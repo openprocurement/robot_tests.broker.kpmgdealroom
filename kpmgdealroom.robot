@@ -7,11 +7,6 @@ Library           kpmgdealroom_service.py
 Resource          locators.robot
 
 *** Keywords ***
-# Prepare data for tender announcement
-Підготувати дані для оголошення тендера
-    [Arguments]    ${username}    ${tender_data}    ${role_name}
-    [Return]    ${tender_data}
-
 # Prepare client for user
 Підготувати клієнт для користувача
     [Arguments]    @{ARGUMENTS}
@@ -20,12 +15,10 @@ Resource          locators.robot
     Set Window Position    @{USERS.users['${ARGUMENTS[0]}'].position}
     Run Keyword If    '${ARGUMENTS[0]}' != 'kpmgdealroom_Viewer'    Login    ${ARGUMENTS[0]}
 
-# Prepare user data for the tender by user
-# Edwin - Removed as this seems unused
-#Підготувати дані для оголошення тендера користувачем
-#    [Arguments]    ${username}    ${tender_data}    ${role_name}
-#    ${tender_data}=    adapt_test_mode    ${tender_data}
-#    [Return]    ${tender_data}
+# Prepare data for tender announcement
+Підготувати дані для оголошення тендера
+    [Arguments]    ${username}    ${tender_data}    ${role_name}
+    [Return]    ${tender_data}
 
 # Edwin - Updated for KDR
 Login
@@ -43,17 +36,6 @@ Logout
     Click Element   ${locator.toolbar.logoutButton}
     Sleep   2
 
-# Edwin - To remove?  This seems unused...
-# Change user
-#Змінити користувача
-#    [Arguments]    @{ARGUMENTS}
-#    Go to    ${USERS.users['${ARGUMENTS[0]}'].homepage}
-#    Sleep    2
-#    Input text    id=login-form-login    ${USERS.users['${ARGUMENTS[0]}'].login}
-#    Input text    id = login-form-password    ${USERS.users['${ARGUMENTS[0]}'].password}
-#    Click Element    id=login-btn
-#    Sleep    2
-
 # Create a tender
 Створити тендер
     [Arguments]    @{ARGUMENTS}
@@ -69,6 +51,7 @@ Logout
     ${description}=    Get From Dictionary    ${ARGUMENTS[1].data}    description
     ${procuringEntity_name}=    Get From Dictionary    ${ARGUMENTS[1].data.procuringEntity}    name
     ${items}=    Get From Dictionary    ${ARGUMENTS[1].data}    items
+    ${number_of_items}=  Get Length  ${items}
     ${budget}=    get_budget    ${ARGUMENTS[1]}
     ${step_rate}=    get_step_rate    ${ARGUMENTS[1]}
     ${currency}=    Get From Dictionary    ${ARGUMENTS[1].data.value}    currency
@@ -80,70 +63,57 @@ Logout
     ${unit}=    Get From Dictionary    ${items[0].unit}    code
     ${cav_id}=    Get From Dictionary    ${items[0].classification}    id
     ${quantity}=    get_quantity    ${items[0]}
-    #  ---- start KDR specific test
+    
     Switch Browser    ${ARGUMENTS[0]}
     Wait Until Page Contains Element    ${locator.createExchangeButton}    20
+    
+    #  1. Click Create Exchange button
     Click Element    ${locator.createExchangeButton}
-    Wait Until Page Contains Element    
-    #  1. Click Create Exchange button (need locator )
+    Wait Until Page Contains Element ${locator.createExchange.submitButton}  20    
+    
+    # 2. Fill in form details
+    Click Element ${locator.createExchange.Client.ProZorro}
+    Input Text ${locator.createExchange.name} ${title}
+    Input Text ${locator.createExchange.sponsorEmail} ${ARGUMENTS[0]}
+    Input Text ${locator.createExchange.adminEmails} ${ARGUMENTS[0]}
+    Wait Until Page Contains Element ${locator.createExchange.typeSelector.Prozorro} 10
+    Click Element ${locator.createExchange.typeSelector.Prozorro}
+    Wait Until Page Contains Element ${locator.createExchange.startDate} 10
+    Input Text ${locator.createExchange.startDate} ${start_day_auction}
+    Click Element ${locator.createExchange.dgfCategorySelector.dgfFinancialAssets}
+    Input Text ${locator.createExchange.guaranteeAmount} ${budget}
+    Input Text ${locator.createExchange.startPrice} 0
 
+    # 3. Submit exchange creations
+    Click Element ${locator.createExchange.submitButton}
 
-    # ---- end KDR specific test
+    # 4. Now we must add items before Prozorro actually accepts our submitted auction
+    :FOR  ${index}  IN RANGE  ${number_of_items} 
+    \  Додати предмет  ${items[${index}]} 
+    Click Element ${locator.addAsset.saveButton}
 
-
-    Switch Browser    ${ARGUMENTS[0]}
-    Wait Until Page Contains Element    id=create-auction-btn    20
-    Click Element    id=create-auction-btn
-    Wait Until Page Contains Element    id=lots-name    20
-    Select From List By Value    id=lots-procurementmethodtype    ${ARGUMENTS[1].data.procurementMethodType}
-    Input text    id=lots-name    ${title}
-    Input text    id=lots-description    ${description}
-    Input text    id=lots-num    ${dgf}
-    Input text    id=lots-dgfdecisionid    ${dgfDecisionID}
-    Input text    id=lots-dgfdecisiondate    ${dgfDecisionDate}
-    Select From List By Value    id=lots-tenderattempts    ${tenderAttempts}
-    Input text    id=lots-start_price    ${budget}
-    Click Element    id=lots-nds
-    Input text    id=lots-auction_date    ${start_day_auction}
-    Input text    id=lots-step    ${step_rate}
-    Input text    id = lots-bidding_date    ${locator.auctionPeriod.startDate}
-    Input text    id = lots-bidding_date_end    ${locator.enquiryPeriod.endDate}
-    Input text    id = lots-auction_date    ${locator.tenderPeriod.startDate}
-    Input text    id = lots-auction_date_end    ${locator.tenderPeriod.endDate}
-    Input text    id = lots-address
-    Input text    id = lots-delivery_time
-    Input text    id = lots-delivery_term
-    Input text    id = lots-requires
-    Input text    id = lots-notes
-    Click Element    id=submit-auction-btn
+    # 5. On page load find the created tender ID and return it
     Wait Until Page Contains    Аукціон збережено як чернетку    10
-    Select From List By Value    id = files-type    1
-    Choose File    id = auction-file    ${ARGUMENTS[2]}
-    Click Element    id = lot-document-upload-btn
-    ${items}=    Get From Dictionary    ${ARGUMENTS[1].data}    items
-    ${Items_length}=    Get Length    ${items}
-    Додати предмет    ${items[${index}]}    ${index}
-    Click Element    id = submissive-btn
-    Wait Until Page Contains    Успішно оновлено    10
-    Click Element    id =publish-btn
-    Wait Until Page Contains    Аукціон створено
     ${tender_id}=    Get Text    id = auction-id
     ${TENDER}=    Get Text    id= auction-id
     log to console    ${TENDER}
     [Return]    ${TENDER}
-
+    
 # Add item
 Додати предмет
     [Arguments]    ${item}    ${index}
-    Click Element    id = create-item-btn
-    Input text    id=items-description    ${item.description}
-    Input text    id=items-quantity    ${item.quantity}
-    Select From List By Value    id=items-unit_code    ${item.unit.code}
-    Select From List By Value    id=select2-items-classification_id-container    ${item.classification.id}
-    Input text    id=items-address_postalcode    ${item.deliveryAddress.postalCode}
-    Input text    id=items-address_region    ${item.deliveryAddress.region}
-    Input text    id=items-address_locality    ${item.deliveryAddress.locality}
-    Input text    id=items-address_streetaddress    ${item.deliveryAddress.streetAddress}
+    Run Keyword If  ${index} != 0    Click Element ${locator.addAsset.addButton} 
+    Wait Until Page Contains Element id=Assets_${index}__Description ${item.description} 5
+    Input Text  id=Assets_${index}__Description ${item.description}
+    Input Text  id=Assets_${index}__Quantity ${item.quantity}
+    Input Text  id=Assets_${index}__Classification_Scheme ${item.classification.id}
+    Input Text  id=Assets_${index}__Classification_Description ${item.unit.code}
+    Input Text  id=Assets_${index}__ClassificationCode ${item.unit.code}
+    Input Text  id=Assets_${index}__Address_AddressLineOne ${item.deliveryAddress.streetAddress}
+    Input Text  id=Assets_${index}__Address_AddressLineTwo ${item.deliveryAddress.region}
+    Input Text  id=Assets_${index}__Address_AddressCity    ${item.deliveryAddress.locality}
+    Input Text  id=Assets_${index}__Address_AddressCountry ${item.deliveryAddress.countryName}
+    Input Text  id=Assets_${index}__Address_AddressPostCode    ${item.deliveryAddress.postalCode}
     Click Element    id = submit-item-btn
 
 # Download document

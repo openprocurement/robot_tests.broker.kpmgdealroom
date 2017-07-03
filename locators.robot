@@ -12,43 +12,22 @@ ${locator.toolbar.createExchangeButton}
 ${locator.toolbar.logoutButton} id=toolbar-logout
 
 # create exchange
-${locator.createExchange.clientSelector}
-${locator.createExchange.name}
-${locator.createExchange.sellerName}
-${locator.createExchange.sponsorEmail}
-${locator.createExchange.adminEmails}
-${locator.createExchange.typeSelector}
-${locator.createExchange.startDate}
-${locator.createExchange.dgfCategorySelector}
-${locator.createExchange.guaranteeAmount}
-${locator.createExchange.startPrice}
-${locator.createExchange.submitButton}
+${locator.createExchange.clientSelector.Prozorro} //*[@id='_ClientId_dropdown']//a[contains(text(),'Prozorro')]
+${locator.createExchange.name} id=Name
+${locator.createExchange.sellerName} id=sellerDisplayName
+${locator.createExchange.sponsorEmail} id=SponsorEmail
+${locator.createExchange.adminEmails} id=PrincipalAdministratorEmails
+
+${locator.createExchange.typeSelector.Prozorro} //div[@id='_TypeId_dropdown']//a[contains(text(),'Prozorro')]
+${locator.createExchange.startDate} id=AuctionStartDate
+${locator.createExchange.dgfCategorySelector.dgfFinancialAssets} //div[@id='_ProzorroCategoryId_dropdown']//a[contains(text(),'dgfFinancialAssets')]
+${locator.createExchange.guaranteeAmount} id=guaranteeAmount
+${locator.createExchange.startPrice} id=startingPrice
+${locator.createExchange.submitButton} id=create-exchange-submit
 
 # add item / asset
-${locator.addAsset.items[0].description}
-${locator.addAsset.items[0].quantity}
-${locator.addAsset.items[0].classification.scheme}
-${locator.addAsset.items[0].classification.description}
-${locator.addAsset.items[0].classification.code}
-${locator.addAsset.items[0].deleteLink}
-
-${locator.addAsset.items[1].description}
-${locator.addAsset.items[1].quantity}
-${locator.addAsset.items[1].classification.scheme}
-${locator.addAsset.items[1].classification.description}
-${locator.addAsset.items[1].classification.code}
-${locator.addAsset.items[1].deleteLink}
-
-${locator.addAsset.items[2].description}
-${locator.addAsset.items[2].quantity}
-${locator.addAsset.items[2].classification.scheme}
-${locator.addAsset.items[2].classification.description}
-${locator.addAsset.items[2].classification.code}
-${locator.addAsset.items[2].deleteLink}
-
-${locator.addAsset.saveButton}
-${locator.addAsset.addButton}
-
+${locator.addAsset.saveButton} css=.btn.btn-default.btn-primary
+${locator.addAsset.addButton} id=add-asset
 
 # Edwin - The below locators are from UESC's driver.  To eventually delete...
 ${locator.edit.description}    id = auction-description
