@@ -3,31 +3,31 @@ Resource    kpmgdealroom.robot
 
 *** Variables ***
 # login page
-${locator.login.emailField}    id=Email
-${locator.login.passwordField}    id=Password
-${locator.login.loginButton}    id=login-submit
+${locator.login.EmailField}    id=Email
+${locator.login.PasswordField}    id=Password
+${locator.login.LoginButton}    id=login-submit
 
 # toolbar
-${locator.toolbar.createExchangeButton}  
-${locator.toolbar.logoutButton} id=toolbar-logout
+${locator.toolbar.CreateExchangeButton}  //li[@id='top-nav-create-exchange']/a
+${locator.toolbar.LogoutButton}  id=toolbar-logout
 
 # create exchange
-${locator.createExchange.clientSelector.Prozorro} //*[@id='_ClientId_dropdown']//a[contains(text(),'Prozorro')]
-${locator.createExchange.name} id=Name
-${locator.createExchange.sellerName} id=sellerDisplayName
-${locator.createExchange.sponsorEmail} id=SponsorEmail
-${locator.createExchange.adminEmails} id=PrincipalAdministratorEmails
+${locator.createExchangeClientSelectorProzorro}     //*[@id='_ClientId_dropdown']//a[contains(text(),'Prozorro')]
+${locator.createExchangeName}   id=Name
+${locator.createExchangeSellerName}     id=sellerDisplayName
+${locator.createExchangeSponsorEmail}   id=SponsorEmail
+${locator.createExchangeAdminEmails}    id=PrincipalAdministratorEmails
 
-${locator.createExchange.typeSelector.Prozorro} //div[@id='_TypeId_dropdown']//a[contains(text(),'Prozorro')]
-${locator.createExchange.startDate} id=AuctionStartDate
-${locator.createExchange.dgfCategorySelector.dgfFinancialAssets} //div[@id='_ProzorroCategoryId_dropdown']//a[contains(text(),'dgfFinancialAssets')]
-${locator.createExchange.guaranteeAmount} id=guaranteeAmount
-${locator.createExchange.startPrice} id=startingPrice
-${locator.createExchange.submitButton} id=create-exchange-submit
+${locator.createExchangeTypeSelectorProzorro}   //div[@id='_TypeId_dropdown']//a[contains(text(),'Prozorro')]
+${locator.createExchangeStartDate}  id=AuctionStartDate
+${locator.createExchangeDgfCategorySelectorDgfFinancialAssets}   //div[@id='_ProzorroCategoryId_dropdown']//a[contains(text(),'dgfFinancialAssets')]
+${locator.createExchangeGuaranteeAmount}    id=guaranteeAmount
+${locator.createExchangeStartPrice}     id=startingPrice
+${locator.createExchangeSubmitButton}   id=create-exchange-submit
 
 # add item / asset
-${locator.addAsset.saveButton} css=.btn.btn-default.btn-primary
-${locator.addAsset.addButton} id=add-asset
+${locator.addAssetSaveButton}   css=.btn.btn-default.btn-primary
+${locator.addAssetAddButton}    id=add-asset
 
 # Edwin - The below locators are from UESC's driver.  To eventually delete...
 ${locator.edit.description}    id = auction-description

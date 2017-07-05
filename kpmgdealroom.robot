@@ -23,17 +23,17 @@ Resource          locators.robot
 # Edwin - Updated for KDR
 Login
     [Arguments]   @{ARGUMENTS}
-    Wait Until Element Is Visible    ${locator.emailField}    10
-    Input text    ${locator.login.emailField}    ${USERS.users['${ARGUMENTS[0]}'].login}
-    Input text    ${locator.login.passwordField}    ${USERS.users['${ARGUMENTS[0]}'].password}
-    Click Element    ${locator.login.loginButton}
+    Wait Until Element Is Visible    ${locator.login.EmailField}    10
+    Input text    ${locator.login.EmailField}    ${USERS.users['${ARGUMENTS[0]}'].login}
+    Input text    ${locator.login.PasswordField}    ${USERS.users['${ARGUMENTS[0]}'].password}
+    Click Element    ${locator.login.LoginButton}
     Sleep    2
 
 # Edwin - Added for KDR
 Logout
     [Arguments]   @{ARGUMENTS}
-    Wait Until Element Is Visible   ${locator.logoutButton}   10
-    Click Element   ${locator.toolbar.logoutButton}
+    Wait Until Element Is Visible   ${locator.toolbar.LogoutButton}   10
+    Click Element   ${locator.toolbar.LogoutButton}
     Sleep   2
 
 # Create a tender
@@ -65,32 +65,32 @@ Logout
     ${quantity}=    get_quantity    ${items[0]}
     
     Switch Browser    ${ARGUMENTS[0]}
-    Wait Until Page Contains Element    ${locator.createExchangeButton}    20
+    Wait Until Page Contains Element    ${locator.toolbar.CreateExchangeButton}    20
     
     #  1. Click Create Exchange button
-    Click Element    ${locator.createExchangeButton}
-    Wait Until Page Contains Element ${locator.createExchange.submitButton}  20    
+    Click Element    ${locator.toolbar.CreateExchangeButton}
+    Wait Until Page Contains Element ${locator.create.ExchangeSubmitButton}  20    
     
     # 2. Fill in form details
-    Click Element ${locator.createExchange.Client.ProZorro}
-    Input Text ${locator.createExchange.name} ${title}
-    Input Text ${locator.createExchange.sponsorEmail} ${ARGUMENTS[0]}
-    Input Text ${locator.createExchange.adminEmails} ${ARGUMENTS[0]}
-    Wait Until Page Contains Element ${locator.createExchange.typeSelector.Prozorro} 10
-    Click Element ${locator.createExchange.typeSelector.Prozorro}
-    Wait Until Page Contains Element ${locator.createExchange.startDate} 10
-    Input Text ${locator.createExchange.startDate} ${start_day_auction}
-    Click Element ${locator.createExchange.dgfCategorySelector.dgfFinancialAssets}
-    Input Text ${locator.createExchange.guaranteeAmount} ${budget}
-    Input Text ${locator.createExchange.startPrice} 0
+    Click Element ${locator.createExchangeClientProZorro}
+    Input Text ${locator.createExchangeName} ${title}
+    Input Text ${locator.createExchangeSponsorEmail} ${ARGUMENTS[0]}
+    Input Text ${locator.createExchangeAdminEmails} ${ARGUMENTS[0]}
+    Wait Until Page Contains Element ${locator.createExchangeTypeSelectorProzorro} 10
+    Click Element ${locator.createExchangeTypeSelectorProzorro}
+    Wait Until Page Contains Element ${locator.createExchangeStartDate} 10
+    Input Text ${locator.createExchangeStartDate} ${start_day_auction}
+    Click Element ${locator.createExchangeDgfCategorySelectorDgfFinancialAssets}
+    Input Text ${locator.createExchangeGuaranteeAmount} ${budget}
+    Input Text ${locator.createExchangeStartPrice} 0
 
     # 3. Submit exchange creations
-    Click Element ${locator.createExchange.submitButton}
+    Click Element ${locator.createExchangeSubmitButton}
 
     # 4. Now we must add items before Prozorro actually accepts our submitted auction
     :FOR  ${index}  IN RANGE  ${number_of_items} 
     \  Додати предмет  ${items[${index}]} 
-    Click Element ${locator.addAsset.saveButton}
+    Click Element ${locator.addAssetSaveButton}
 
     # 5. On page load find the created tender ID and return it
     Wait Until Page Contains    Аукціон збережено як чернетку    10
@@ -102,7 +102,7 @@ Logout
 # Add item
 Додати предмет
     [Arguments]    ${item}    ${index}
-    Run Keyword If  ${index} != 0    Click Element ${locator.addAsset.addButton} 
+    Run Keyword If  ${index} != 0    Click Element ${locator.addAssetAddButton} 
     Wait Until Page Contains Element id=Assets_${index}__Description ${item.description} 5
     Input Text  id=Assets_${index}__Description ${item.description}
     Input Text  id=Assets_${index}__Quantity ${item.quantity}
