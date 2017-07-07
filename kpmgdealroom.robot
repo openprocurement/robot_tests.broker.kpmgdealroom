@@ -59,9 +59,9 @@ Get Field Value
     ${procuringEntity_name}=    Get From Dictionary    ${ARGUMENTS[1].data.procuringEntity}    name
     ${items}=    Get From Dictionary    ${ARGUMENTS[1].data}    items
     ${number_of_items}=  Get Length  ${items}
-    ${budget}=  Get From Dictionary ${ARGUMENTS[1].data.value} amount
+    ${budget}=  Get From Dictionary     ${ARGUMENTS[1].data.value} amount
     #${budget}=    get_budget    ${ARGUMENTS[1]}
-    ${step_rate}=   Get From Dictionary ${ARGUMENTS[1].data.minimalStep}    amount
+    ${step_rate}=   Get From Dictionary     ${ARGUMENTS[1].data.minimalStep}    amount
     #${step_rate}=    get_step_rate    ${ARGUMENTS[1]}
     ${currency}=    Get From Dictionary    ${ARGUMENTS[1].data.value}    currency
     ${valueAddedTaxIncluded}=    Get From Dictionary    ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
