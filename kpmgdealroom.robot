@@ -59,7 +59,7 @@ Get Field Value
     ${procuringEntity_name}=    Get From Dictionary    ${ARGUMENTS[1].data.procuringEntity}    name
     ${items}=    Get From Dictionary    ${ARGUMENTS[1].data}    items
     ${number_of_items}=  Get Length  ${items}
-    ${budget}=  Get From Dictionary     ${ARGUMENTS[1].data.value} amount
+    ${budget}=  Get From Dictionary     ${ARGUMENTS[1].data.value}  amount
     #${budget}=    get_budget    ${ARGUMENTS[1]}
     ${step_rate}=   Get From Dictionary     ${ARGUMENTS[1].data.minimalStep}    amount
     #${step_rate}=    get_step_rate    ${ARGUMENTS[1]}
@@ -71,30 +71,31 @@ Get Field Value
     ${descr_lot}=    Get From Dictionary    ${item0}    description
     ${unit}=    Get From Dictionary    ${items[0].unit}    code
     ${cav_id}=    Get From Dictionary    ${items[0].classification}    id
-    ${quantity}=    get_quantity    ${items[0]}
+    ${quanity}=     Get From Dictionary     ${items[0]}  quantity
+    #${quantity}=    get_quantity    ${items[0]}
     
     Switch Browser    ${ARGUMENTS[0]}
     Wait Until Page Contains Element    ${locator.toolbar.CreateExchangeButton}    20
     
     #  1. Click Create Exchange button
     Click Element    ${locator.toolbar.CreateExchangeButton}
-    Wait Until Page Contains Element ${locator.createExchange.SubmitButton}  20    
+    Wait Until Page Contains Element    ${locator.createExchange.SubmitButton}  20    
     
     # 2. Fill in form details
-    Click Element ${locator.createExchange.ClientProZorro}
-    Input Text ${locator.createExchange.Name} ${title}
-    Input Text ${locator.createExchange.SponsorEmail} ${ARGUMENTS[0]}
-    Input Text ${locator.createExchange.AdminEmails} ${ARGUMENTS[0]}
-    Wait Until Page Contains Element ${locator.createExchange.TypeSelectorProzorro} 10
-    Click Element ${locator.createExchange.TypeSelectorProzorro}
-    Wait Until Page Contains Element ${locator.createExchange.StartDate} 10
-    Input Text ${locator.createExchange.StartDate} ${start_day_auction}
-    Click Element ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}
-    Input Text ${locator.createExchange.GuaranteeAmount} ${budget}
-    Input Text ${locator.createExchange.StartPrice} 0
+    Click Element   ${locator.createExchange.ClientSelectorProZorro}
+    Input Text  ${locator.createExchange.Name}  ${title}
+    Input Text  ${locator.createExchange.SponsorEmail}  ${ARGUMENTS[0]}
+    Input Text  ${locator.createExchange.AdminEmails}   ${ARGUMENTS[0]}
+    Wait Until Page Contains Element    ${locator.createExchange.TypeSelectorProzorro}  10
+    Click Element   ${locator.createExchange.TypeSelectorProzorro}
+    Wait Until Page Contains Element    ${locator.createExchange.StartDate}     10
+    Input Text  ${locator.createExchange.StartDate}     ${start_day_auction}
+    Click Element   ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}
+    Input Text  ${locator.createExchange.GuaranteeAmount}   ${budget}
+    Input Text  ${locator.createExchange.StartPrice}    0
 
     # 3. Submit exchange creations
-    Click Element ${locator.createExchange.SubmitButton}
+    Click Element   ${locator.createExchange.SubmitButton}
 
     # 4. Now we must add items before Prozorro actually accepts our submitted auction
     :FOR  ${index}  IN RANGE  ${number_of_items} 

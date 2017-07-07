@@ -8,7 +8,7 @@ ${locator.login.PasswordField}    id=Password
 ${locator.login.LoginButton}    id=login-submit
 
 # toolbar
-${locator.toolbar.CreateExchangeButton}  //li[@id='top-nav-create-exchange']/a
+${locator.toolbar.CreateExchangeButton}  //li[@id='top-nav-create-exchange']/a/div/span
 ${locator.toolbar.LogoutButton}  id=toolbar-logout
 
 # create exchange
