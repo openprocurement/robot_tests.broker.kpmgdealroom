@@ -10,6 +10,15 @@ def get_webdriver():
     se2lib = BuiltIn().get_library_instance('Selenium2Library')
     return se2lib._current_browser()
 
+def get_tender_dates(initial_tender_data, key):
+    data_period = initial_tender_data.data.auctionPeriod
+    start_dt = dateutil.parser.parse(data_period['startDate'])
+    data = {
+        'StartDate': start_dt.strftime("%d.%m.%Y"),
+        'StartTime': start_dt.strftime("%H:%M"),
+    }
+    return data.get(key, '')
+
 def is_checked(locator): 
     driver = get_webdriver() 
     return driver.find_element_by_id(locator).is_selected() 
