@@ -14,6 +14,9 @@ def is_checked(locator):
     driver = get_webdriver() 
     return driver.find_element_by_id(locator).is_selected() 
 
+def convert_ISO_DMY(isodate):
+    return dateutil.parser.parse(isodate).strftime("%d.%m.%Y")
+
 def convert_date(isodate):
     return datetime.strptime(isodate, '%d.%m.%Y').date().isoformat()
 
