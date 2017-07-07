@@ -4,32 +4,91 @@
 #------------------------------------------------------------------------------
 # Get information from questions[].title
 Отримати інформацію про questions[${index}].title
-    ${index}=    inc    ${index}
+    ${index}=    kpmgdealroom_service.inc    ${index}
     Wait Until Page Contains Element    id =
     ${return_value}=    Get text    id =
     [Return]    ${return_value}
 
 # Get information from questions[].description
 Отримати інформацію про questions[${index}].description
-    ${index}=    inc    ${index}
+    ${index}=    kpmgdealroom_service.inc    ${index}
     Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_description')])[${index}]
     ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_description')])[${index}]
     [Return]    ${return_value}
 
 # Get information from questions[].answer
 Отримати інформацію про questions[${index}].answer
-    ${index}=    inc    ${index}
+    ${index}=    kpmgdealroom_service.inc    ${index}
     Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_answer')])[${index}]
     ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_answer')])[${index}]
     [Return]    ${return_value}
 
 # Get information from questions[].date
 Отримати інформацію про questions[${index}].date
-    ${index}=    inc    ${index}
+    ${index}=    kpmgdealroom_service.inc    ${index}
     Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_date')])[${index}]
     ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_date')])[${index}]
     ${return_value}=    convert_date_time_to_iso    ${return_value}
     [Return]    ${return_value}
+
+# Go to the questions page
+Перейти до сторінки запитань
+    [Documentation]    ${ARGUMENTS[0]} = username
+    ...    ${ARGUMENTS[1]} = tenderUaId
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    Click Element    id = auction-view-btn
+    Click Element    id = tab-2
+    Wait Until Page Contains Element    id= create-question-btn
+
+# Ask a question
+Задати питання
+    [Arguments]    @{ARGUMENTS}
+    [Documentation]    ${ARGUMENTS[0]} == username
+    ...    ${ARGUMENTS[1]} == tenderUaId
+    ...    ${ARGUMENTS[2]} == questionId
+    ${title}=    Get From Dictionary    ${ARGUMENTS[2].data}    title
+    ${description}=    Get From Dictionary    ${ARGUMENTS[2].data}    description
+    Wait Until Page Contains Element    id = auction-view-btn
+    Click Element    id = auction-view-btn
+    Click Element    id = tab-2
+    Wait Until Page Contains Element    id= create-question-btn
+    Click Element    id=create-question-btn
+    Sleep    3
+    Input text    id=questions-title    ${title}
+    Input text    id=questions-description    ${description}
+    Click Element    id= create-question-btn
+
+# Answer a question
+Відповісти на запитання
+    [Arguments]    @{ARGUMENTS}
+    [Documentation]    ${ARGUMENTS[0]} = username
+    ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
+    ...    ${ARGUMENTS[2]} = 0
+    ...    ${ARGUMENTS[3]} = answer_data
+    ${answer}=    Get From Dictionary    ${ARGUMENTS[3].data}    answer
+    Перейти до сторінки запитань
+    Click Element    id = create-answer-btn
+    Sleep    3
+    Input Text    id=questions-answer    ${answer}
+    Click Element    id=create-question-btn
+    sleep    1
+
+# Get info from the question
+Отримати інформацію із запитання
+    [Arguments]    ${username}    ${tender_uaid}    ${question_id}    ${field_name}
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    Перейти до сторінки запитань
+    ${return_value}=    Run Keyword If    '${field_name}' == 'title'    Get Text    xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')])
+    ...    ELSE IF    '${field_name}' == 'answer'    Get Text    xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')])
+    ...    ELSE    Get Text    xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')])
+    [Return]    ${return_value}
+
+# Ask a question about the tender
+Задати запитання на тендер
+    [Arguments]    ${username}    ${tender_uaid}    ${question}
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    Задати питання    ${username}    ${tender_uaid}    ${question}
+
 
 
 
@@ -60,6 +119,9 @@
 
 
 
+
+
+
 # Upload document
 Завантажити документ
     [Arguments]    @{ARGUMENTS}
@@ -74,34 +136,6 @@
     Sleep    2
     Click Element    id=lot-document-upload-btn
     Reload Page
-
-# Go to the questions page
-Перейти до сторінки запитань
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = tenderUaId
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Click Element    id = auction-view-btn
-    Click Element    id = tab-2
-    Wait Until Page Contains Element    id= create-question-btn
-
-
-# Ask a question
-Задати питання
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == tenderUaId
-    ...    ${ARGUMENTS[2]} == questionId
-    ${title}=    Get From Dictionary    ${ARGUMENTS[2].data}    title
-    ${description}=    Get From Dictionary    ${ARGUMENTS[2].data}    description
-    Wait Until Page Contains Element    id = auction-view-btn
-    Click Element    id = auction-view-btn
-    Click Element    id = tab-2
-    Wait Until Page Contains Element    id= create-question-btn
-    Click Element    id=create-question-btn
-    Sleep    3
-    Input text    id=questions-title    ${title}
-    Input text    id=questions-description    ${description}
-    Click Element    id= create-question-btn
 
 
 
@@ -122,21 +156,6 @@
     Wait Until Page Contains    Успішно оновлено    5
     ${result_field}=    Get Value    ${locator.edit.${ARGUMENTS[2]}}
     Should Be Equal    ${result_field}    ${ARGUMENTS[3]}
-
-
-# Answer a question
-Відповісти на питання
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
-    ...    ${ARGUMENTS[2]} = 0
-    ...    ${ARGUMENTS[3]} = answer_data
-    ${answer}=    Get From Dictionary    ${ARGUMENTS[3].data}    answer
-    Перейти до сторінки запитань
-    Click Element    id = create-answer-btn
-    Sleep    3
-    Input Text    id=questions-answer    ${answer}
-    Click Element    id=create-question-btn
 
 # Submit a quote
 Подати цінову пропозицію
@@ -300,37 +319,6 @@
     [Arguments]    ${username}    ${tender_uaid}    ${doc_id}    ${field_name}
     ${doc_value}=    Get Text    id = doc_id
     [Return]    ${doc_value}
-
-# Answer the question
-Відповісти на запитання
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
-    ...    ${ARGUMENTS[2]} = 0
-    ...    ${ARGUMENTS[3]} = answer_data
-    ${answer}=    Get From Dictionary    ${ARGUMENTS[3].data}    answer
-    Перейти до сторінки запитань
-    Click Element    id = create-answer-btn
-    Sleep    3
-    Input Text    id=questions-answer    ${answer}
-    Click Element    id=create-question-btn
-    sleep    1
-
-# Get info from the question
-Отримати інформацію із запитання
-    [Arguments]    ${username}    ${tender_uaid}    ${question_id}    ${field_name}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Перейти до сторінки запитань
-    ${return_value}=    Run Keyword If    '${field_name}' == 'title'    Get Text    xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')])
-    ...    ELSE IF    '${field_name}' == 'answer'    Get Text    xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')])
-    ...    ELSE    Get Text    xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')])
-    [Return]    ${return_value}
-
-# Ask a question about the tender
-Задати запитання на тендер
-    [Arguments]    ${username}    ${tender_uaid}    ${question}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Задати питання    ${username}    ${tender_uaid}    ${question}
 
 # Get the number of documents in the tender
 Отримати кількість документів в тендері

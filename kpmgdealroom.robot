@@ -53,7 +53,8 @@ Get Field Value
     ${dgf}=    Get From Dictionary    ${ARGUMENTS[1].data}    dgfID
     ${dgfDecisionDate}=    convert_ISO_DMY    ${ARGUMENTS[1].data.dgfDecisionDate}
     ${dgfDecisionID}=    Get From Dictionary    ${ARGUMENTS[1].data}    dgfDecisionID
-    ${tenderAttempts}=    get_tenderAttempts    ${ARGUMENTS[1].data}
+    ${tenderAttempts}=    Get From Dictionary    ${ARGUMENTS[1].data}   tenderAttempts
+    #${tenderAttempts}=    get_tenderAttempts    ${ARGUMENTS[1].data}
     ${description}=    Get From Dictionary    ${ARGUMENTS[1].data}    description
     ${procuringEntity_name}=    Get From Dictionary    ${ARGUMENTS[1].data.procuringEntity}    name
     ${items}=    Get From Dictionary    ${ARGUMENTS[1].data}    items
