@@ -10,6 +10,9 @@ def get_webdriver():
     se2lib = BuiltIn().get_library_instance('Selenium2Library')
     return se2lib._current_browser()
 
+def is_checked(locator): 
+    driver = get_webdriver() 
+    return driver.find_element_by_id(locator).is_selected() 
 
 def convert_date(isodate):
     return datetime.strptime(isodate, '%d.%m.%Y').date().isoformat()
@@ -20,3 +23,6 @@ def convert_date_to_iso(v_date, v_time):
     time_zone = pytz.timezone('Europe/Kiev')
     localized_date = time_zone.localize(date_obj)
     return localized_date.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+
+def inc(value):
+    return int(value) + 1

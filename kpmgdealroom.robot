@@ -33,7 +33,7 @@ Login
     Sleep    2
 
 # Get text from auction info field
-Отримати текст із поля і показати на сторінці
+Get Field Value
     [Arguments]    ${fieldname}
     ${return_value}=    Get Text    ${locator.viewExchange.${fieldname}}
     [Return]    ${return_value}
@@ -166,120 +166,120 @@ Login
 
 # Get information from title
 Отримати інформацію про title
-    ${return_value}=    Отримати текст із поля і показати на сторінці    title
+    ${return_value}=    Get Field Value    title
     [Return]    ${return_value}
 
 # Get information from description
 Отримати інформацію про description
-    ${return_value}=    Отримати текст із поля і показати на сторінці    description
+    ${return_value}=    Get Field Value    description
     [Return]    ${return_value}
 
 # Get information from procurementMethodType
 Отримати інформацію про procurementMethodType
-    ${return_value}=    Отримати текст із поля і показати на сторінці    procurementMethodType
+    ${return_value}=    Get Field Value    procurementMethodType
     [Return]    ${return_value}
 
 # Get information from  dgfID
 Отримати інформацію про dgfID
-    ${return_value}=    Отримати текст із поля і показати на сторінці    dgf
+    ${return_value}=    Get Field Value    dgfID
     [Return]    ${return_value}
 
 # Get information from dgfDecisionID
 Отримати інформацію про dgfDecisionID
-    ${return_value}=    Отримати текст із поля і показати на сторінці    dgfDecisionID
+    ${return_value}=    Get Field Value    dgfDecisionID
     [Return]    ${return_value}
 
 # Get information from dgfDecisionDate
 Отримати інформацію про dgfDecisionDate
-    ${date_value}=    Отримати текст із поля і показати на сторінці    dgfDecisionDate
+    ${date_value}=    Get Field Value    dgfDecisionDate
     ${return_value}=    kpmgdealroom_service.convert_date    ${date_value}
     [Return]    ${return_value}
 
 # Get information from tenderAttempts
 Отримати інформацію про tenderAttempts
-    ${return_value}=    Отримати текст із поля і показати на сторінці    tenderAttempts
+    ${return_value}=    Get Field Value    tenderAttempts
     ${return_value}=    Convert To Integer    ${return_value}
     [Return]    ${return_value}
 
 # Get information from eligiblityCriteria
 Отримати інформацію про eligibilityCriteria
-    ${return_value}=    Отримати текст із поля і показати на сторінці    eligibilityCriteria
+    ${return_value}=    Get Field Value    eligibilityCriteria
 
 # Get information from value.amount
 Отримати інформацію про value.amount
-    ${return_value}=    Отримати текст із поля і показати на сторінці    value.amount
+    ${return_value}=    Get Field Value    value.amount
     ${return_value}=    Convert To Number    ${return_value.replace(' ', '').replace(',', '.')}
     [Return]    ${return_value}
 
 # Get information from minimialStep.amount
 Отримати інформацію про minimalStep.amount
-    ${return_value}=    Отримати текст із поля і показати на сторінці    minimalStep.amount
+    ${return_value}=    Get Field Value    minimalStep.amount
     ${return_value}=    Convert To Number    ${return_value.replace(' ', '').replace(',', '.')}
     [Return]    ${return_value}
 
 # Get information from value.currency
-#TODO & FIXME
 Отримати інформацію про value.currency
-    ${return_value}=    Get Selected List Value    slPosition_value_currency
+    ${return_value}=    Get Field Value    value.currency
     [Return]    ${return_value}
 
 # Get information from value.valueAddedTaxIncluded
 #TODO & FIXME
 Отримати інформацію про value.valueAddedTaxIncluded
-    ${return_value}=    is_checked    cbPosition_value_valueAddedTaxIncluded
+    ${return_value}=    kpmgdealroom_service.is_checked    ${locator.viewExchange.value.valueAddedTaxIncluded}
     [Return]    ${return_value}
 
 # Get information from auctionID
 Отримати інформацію про auctionID
-    ${return_value}=    Отримати текст із поля і показати на сторінці    tenderId
+    ${return_value}=    Get Field Value    tenderId
     [Return]    ${return_value}
 
 # Get information from procuringEntity.name
 Отримати інформацію про procuringEntity.name
-    ${return_value}=    Отримати текст із поля і показати на сторінці    procuringEntity.name
+    ${return_value}=    Get Field Value    procuringEntity.name
     [Return]    ${return_value}
 
 # Get information from auctionPeriod.startDate
 Отримати інформацію про auctionPeriod.startDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
+    ${date_value}=    Get Field Value    auctionPeriod.startDate
     ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
     [Return]    ${return_value}
 
 # Get information from auctionPeriod.endDate
 Отримати інформацію про auctionPeriod.endDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
+    ${date_value}=    Get Field Value    auctionPeriod.endDate
     ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
+    [Return]    ${return_value}
 
 # Get information from tenderPeriod.startDate
 Отримати інформацію про tenderPeriod.startDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
+    ${date_value}=    Get Field Value    tenderPeriod.startDate
     ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
     [Return]    ${return_value}
 
 # Get information from tenderPeriod.endDate
 Отримати інформацію про tenderPeriod.endDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
+    ${date_value}=    Get Field Value    tenderPeriod.endDate
     ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
     [Return]    ${return_value}
 
 # Get information from enquiryPeriod.startDate
 Отримати інформацію про enquiryPeriod.startDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
+    ${date_value}=    Get Field Value    enquiryPeriod.startDate
     ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
     [Return]    ${return_value}
 
 # Get information from enquiryPeriod.endDate
 Отримати інформацію про enquiryPeriod.endDate
-    ${date_value}=    Get Text    css = div.table > tr : nth-child(5) > td
+    ${date_value}=    Get Field Value    enquiryPeriod.endDate
     ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
     [Return]    ${return_value}
 
 # Get information from status
 Отримати інформацію про status
     Reload Page
-    Wait Until Page Contains Element    id = status
+    Wait Until Page Contains Element    ${locator.viewExchange.status}
     Sleep    2
-    ${return_value}=    Get Text    id = status
+    ${return_value}=    Get Field Value    status
     [Return]    ${return_value}
 
 
@@ -288,138 +288,79 @@ Login
 #------------------------------------------------------------------------------
 # Get information from items[0].deliveryAddress.countryName
 Отримати інформацію про items[0].deliveryAddress.countryName
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryAddress.countryName
+    ${return_value}=    Get Field Value    items[0].deliveryAddress.countryName
     [Return]    ${return_value.split(', ')[0]}
 
 # Get information from items[0].deliveryAddress.postalCode
 Отримати інформацію про items[0].deliveryAddress.postalCode
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryAddress.postalCode
+    ${return_value}=    Get Field Value    items[0].deliveryAddress.postalCode
     [Return]    ${return_value.split(', ')[1]}
 
 # Get information from items[0].deliveryAddress.region
 Отримати інформацію про items[0].deliveryAddress.region
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryAddress.region
+    ${return_value}=    Get Field Value    items[0].deliveryAddress.region
     [Return]    ${return_value.split(', ')[2]}
 
 # Get information from items[0].deliveryAddress.locality
 Отримати інформацію про items[0].deliveryAddress.locality
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryAddress.locality
+    ${return_value}=    Get Field Value    items[0].deliveryAddress.locality
     [Return]    ${return_value.split(', ')[3]}
 
 # Get information from items[0].deliveryAddress.streetAddress
 Отримати інформацію про items[0].deliveryAddress.streetAddress
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryAddress.streetAddress
+    ${return_value}=    Get Field Value    items[0].deliveryAddress.streetAddress
     [Return]    ${return_value.split(', ')[4]}
 
 # Get information from items[0].deliveryDate.endDate
 Отримати інформацію про items[0].deliveryDate.endDate
-    ${date_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryDate.endDate
+    ${date_value}=    Get Field Value    items[0].deliveryDate.endDate
     ${return_value}=    kpmgdealroom_service.convert_date    ${date_value}
     [Return]    ${return_value}
 
 # Get information from items[0].deliveryLocation.latitude
 Отримати інформацію про items[0].deliveryLocation.latitude
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryLocation.latitude
+    ${return_value}=    Get Field Value    items[0].deliveryLocation.latitude
     ${return_value}=    Convert To Number    ${return_value}
     [Return]    ${return_value}
 
 # Get information from items[0].deliveryLocation.longitude
 Отримати інформацію про items[0].deliveryLocation.longitude
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[0].deliveryLocation.longitude
+    ${return_value}=    Get Field Value    items[0].deliveryLocation.longitude
     ${return_value}=    Convert To Number    ${return_value}
     [Return]    ${return_value}
 
 # Get information from items[].quantity
 Отримати інформацію про items[${index}].quantity
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[${index}].quantity
+    ${return_value}=    Get Field Value    items[${index}].quantity
     ${return_value}=    Convert To Number    ${return_value.replace(' ', '').replace(',', '.')}
     [Return]    ${return_value}
 
 # Get information from items[].unit.code
 Отримати інформацію про items[${index}].unit.code
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[${index}].unit.code
+    ${return_value}=    Get Field Value    items[${index}].unit.code
     [Return]    ${return_value}
 
 # Get information from items[].unit.name
 Отримати інформацію про items[${index}].unit.name
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[${index}].unit.name
+    ${return_value}=    Get Field Value    items[${index}].unit.name
     [Return]    ${return_value}
 
 # Get information from items[].description
 Отримати інформацію про items[${index}].description
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[${index}].description
+    ${return_value}=    Get Field Value    items[${index}].description
     [Return]    ${return_value}
 
 # Get information from items[].classification.id
 Отримати інформацію про items[${index}].classification.id
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[${index}].classification.id
+    ${return_value}=    Get Field Value    items[${index}].classification.id
     [Return]    ${return_value}
 
 # Get information from items[].classification.scheme
 Отримати інформацію про items[${index}].classification.scheme
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[${index}].classification.scheme
+    ${return_value}=    Get Field Value    items[${index}].classification.scheme
     [Return]    ${return_value}
 
 # Get information from items[].classification.description
 Отримати інформацію про items[${index}].classification.description
-    ${return_value}=    Отримати текст із поля і показати на сторінці    items[${index}].classification.description
-    [Return]    ${return_value}
-
-#------------------------------------------------------------------------------
-#  QUESTIONS AND ANSWERS
-#------------------------------------------------------------------------------
-# Get information from questions[].title
-Отримати інформацію про questions[${index}].title
-    ${index}=    inc    ${index}
-    Wait Until Page Contains Element    id =
-    ${return_value}=    Get text    id =
-    [Return]    ${return_value}
-
-# Get information from questions[].description
-Отримати інформацію про questions[${index}].description
-    ${index}=    inc    ${index}
-    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_description')])[${index}]
-    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_description')])[${index}]
-    [Return]    ${return_value}
-
-# Get information from questions[].answer
-Отримати інформацію про questions[${index}].answer
-    ${index}=    inc    ${index}
-    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_answer')])[${index}]
-    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_answer')])[${index}]
-    [Return]    ${return_value}
-
-# Get information from questions[].date
-Отримати інформацію про questions[${index}].date
-    ${index}=    inc    ${index}
-    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_date')])[${index}]
-    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_date')])[${index}]
-    ${return_value}=    convert_date_time_to_iso    ${return_value}
-    [Return]    ${return_value}
-
-
-
-#------------------------------------------------------------------------------
-#  PRICE OFFERS
-#------------------------------------------------------------------------------
-# Go to the cancellations page
-Перейти до сторінки відмін
-    Go To    https://proumstrade.com.ua/cancelations/index
-    Wait Until Page Contains Element    id=decline-btn
-    Click Element    id=decline-btn
-    Wait Until Page Contains Element    id=decline-id
-    
-# Get information about cancellations[0].status
-Отримати інформацію про cancellations[0].status
-    Перейти до сторінки відмін
-    Wait Until Page Contains Element    id = status
-    ${return_value}=    Get text    id = status
-    [Return]    ${return_value}
-
-# Get information about cancellations[0].reason
-Отримати інформацію про cancellations[0].reason
-    Перейти до сторінки відмін
-    Wait Until Page Contains Element    id = modal-btn
-    Click Element    id = modal-btn
-    ${return_value}=    Get text    id = messages-notes
+    ${return_value}=    Get Field Value    items[${index}].classification.description
     [Return]    ${return_value}

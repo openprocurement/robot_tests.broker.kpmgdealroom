@@ -1,4 +1,65 @@
 
+#------------------------------------------------------------------------------
+#  QUESTIONS AND ANSWERS
+#------------------------------------------------------------------------------
+# Get information from questions[].title
+Отримати інформацію про questions[${index}].title
+    ${index}=    inc    ${index}
+    Wait Until Page Contains Element    id =
+    ${return_value}=    Get text    id =
+    [Return]    ${return_value}
+
+# Get information from questions[].description
+Отримати інформацію про questions[${index}].description
+    ${index}=    inc    ${index}
+    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_description')])[${index}]
+    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_description')])[${index}]
+    [Return]    ${return_value}
+
+# Get information from questions[].answer
+Отримати інформацію про questions[${index}].answer
+    ${index}=    inc    ${index}
+    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_answer')])[${index}]
+    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_answer')])[${index}]
+    [Return]    ${return_value}
+
+# Get information from questions[].date
+Отримати інформацію про questions[${index}].date
+    ${index}=    inc    ${index}
+    Wait Until Page Contains Element    xpath=(//span[contains(@class, 'rec_qa_date')])[${index}]
+    ${return_value}=    Get text    xpath=(//span[contains(@class, 'rec_qa_date')])[${index}]
+    ${return_value}=    convert_date_time_to_iso    ${return_value}
+    [Return]    ${return_value}
+
+
+
+#------------------------------------------------------------------------------
+#  PRICE OFFERS
+#------------------------------------------------------------------------------
+# Go to the cancellations page
+Перейти до сторінки відмін
+    Go To    https://proumstrade.com.ua/cancelations/index
+    Wait Until Page Contains Element    id=decline-btn
+    Click Element    id=decline-btn
+    Wait Until Page Contains Element    id=decline-id
+    
+# Get information about cancellations[0].status
+Отримати інформацію про cancellations[0].status
+    Перейти до сторінки відмін
+    Wait Until Page Contains Element    id = status
+    ${return_value}=    Get text    id = status
+    [Return]    ${return_value}
+
+# Get information about cancellations[0].reason
+Отримати інформацію про cancellations[0].reason
+    Перейти до сторінки відмін
+    Wait Until Page Contains Element    id = modal-btn
+    Click Element    id = modal-btn
+    ${return_value}=    Get text    id = messages-notes
+    [Return]    ${return_value}
+
+
+
 # Upload document
 Завантажити документ
     [Arguments]    @{ARGUMENTS}

@@ -33,17 +33,24 @@ ${locator.addAsset.AddButton}    id=add-asset
 ${locator.viewExchange.title}
 ${locator.viewExchange.description}
 ${locator.viewExchange.procurementMethodType}
-${locator.viewExchange.dgf}
+${locator.viewExchange.dgfID}
 ${locator.viewExchange.dgfDecisionID}
 ${locator.viewExchange.dgfDecisionDate}
 ${locator.viewExchange.tenderAttempts}
 ${locator.viewExchange.eligibilityCriteria}
-
 ${locator.viewExchange.value.amount}
 ${locator.viewExchange.minimalStep.amount}
 ${locator.viewExchange.value.currency}
+${locator.viewExchange.value.valueAddedTaxIncluded}
 ${locator.viewExchange.tenderId}
-
+${locator.viewExchange.procuringEntity.name}
+${locator.viewExchange.auctionPeriod.startDate}
+${locator.viewExchange.auctionPeriod.endDate}
+${locator.viewExchange.tenderPeriod.startDate}
+${locator.viewExchange.tenderPeriod.endDate}
+${locator.viewExchange.enquiryPeriod.startDate}
+${locator.viewExchange.enquiryPeriod.endDate}
+${locator.viewExchange.status}
 
 # search exchange list
 ${locator.exchangeList.FilterByIdButton}   //th[@id='exchangeDashboardIdCol']/a/span
@@ -51,28 +58,8 @@ ${locator.exchangeList.FilterTextField}    //input[@type='text']
 ${locator.exchangeList.FilterSubmitButton}     //button[@type='submit']
 ${locator.exchangeList.FilteredResult}  //tr[1]/td/a
 
-# Edwin - The below locators are from UESC's driver.  To eventually delete...
+# Edwin - The below locators are from UISCE's driver.  To eventually delete...
 ${locator.edit.description}    id = auction-description
-#${locator.title}    id = auction-title
-#${locator.description}    id = auction-description
-#${locator.minimalStep.amount}    id = auction-minimalStep_amount
-#${locator.value.amount}    id = auction_value_amount
-${locator.value.valueAddedTaxIncluded}    id=auction-valueAddedTaxIncluded
-#${locator.value.currency}    id=auction-minimalStep_currency
-${locator.auctionPeriod.startDate}    id = auction-auctionPeriod_startDate
-${locator.enquiryPeriod.startDate}    id = auction-enquiryPeriod_startDate
-${locator.enquiryPeriod.endDate}    id = auction-enquiryPeriod_endDate
-${locator.tenderPeriod.startDate}    id = auction-tenderPeriod_startDate
-${locator.tenderPeriod.endDate}    id = auction-tenderPeriod_endDate
-
-#${locator.tenderId}    id = auction-auctionID
-${locator.procuringEntity.name}    id = auction-procuringEntity_name
-${locator.dgf}    id = auction-dgfID
-${locator.dgfDecisionID}    id=auction-dgfDecisionID
-${locator.dgfDecisionDate}    id=auction-dgfDecisionDate
-${locator.eligibilityCriteria}    id=критерії оцінки
-${locator.tenderAttempts}    id=auction-tenderAttempts
-#${locator.procurementMethodType}    id=auction-procurementMethodType
 ${locator.items[0].quantity}    id=item-quantity-1
 ${locator.items[0].description}    id = item-description-1
 ${locator.items[0].unit.code}    id = item-unit_code1
