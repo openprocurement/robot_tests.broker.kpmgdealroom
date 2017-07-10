@@ -12,14 +12,16 @@ ${locator.toolbar.CreateExchangeButton}  //li[@id='top-nav-create-exchange']/a/d
 ${locator.toolbar.LogoutButton}  id=toolbar-logout
 
 # create exchange
+${locator.createExchange.ClientSelector}    id=_ClientId_dropdown
 ${locator.createExchange.ClientSelectorProzorro}     //*[@id='_ClientId_dropdown']//a[contains(text(),'Prozorro')]
 ${locator.createExchange.Name}   id=Name
 ${locator.createExchange.SellerName}     id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}   id=SponsorEmail
 ${locator.createExchange.AdminEmails}    id=PrincipalAdministratorEmails
-
+${locator.createExchange.TypeSelector}   id=_TypeId_dropdown
 ${locator.createExchange.TypeSelectorProzorro}   //div[@id='_TypeId_dropdown']//a[contains(text(),'Prozorro')]
 ${locator.createExchange.StartDate}  id=AuctionStartDate
+${locator.createExchange.DgfCategorySelector}   id=_ProzorroCategoryId_dropdown
 ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}   //div[@id='_ProzorroCategoryId_dropdown']//a[contains(text(),'dgfFinancialAssets')]
 ${locator.createExchange.GuaranteeAmount}    id=guaranteeAmount
 ${locator.createExchange.StartPrice}     id=startingPrice
@@ -57,6 +59,25 @@ ${locator.exchangeList.FilterByIdButton}   //th[@id='exchangeDashboardIdCol']/a/
 ${locator.exchangeList.FilterTextField}    //input[@type='text']
 ${locator.exchangeList.FilterSubmitButton}     //button[@type='submit']
 ${locator.exchangeList.FilteredResult}  //tr[1]/td/a
+
+# questions and answers
+${locator.Questions.Q&A}    //*[@id='li-exchange-toolbar-qanda']	
+${locator.Questions.DraftQuestions}     //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]
+${locator.Questions.Subject}    id=Subject
+${locator.Questions.Question}   id=Question
+${locator.Questions.DocumentReference}  id = DocumentReference
+${locator.Questions.CategoryDropdown}   //*[@id='_Category_dropdown']/div[2]/i
+${locator.Questions.CategoryDocuments}  //*[@id='_Category_dropdown']/ul/li[3]/a
+${locator.Questions.PriorityDropdown}   //*[@id='_Priority_dropdown']/div[2]/i
+${locator.Questions.PriorityMedium}     //*[@id='_Priority_dropdown']/ul/li[2]/a
+${locator.Questions.ApproveQuestion}    id=question-Approved
+${locator.Questions.Confirm}    id=confirm-edit-yes
+${locator.Answers.PageTitle}    id=pageTitle
+${locator.Answers.Answer}   id=Answer
+${locator.Answers.Publish}  id=question-Published
+
+
+
 
 # Edwin - The below locators are from UISCE's driver.  To eventually delete...
 ${locator.edit.description}    id = auction-description

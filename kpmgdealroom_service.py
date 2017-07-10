@@ -2,6 +2,7 @@
 import pytz
 import dateutil.parser
 import urllib
+import time
 
 from datetime import datetime
 from robot.libraries.BuiltIn import BuiltIn
@@ -35,6 +36,16 @@ def convert_date_to_iso(v_date, v_time):
     time_zone = pytz.timezone('Europe/Kiev')
     localized_date = time_zone.localize(date_obj)
     return localized_date.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+
+def convert_number_to_str(number):
+    return str(number)
+
+def convert_string_to_fake_email(username):
+    return username + "@kpmgtest.co.uk"
+
+def cleanup_string(text):
+    #return text.replace("[", "").replace("]", "")
+    return "Testing Create Exchange" + str(time.time())
 
 def inc(value):
     return int(value) + 1

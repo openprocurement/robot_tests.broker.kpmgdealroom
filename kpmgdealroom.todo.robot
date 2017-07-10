@@ -31,48 +31,6 @@
     ${return_value}=    convert_date_time_to_iso    ${return_value}
     [Return]    ${return_value}
 
-# Go to the questions page
-Перейти до сторінки запитань
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = tenderUaId
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Click Element    id = auction-view-btn
-    Click Element    id = tab-2
-    Wait Until Page Contains Element    id= create-question-btn
-
-# Ask a question
-Задати питання
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == tenderUaId
-    ...    ${ARGUMENTS[2]} == questionId
-    ${title}=    Get From Dictionary    ${ARGUMENTS[2].data}    title
-    ${description}=    Get From Dictionary    ${ARGUMENTS[2].data}    description
-    Wait Until Page Contains Element    id = auction-view-btn
-    Click Element    id = auction-view-btn
-    Click Element    id = tab-2
-    Wait Until Page Contains Element    id= create-question-btn
-    Click Element    id=create-question-btn
-    Sleep    3
-    Input text    id=questions-title    ${title}
-    Input text    id=questions-description    ${description}
-    Click Element    id= create-question-btn
-
-# Answer a question
-Відповісти на запитання
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
-    ...    ${ARGUMENTS[2]} = 0
-    ...    ${ARGUMENTS[3]} = answer_data
-    ${answer}=    Get From Dictionary    ${ARGUMENTS[3].data}    answer
-    Перейти до сторінки запитань
-    Click Element    id = create-answer-btn
-    Sleep    3
-    Input Text    id=questions-answer    ${answer}
-    Click Element    id=create-question-btn
-    sleep    1
-
 # Get info from the question
 Отримати інформацію із запитання
     [Arguments]    ${username}    ${tender_uaid}    ${question_id}    ${field_name}

@@ -48,31 +48,35 @@ Get Field Value
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == tender_data
     ...    ${ARGUMENTS[2]} == ${filepath}
-    Set Global Variable    ${TENDER_INIT_DATA_LIST}    ${ARGUMENTS[1]}
-    ${title}=    Get From Dictionary    ${ARGUMENTS[1].data}    title
-    ${dgf}=    Get From Dictionary    ${ARGUMENTS[1].data}    dgfID
-    ${dgfDecisionDate}=    convert_ISO_DMY    ${ARGUMENTS[1].data.dgfDecisionDate}
-    ${dgfDecisionID}=    Get From Dictionary    ${ARGUMENTS[1].data}    dgfDecisionID
-    ${tenderAttempts}=    Get From Dictionary    ${ARGUMENTS[1].data}   tenderAttempts
-    #${tenderAttempts}=    get_tenderAttempts    ${ARGUMENTS[1].data}
-    ${description}=    Get From Dictionary    ${ARGUMENTS[1].data}    description
-    ${procuringEntity_name}=    Get From Dictionary    ${ARGUMENTS[1].data.procuringEntity}    name
-    ${items}=    Get From Dictionary    ${ARGUMENTS[1].data}    items
-    ${number_of_items}=  Get Length  ${items}
-    ${budget}=  Get From Dictionary     ${ARGUMENTS[1].data.value}  amount
-    #${budget}=    get_budget    ${ARGUMENTS[1]}
-    ${step_rate}=   Get From Dictionary     ${ARGUMENTS[1].data.minimalStep}    amount
-    #${step_rate}=    get_step_rate    ${ARGUMENTS[1]}
-    ${currency}=    Get From Dictionary    ${ARGUMENTS[1].data.value}    currency
-    ${valueAddedTaxIncluded}=    Get From Dictionary    ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
-    ${start_day_auction}=    get_tender_dates    ${ARGUMENTS[1]}    StartDate
-    ${start_time_auction}=    get_tender_dates    ${ARGUMENTS[1]}    StartTime
-    ${item0}=    Get From List    ${items}    0
-    ${descr_lot}=    Get From Dictionary    ${item0}    description
-    ${unit}=    Get From Dictionary    ${items[0].unit}    code
-    ${cav_id}=    Get From Dictionary    ${items[0].classification}    id
-    ${quanity}=     Get From Dictionary     ${items[0]}  quantity
-    #${quantity}=    get_quantity    ${items[0]}
+    Set Global Variable    ${TENDER_INIT_DATA_LIST}     ${ARGUMENTS[1]}
+    ${title}=                   Get From Dictionary     ${ARGUMENTS[1].data}    title
+    ${dgf}=                     Get From Dictionary     ${ARGUMENTS[1].data}    dgfID
+    ${dgfDecisionDate}=         convert_ISO_DMY         ${ARGUMENTS[1].data.dgfDecisionDate}
+    ${dgfDecisionID}=           Get From Dictionary     ${ARGUMENTS[1].data}    dgfDecisionID
+    ${tenderAttempts}=          Get From Dictionary     ${ARGUMENTS[1].data}    tenderAttempts
+    #${tenderAttempts}=         get_tenderAttempts      ${ARGUMENTS[1].data}
+    ${description}=             Get From Dictionary     ${ARGUMENTS[1].data}    description
+    ${procuringEntity_name}=    Get From Dictionary     ${ARGUMENTS[1].data.procuringEntity}    name
+    ${items}=                   Get From Dictionary     ${ARGUMENTS[1].data}    items
+    ${number_of_items}=         Get Length              ${items}
+    ${budget}=                  convert_number_to_str   ${ARGUMENTS[1].data.value.amount}
+    #${budget}=                  Get From Dictionary     ${ARGUMENTS[1].data.value}  amount
+    #${budget}=                 get_budget              ${ARGUMENTS[1]}
+    ${step_rate}=               Get From Dictionary     ${ARGUMENTS[1].data.minimalStep}    amount
+    #${step_rate}=              get_step_rate           ${ARGUMENTS[1]}
+    ${currency}=                Get From Dictionary     ${ARGUMENTS[1].data.value}    currency
+    ${valueAddedTaxIncluded}=   Get From Dictionary     ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
+    ${start_day_auction}=       get_tender_dates        ${ARGUMENTS[1]}    StartDate
+    ${start_time_auction}=      get_tender_dates        ${ARGUMENTS[1]}    StartTime
+    ${item0}=                   Get From List           ${items}    0
+    ${descr_lot}=               Get From Dictionary     ${item0}    description
+    ${unit}=                    Get From Dictionary     ${items[0].unit}    code
+    ${cav_id}=                  Get From Dictionary     ${items[0].classification}    id
+    ${quanity}=                 Get From Dictionary     ${items[0]}  quantity
+    #${quantity}=               get_quantity            ${items[0]}
+    ${admin_email}=             kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
+    ${sponsor_email}=           kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
+    ${name}=                    kpmgdealroom_service.cleanup_string  ${title}
     
     Switch Browser    ${ARGUMENTS[0]}
     Wait Until Page Contains Element    ${locator.toolbar.CreateExchangeButton}    20
@@ -82,14 +86,20 @@ Get Field Value
     Wait Until Page Contains Element    ${locator.createExchange.SubmitButton}  20    
     
     # 2. Fill in form details
+    Click Element                   ${locator.createExchange.ClientSelector}
+    Wait Until Element Is Visible   ${locator.createExchange.ClientSelectorProZorro}  2
     Click Element   ${locator.createExchange.ClientSelectorProZorro}
-    Input Text  ${locator.createExchange.Name}  ${title}
-    Input Text  ${locator.createExchange.SponsorEmail}  ${ARGUMENTS[0]}
-    Input Text  ${locator.createExchange.AdminEmails}   ${ARGUMENTS[0]}
-    Wait Until Page Contains Element    ${locator.createExchange.TypeSelectorProzorro}  10
+    Input Text  ${locator.createExchange.Name}  ${name}
+    Input Text  ${locator.createExchange.SponsorEmail}  ${sponsor_email}
+    Input Text  ${locator.createExchange.AdminEmails}   ${admin_email}
+    Wait Until Page Contains Element    ${locator.createExchange.TypeSelector}  10
+    Click Element    ${locator.createExchange.TypeSelector}
+    Wait Until Element Is Visible    ${locator.createExchange.TypeSelectorProzorro}  10
     Click Element   ${locator.createExchange.TypeSelectorProzorro}
-    Wait Until Page Contains Element    ${locator.createExchange.StartDate}     10
+    Wait Until Element Is Visible    ${locator.createExchange.StartDate}     10
     Input Text  ${locator.createExchange.StartDate}     ${start_day_auction}
+    Click Element   ${locator.createExchange.DgfCategorySelector}
+    Wait Until Element Is Visible    ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}  10
     Click Element   ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}
     Input Text  ${locator.createExchange.GuaranteeAmount}   ${budget}
     Input Text  ${locator.createExchange.StartPrice}    0
@@ -99,7 +109,7 @@ Get Field Value
 
     # 4. Now we must add items before Prozorro actually accepts our submitted auction
     :FOR  ${index}  IN RANGE  ${number_of_items} 
-    \  Додати предмет  ${items[${index}]} ${index}
+    \  Додати предмет  ${items[${index}]}   ${index}
     Click Element ${locator.addAsset.SaveButton}
 
     # 5. FIXME & TODO: On page load find the created tender ID and return it
@@ -113,8 +123,8 @@ Get Field Value
 Додати предмет
     [Arguments]    ${item}    ${index}
     Run Keyword If  ${index} != 0    Click Element  ${locator.addAsset.AddButton} 
-    Wait Until Page Contains Element id=Assets_${index}__Description 5
-    Input Text  id=Assets_${index}__Description ${item.description}
+    Wait Until Page Contains Element    id=Assets_${index}__Description    5
+    Input Text  id=Assets_${index}__Description  ${item.description}
     Input Text  id=Assets_${index}__Quantity    ${item.quantity}
     Input Text  id=Assets_${index}__Classification_Scheme   ${item.classification.id}
     Input Text  id=Assets_${index}__Classification_Description  ${item.unit.code}
@@ -368,3 +378,50 @@ Get Field Value
 Отримати інформацію про items[${index}].classification.description
     ${return_value}=    Get Field Value    items[${index}].classification.description
     [Return]    ${return_value}
+
+#------------------------------------------------------------------------------
+#  QUESTIONS AND ANSWERS
+#------------------------------------------------------------------------------
+# Go to the questions page
+Перейти до сторінки запитань
+    [Documentation]    ${ARGUMENTS[0]} = username
+    ...    ${ARGUMENTS[1]} = tenderUaId
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    Click Element    id = auction-view-btn
+    Click Element    id = tab-2
+    Wait Until Page Contains Element    id= create-question-btn
+
+# Ask a question
+Задати питання
+    [Arguments]    @{ARGUMENTS}
+    [Documentation]    ${ARGUMENTS[0]} == username
+    ...    ${ARGUMENTS[1]} == tenderUaId
+    ...    ${ARGUMENTS[2]} == questionId
+    ${title}=    Get From Dictionary    ${ARGUMENTS[2].data}    title
+    ${description}=    Get From Dictionary    ${ARGUMENTS[2].data}    description
+    Wait Until Page Contains Element    id = auction-view-btn
+    Click Element    id = auction-view-btn
+    Click Element    id = tab-2
+    Wait Until Page Contains Element    id= create-question-btn
+    Click Element    id=create-question-btn
+    Sleep    3
+    Input text    id=questions-title    ${title}
+    Input text    id=questions-description    ${description}
+    Click Element    id= create-question-btn
+
+
+
+# Answer a question
+Відповісти на запитання
+    [Arguments]    @{ARGUMENTS}
+    [Documentation]    ${ARGUMENTS[0]} = username
+    ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
+    ...    ${ARGUMENTS[2]} = 0
+    ...    ${ARGUMENTS[3]} = answer_data
+    ${answer}=    Get From Dictionary    ${ARGUMENTS[3].data}    answer
+    Перейти до сторінки запитань
+    Click Element    id = create-answer-btn
+    Sleep    3
+    Input Text    id=questions-answer    ${answer}
+    Click Element    id=create-question-btn
+    sleep    1
