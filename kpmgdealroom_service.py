@@ -41,11 +41,11 @@ def convert_number_to_str(number):
     return str(number)
 
 def convert_string_to_fake_email(username):
-    return username + "@kpmgtest.co.uk"
+    return username + "@robottest.com"
 
 def cleanup_string(text):
     #return text.replace("[", "").replace("]", "")
-    return "Testing Create Exchange" + str(time.time())
+    return "Robot Testing" + str(time.time())
 
 def inc(value):
     return int(value) + 1

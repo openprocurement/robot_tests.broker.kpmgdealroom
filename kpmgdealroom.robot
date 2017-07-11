@@ -38,6 +38,10 @@ Get Field Value
     ${return_value}=    Get Text    ${locator.viewExchange.${fieldname}}
     [Return]    ${return_value}
 
+Wait And Click Element
+    [Arguments]     ${locator}  ${delay}
+    Wait Until Page Contains Element    ${locator}  ${delay}
+    Click Element   ${locator}
 
 #------------------------------------------------------------------------------
 #  LOT OPERATIONS
@@ -66,8 +70,6 @@ Get Field Value
     #${step_rate}=              get_step_rate           ${ARGUMENTS[1]}
     ${currency}=                Get From Dictionary     ${ARGUMENTS[1].data.value}    currency
     ${valueAddedTaxIncluded}=   Get From Dictionary     ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
-    ${start_day_auction}=       get_tender_dates        ${ARGUMENTS[1]}    StartDate
-    ${start_time_auction}=      get_tender_dates        ${ARGUMENTS[1]}    StartTime
     ${item0}=                   Get From List           ${items}    0
     ${descr_lot}=               Get From Dictionary     ${item0}    description
     ${unit}=                    Get From Dictionary     ${items[0].unit}    code
@@ -76,17 +78,18 @@ Get Field Value
     #${quantity}=               get_quantity            ${items[0]}
     ${admin_email}=             kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
     ${sponsor_email}=           kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
-    ${name}=                    kpmgdealroom_service.cleanup_string  ${title}
+    ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartDate
+    ${start_time_auction}=      kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartTime
+    ${name}=                    kpmgdealroom_service.cleanup_string                 ${title}
     
     Switch Browser    ${ARGUMENTS[0]}
-    Wait Until Page Contains Element    ${locator.toolbar.CreateExchangeButton}    20
+    
     
     #  1. Click Create Exchange button
-    Click Element    ${locator.toolbar.CreateExchangeButton}
-    Wait Until Page Contains Element    ${locator.createExchange.SubmitButton}  20    
-    
+    Wait And Click Element    ${locator.toolbar.CreateExchangeButton}   5
+            
     # 2. Fill in form details
-    Click Element                   ${locator.createExchange.ClientSelector}
+    Wait And Click Element  ${locator.createExchange.ClientSelector}    5
     Wait Until Element Is Visible   ${locator.createExchange.ClientSelectorProZorro}  2
     Click Element   ${locator.createExchange.ClientSelectorProZorro}
     Input Text  ${locator.createExchange.Name}  ${name}
@@ -98,7 +101,7 @@ Get Field Value
     Click Element   ${locator.createExchange.TypeSelectorProzorro}
     Wait Until Element Is Visible    ${locator.createExchange.StartDate}     10
     Input Text  ${locator.createExchange.StartDate}     ${start_day_auction}
-    Click Element   ${locator.createExchange.DgfCategorySelector}
+    Wait And Click Element   ${locator.createExchange.DgfCategorySelector}  2
     Wait Until Element Is Visible    ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}  10
     Click Element   ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}
     Input Text  ${locator.createExchange.GuaranteeAmount}   ${budget}
@@ -122,21 +125,19 @@ Get Field Value
 # Add item/asset (KDR-1129)
 Додати предмет
     [Arguments]    ${item}    ${index}
-    Run Keyword If  ${index} != 0    Click Element  ${locator.addAsset.AddButton} 
-    Wait Until Page Contains Element    id=Assets_${index}__Description    5
-    Input Text  id=Assets_${index}__Description  ${item.description}
-    Input Text  id=Assets_${index}__Quantity    ${item.quantity}
-    Input Text  id=Assets_${index}__Classification_Scheme   ${item.classification.id}
-    Input Text  id=Assets_${index}__Classification_Description  ${item.unit.code}
-    Input Text  id=Assets_${index}__ClassificationCode ${item.unit.code}
-    Input Text  id=Assets_${index}__Address_AddressLineOne  ${item.deliveryAddress.streetAddress}
-    Input Text  id=Assets_${index}__Address_AddressLineTwo  ${item.deliveryAddress.region}
-    Input Text  id=Assets_${index}__Address_AddressCity    ${item.deliveryAddress.locality}
-    Input Text  id=Assets_${index}__Address_AddressCountry  ${item.deliveryAddress.countryName}
-    Input Text  id=Assets_${index}__Address_AddressPostCode    ${item.deliveryAddress.postalCode}
-    # FIXME
-    Click Element    id = submit-item-btn
-
+    Run Keyword If  ${index} != 0  Click Element  ${locator.addAsset.AddButton} 
+    Wait Until Page Contains Element    ${locator.addAsset.items[${index}].description}    5
+    Input Text  ${locator.addAsset.items[${index}].description}                 ${item.description}
+    Input Text  ${locator.addAsset.items[${index}].quantity}                    ${item.quantity}
+    Input Text  ${locator.addAsset.items[${index}].classification.scheme}       ${item.classification.id}
+    Input Text  ${locator.addAsset.items[${index}].classification.description}  ${item.unit.code}
+    Input Text  ${locator.addAsset.items[${index}].classification.code}         ${item.unit.code}
+    Input Text  ${locator.addAsset.items[${index}].address1}                    ${item.deliveryAddress.streetAddress}
+    Input Text  ${locator.addAsset.items[${index}].region}                      ${item.deliveryAddress.region}
+    Input Text  ${locator.addAsset.items[${index}].city}                        ${item.deliveryAddress.locality}
+    Input Text  ${locator.addAsset.items[${index}].country}                     ${item.deliveryAddress.countryName}
+    Input Text  ${locator.addAsset.items[${index}].postcode}                    ${item.deliveryAddress.postalCode}
+    
 # Search for a bid identifier (KDR-1077)
 Пошук тендера по ідентифікатору
     [Arguments]    @{ARGUMENTS}
@@ -387,9 +388,8 @@ Get Field Value
     [Documentation]    ${ARGUMENTS[0]} = username
     ...    ${ARGUMENTS[1]} = tenderUaId
     kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Click Element    id = auction-view-btn
-    Click Element    id = tab-2
-    Wait Until Page Contains Element    id= create-question-btn
+    Click Element   ${locator.Questions.Q&A}
+    Wait Until Page Contains Element    ${locator.Questions.DraftQuestions}
 
 # Ask a question
 Задати питання
@@ -399,17 +399,18 @@ Get Field Value
     ...    ${ARGUMENTS[2]} == questionId
     ${title}=    Get From Dictionary    ${ARGUMENTS[2].data}    title
     ${description}=    Get From Dictionary    ${ARGUMENTS[2].data}    description
-    Wait Until Page Contains Element    id = auction-view-btn
-    Click Element    id = auction-view-btn
-    Click Element    id = tab-2
-    Wait Until Page Contains Element    id= create-question-btn
-    Click Element    id=create-question-btn
-    Sleep    3
-    Input text    id=questions-title    ${title}
-    Input text    id=questions-description    ${description}
-    Click Element    id= create-question-btn
-
-
+    Перейти до сторінки запитань    ${ARGUMENTS[0]}     ${ARGUMENTS[1]}
+    Wait And Click Element    ${locator.Questions.DraftQuestions}   10
+    Wait Until Page Contains Element    ${locator.Questions.Subject}
+    Input Text      ${locator.Questions.Subject}    ${title}
+    Input Text      ${locator.Questions.Question}   ${description}
+    Input Text      ${locator.Questions.DocumentReference} ${ARGUMENTS[1]}
+    Click Element   ${locator.Questions.CategoryDropdown}
+    Click Element   ${locator.Questions.CategoryDocuments}
+    Click Element   ${locator.Questions.PriorityDropdown}
+    Click Element   ${locator.Questions.PriorityMedium}
+    Click Element   ${locator.Questions.ApproveQuestion}
+    Wait And Click Element    ${locator.Questions.Confirm}  10
 
 # Answer a question
 Відповісти на запитання
@@ -425,3 +426,11 @@ Get Field Value
     Input Text    id=questions-answer    ${answer}
     Click Element    id=create-question-btn
     sleep    1
+
+# Ask a question about the tender
+Задати запитання на тендер
+    [Arguments]    ${username}    ${tender_uaid}    ${question}
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
+    Задати питання    ${username}    ${tender_uaid}    ${question}
+
+

@@ -41,15 +41,6 @@
     ...    ELSE    Get Text    xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')])
     [Return]    ${return_value}
 
-# Ask a question about the tender
-Задати запитання на тендер
-    [Arguments]    ${username}    ${tender_uaid}    ${question}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Задати питання    ${username}    ${tender_uaid}    ${question}
-
-
-
-
 #------------------------------------------------------------------------------
 #  PRICE OFFERS
 #------------------------------------------------------------------------------
@@ -174,7 +165,7 @@
     Input Text    id=bids-value_amount    ${amount}
     Click Element    id= update-bid-btn
 
-# Download a financial license
+# Upload a financial license
 Завантажити фінансову ліцензію
     [Arguments]    @{ARGUMENTS}
     [Documentation]    ${ARGUMENTS[0]} == username
@@ -209,7 +200,7 @@
     ${result}=    Get Text    id=aPosition_auctionUrl
     [Return]    ${result}
 
-# Download a document in a tender with a type
+# Upload a document in a tender with a type
 Завантажити документ в тендер з типом
     [Arguments]    ${username}    ${tender_uaid}    ${filepath}    ${doc_type}
     kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
@@ -220,7 +211,7 @@
     Sleep    2
     Click Element    id=upload_button
 
-# Download the illustration
+# Upload the illustration
 Завантажити ілюстрацію
     [Arguments]    @{ARGUMENTS}
     [Documentation]    ${ARGUMENTS[0]} == username
@@ -293,7 +284,7 @@
     sleep    3
     ${file_name}=    Get Text    id = doc-id
     ${url}=    Get Element Attribute    id = doc-id@name
-    download_file    ${url}    ${file_name.split('/')[-1]}    ${OUTPUT_DIR}
+    Upload_file    ${url}    ${file_name.split('/')[-1]}    ${OUTPUT_DIR}
     [Return]    ${file_name.split('/')[-1]}
 
 # Obtain data from the proposal document
@@ -311,7 +302,7 @@
     Sleep    1
     Click Element    xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
 
-# Download the decision document of the qualification commission
+# Upload the decision document of the qualification commission
 Завантажити документ рішення кваліфікаційної комісії
     [Arguments]    ${username}    ${filepath}    ${tender_uaid}    ${award_num}
     kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
@@ -322,7 +313,7 @@
     Click Element    id=upload_button
     Reload Page
 
-# Download the auction protocol
+# Upload the auction protocol
 Завантажити протокол аукціону
     [Arguments]    ${username}    ${tender_uaid}    ${filepath}    ${award_index}
     kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
@@ -336,7 +327,7 @@
     Sleep    2
     Click Element    id=upload_button
 
-# Download an agreement to the tender
+# Upload an agreement to the tender
 Завантажити угоду до тендера
     [Arguments]    ${username}    ${tender_uaid}    ${contract_num}    ${filepath}
     kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
