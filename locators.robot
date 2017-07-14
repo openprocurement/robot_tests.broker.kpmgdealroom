@@ -3,29 +3,52 @@ Resource    kpmgdealroom.robot
 
 *** Variables ***
 # login page
-${locator.login.EmailField}                 id=Email
-${locator.login.PasswordField}              id=Password
-${locator.login.LoginButton}                id=login-submit
+${locator.login.EmailField}                     id=Email
+${locator.login.PasswordField}                  id=Password
+${locator.login.LoginButton}                    id=login-submit
 
-# toolbar
-${locator.toolbar.CreateExchangeButton}     //li[@id='top-nav-create-exchange']/a/div/span
-${locator.toolbar.LogoutButton}             id=toolbar-logout
+# main toolbar
+${locator.toolbar.CreateExchangeButton}         //li[@id='top-nav-create-exchange']/a/div/span
+${locator.toolbar.LogoutButton}                 id=toolbar-logout
+
+# exchange toolbar
+${locator.exchangeToolbar.Details}              id=li-exchange-toolbar-assets
+${locator.exchangeToolbar.DataRoom}             id=li-exchange-toolbar-data-room
+${locator.exchangeToolbar.FAQ}                  id=li-exchange-toolbar-data-faq
+${locator.exchangeToolbar.Bids}                 id=li-exchange-toolbar-data-bids
+${locator.exchangeToolbar.QandA}                id=li-exchange-toolbar-qanda	
+${locator.exchangeToolbar.Admin}                id=li-exchange-toolbar-admin
+
+# exchange admin
+${locator.exchangeAdmin.nav.Publish}            id=leftNavLink_Publish_Exchange
+${locator.exchangeAdmin.publish.publishButton}  id=publish-exchange-submit
+${locator.exchangeAdmin.publish.confirmButton}  id=publishExchange-dialog-yes
+${locator.exchangeAdmin.publish.publishedID}    id=ProviderAuctionId
 
 # create exchange
-${locator.createExchange.ClientSelector}    id=_ClientId_dropdown
-${locator.createExchange.ClientSelectorProzorro}     //*[@id='_ClientId_dropdown']//a[contains(text(),'Prozorro')]
-${locator.createExchange.Name}              id=Name
-${locator.createExchange.SellerName}        id=sellerDisplayName
-${locator.createExchange.SponsorEmail}      id=SponsorEmail
-${locator.createExchange.AdminEmails}       id=PrincipalAdministratorEmails
-${locator.createExchange.TypeSelector}      id=_TypeId_dropdown
-${locator.createExchange.TypeSelectorProzorro}   //div[@id='_TypeId_dropdown']//a[contains(text(),'Prozorro')]
-${locator.createExchange.StartDate}         id=AuctionStartDate
-${locator.createExchange.DgfCategorySelector}   id=_ProzorroCategoryId_dropdown
-${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}   //div[@id='_ProzorroCategoryId_dropdown']//a[contains(text(),'dgfFinancialAssets')]
-${locator.createExchange.GuaranteeAmount}   id=guaranteeAmount
-${locator.createExchange.StartPrice}        id=startingPrice
-${locator.createExchange.SubmitButton}      id=create-exchange-submit
+${locator.createExchange.ClientSelector}                    //div[@id='_ClientId_dropdown']/div[2]
+${locator.createExchange.ClientSelector.Prozorro}           //a[contains(text(),'Prozorro Test')]
+${locator.createExchange.Name}                              id=Name
+${locator.createExchange.SellerName}                        id=sellerDisplayName
+${locator.createExchange.SponsorEmail}                      id=SponsorEmail
+${locator.createExchange.AdminEmails}                       id=PrincipalAdministratorEmails
+${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[2]
+${locator.createExchange.TypeSelector.Prozorro}             xpath=(//a[contains(text(),'Prozorro')])[7]
+${locator.createExchange.StartDate}                         id=AuctionStartDateInput
+${locator.createExchange.DgfCategorySelector}               //div[@id='_ProzorroCategoryId_dropdown']/div[2]
+${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'dgfFinancialAssets')]
+${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'dgfOtherAssets')]
+${locator.createExchange.GuaranteeAmount}                   id=guaranteeAmount
+${locator.createExchange.StartPrice}                        id=startingPrice
+${locator.createExchange.MinimumStepValue}                  id=mimimumStepValue
+
+${locator.createExchange.dgfID}                             id=dgfId
+${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails.DgfDecisionId
+${locator.createExchange.dgfDecisionDate}                   id=DgfDecisionDateInput
+${locator.createExchange.description}                       name=ExchangeDetails.Description
+${locator.createExchange.tenderAttempts}                    name=ExchangeDetails.TenderAttempts   
+
+${locator.createExchange.SubmitButton}                      id=create-exchange-submit
 
 # add item / asset
 ${locator.addAsset.items[0].description}                    xpath=(//textarea[@name='Assets[0].Description'])[2]
@@ -97,7 +120,6 @@ ${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
 ${locator.exchangeList.FilteredResult}      //tr[1]/td/a
 
 # questions and answers
-${locator.Questions.Q&A}                //*[@id='li-exchange-toolbar-qanda']	
 ${locator.Questions.DraftQuestions}     //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]
 ${locator.Questions.Subject}            id=Subject
 ${locator.Questions.Question}           id=Question
@@ -118,7 +140,7 @@ ${locator.Dataroom.Upload}              id=dataroom-upload
 ${locator.Dataroom.T&CYes}              id=exchangerules-dialog-yes
 ${locator.Dataroom.UploadSelect}        id=dataroom-upload
 ${locator.Dataroom.SelectFiles}         id=files
-${locator.Dataroom.UploadFile}          //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
+${locator.Dataroom.UploadFileButton}    //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
 ${locator.Dataroom.CloseButton}         id=dataroom-upload-btn-close
 
 

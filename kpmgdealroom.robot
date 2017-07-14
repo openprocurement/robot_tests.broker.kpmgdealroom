@@ -32,6 +32,14 @@ Login
     Click Element    ${locator.login.LoginButton}
     Sleep    2
 
+#
+Write Form Field
+    [Arguments]     ${locator}  ${value}
+    Click Element   ${locator}
+    Clear Element Text      ${locator}
+    Input Text              ${locator}  ${value}
+    
+
 # Get text from auction info field
 Get Field Value
     [Arguments]    ${fieldname}
@@ -53,29 +61,32 @@ Wait And Click Element
     ...    ${ARGUMENTS[1]} == tender_data
     ...    ${ARGUMENTS[2]} == ${filepath}
     Set Global Variable    ${TENDER_INIT_DATA_LIST}     ${ARGUMENTS[1]}
-    ${title}=                   Get From Dictionary     ${ARGUMENTS[1].data}    title
-    ${dgf}=                     Get From Dictionary     ${ARGUMENTS[1].data}    dgfID
+    ${title}=                   Get From Dictionary     ${ARGUMENTS[1].data}    title_en
+    ${dgfID}=                     Get From Dictionary     ${ARGUMENTS[1].data}    dgfID
     ${dgfDecisionDate}=         convert_ISO_DMY         ${ARGUMENTS[1].data.dgfDecisionDate}
     ${dgfDecisionID}=           Get From Dictionary     ${ARGUMENTS[1].data}    dgfDecisionID
     ${tenderAttempts}=          Get From Dictionary     ${ARGUMENTS[1].data}    tenderAttempts
     #${tenderAttempts}=         get_tenderAttempts      ${ARGUMENTS[1].data}
-    ${description}=             Get From Dictionary     ${ARGUMENTS[1].data}    description
+    ${description}=             Get From Dictionary     ${ARGUMENTS[1].data}    description_en
+    ${procurementMethodType}=   Get From Dictionary     ${ARGUMENTS[1].data}    procurementMethodType
     ${procuringEntity_name}=    Get From Dictionary     ${ARGUMENTS[1].data.procuringEntity}    name
     ${items}=                   Get From Dictionary     ${ARGUMENTS[1].data}    items
     ${number_of_items}=         Get Length              ${items}
+    ${guarantee}=               convert_number_to_str   ${ARGUMENTS[1].data.guarantee.amount}
     ${budget}=                  convert_number_to_str   ${ARGUMENTS[1].data.value.amount}
     #${budget}=                  Get From Dictionary     ${ARGUMENTS[1].data.value}  amount
     #${budget}=                 get_budget              ${ARGUMENTS[1]}
-    ${step_rate}=               Get From Dictionary     ${ARGUMENTS[1].data.minimalStep}    amount
+    ${step_rate}=               convert_number_to_str   ${ARGUMENTS[1].data.minimalStep.amount}
+    #${step_rate}=               Get From Dictionary     ${ARGUMENTS[1].data.minimalStep}    amount
     #${step_rate}=              get_step_rate           ${ARGUMENTS[1]}
     ${currency}=                Get From Dictionary     ${ARGUMENTS[1].data.value}    currency
     ${valueAddedTaxIncluded}=   Get From Dictionary     ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
-    ${item0}=                   Get From List           ${items}    0
-    ${descr_lot}=               Get From Dictionary     ${item0}    description
-    ${unit}=                    Get From Dictionary     ${items[0].unit}    code
-    ${cav_id}=                  Get From Dictionary     ${items[0].classification}    id
-    ${quanity}=                 Get From Dictionary     ${items[0]}  quantity
-    #${quantity}=               get_quantity            ${items[0]}
+    #${item0}=                   Get From List           ${items}    0
+    #${descr_lot}=               Get From Dictionary     ${item0}    description
+    ##${unit}=                    Get From Dictionary     ${items[0].unit}    code
+    ##${cav_id}=                  Get From Dictionary     ${items[0].classification}    id
+    ##${quanity}=                 Get From Dictionary     ${items[0]}  quantity
+    ##${quantity}=               get_quantity            ${items[0]}
     ${admin_email}=             kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
     ${sponsor_email}=           kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
     ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartDate
@@ -89,37 +100,56 @@ Wait And Click Element
     Wait And Click Element    ${locator.toolbar.CreateExchangeButton}   5
             
     # 2. Fill in form details
-    Wait And Click Element  ${locator.createExchange.ClientSelector}    5
-    Wait Until Element Is Visible   ${locator.createExchange.ClientSelectorProZorro}  2
-    Click Element   ${locator.createExchange.ClientSelectorProZorro}
-    Input Text  ${locator.createExchange.Name}  ${name}
-    Input Text  ${locator.createExchange.SponsorEmail}  ${sponsor_email}
-    Input Text  ${locator.createExchange.AdminEmails}   ${admin_email}
-    Wait Until Page Contains Element    ${locator.createExchange.TypeSelector}  10
-    Click Element    ${locator.createExchange.TypeSelector}
-    Wait Until Element Is Visible    ${locator.createExchange.TypeSelectorProzorro}  10
-    Click Element   ${locator.createExchange.TypeSelectorProzorro}
-    Wait Until Element Is Visible    ${locator.createExchange.StartDate}     10
-    Input Text  ${locator.createExchange.StartDate}     ${start_day_auction}
-    Wait And Click Element   ${locator.createExchange.DgfCategorySelector}  2
-    Wait Until Element Is Visible    ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}  10
-    Click Element   ${locator.createExchange.DgfCategorySelectorDgfFinancialAssets}
-    Input Text  ${locator.createExchange.GuaranteeAmount}   ${budget}
-    Input Text  ${locator.createExchange.StartPrice}    0
+    Wait And Click Element              ${locator.createExchange.ClientSelector}    5
+    Wait Until Element Is Visible       ${locator.createExchange.ClientSelector.Prozorro}  2
+    Click Element                       ${locator.createExchange.ClientSelector.Prozorro}
+    
+    Input Text                          ${locator.createExchange.Name}  ${name}
+    Input Text                          ${locator.createExchange.SponsorEmail}  ${sponsor_email}
+    Input Text                          ${locator.createExchange.AdminEmails}   ${admin_email}
+    Wait And Click Element              ${locator.createExchange.TypeSelector}  10
+    Wait Until Element Is Visible       ${locator.createExchange.TypeSelector.Prozorro}  2
+    Click Element                       ${locator.createExchange.TypeSelector.Prozorro}
+    Wait Until Element Is Visible       ${locator.createExchange.StartDate}     2
+    Write Form Field                    ${locator.createExchange.StartDate}     ${start_day_auction}
+        
+    Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector}  5
+    Click Element                       ${locator.createExchange.DgfCategorySelector}
+    Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}  2
+    Click Element                       ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}
+    
+    Wait Until Element is Visible       ${locator.createExchange.GuaranteeAmount}   20
+    Input Text                          ${locator.createExchange.GuaranteeAmount}   ${guarantee}
+    Input Text                          ${locator.createExchange.StartPrice}        ${budget}
+    Input Text                          ${locator.createExchange.dgfID}             ${dgfID}
+    Input Text                          ${locator.createExchange.dgfDecisionID}     ${dgfDecisionID}
+    Input Text                          ${locator.createExchange.dgfDecisionDate}   ${dgfDecisionDate}
+    Input Text                          ${locator.createExchange.description}       ${description}    
+    Input Text                          ${locator.createExchange.tenderAttempts}    ${tenderAttempts}
+    Wait Until Element Is Visible       ${locator.createExchange.MinimumStepValue}   
+    Input Text                          ${locator.createExchange.MinimumStepValue}  ${step_rate}  
 
     # 3. Submit exchange creations
+    Sleep       5
     Click Element   ${locator.createExchange.SubmitButton}
 
     # 4. Now we must add items before Prozorro actually accepts our submitted auction
     :FOR  ${index}  IN RANGE  ${number_of_items} 
     \  Додати предмет  ${items[${index}]}   ${index}
-    Click Element ${locator.addAsset.SaveButton}
+    Click Element   ${locator.addAsset.SaveButton}
+    Sleep   1
 
-    # 5. FIXME & TODO: On page load find the created tender ID and return it
-    Wait Until Page Contains    Аукціон збережено як чернетку    10
-    ${tender_id}=    Get Text    id = auction-id
-    ${TENDER}=    Get Text    id= auction-id
-    log to console    ${TENDER}
+    # 5. Publish 
+    Click Element                   ${locator.exchangeToolbar.Admin}
+    Wait And Click Element          ${locator.exchangeAdmin.nav.Publish}    20
+    Wait And Click Element          ${locator.exchangeAdmin.publish.PublishButton}  5
+    Wait Until Element Is Visible   ${locator.exchangeAdmin.publish.confirmButton}  5
+    Click Element                   ${locator.exchangeAdmin.publish.confirmButton}
+
+    Wait Until Page Contains Element   ${locator.exchangeAdmin.publish.publishedID}  30
+    ${tender_id}=    Get Text    ${locator.exchangeAdmin.publish.publishedID}
+    ${TENDER}=    Get Text    ${locator.exchangeAdmin.publish.publishedID}
+    Log To Console    ${TENDER}
     [Return]    ${TENDER}
     
 # Add item/asset (KDR-1129)
@@ -129,13 +159,13 @@ Wait And Click Element
     Wait Until Page Contains Element    ${locator.addAsset.items[${index}].description}    5
     Input Text  ${locator.addAsset.items[${index}].description}                 ${item.description}
     Input Text  ${locator.addAsset.items[${index}].quantity}                    ${item.quantity}
-    Input Text  ${locator.addAsset.items[${index}].classification.scheme}       ${item.classification.id}
-    Input Text  ${locator.addAsset.items[${index}].classification.description}  ${item.unit.code}
-    Input Text  ${locator.addAsset.items[${index}].classification.code}         ${item.unit.code}
+    #Input Text  ${locator.addAsset.items[${index}].classification.scheme}       ${item.classification.scheme}
+    Input Text  ${locator.addAsset.items[${index}].classification.description}  ${item.classification.description}
+    Input Text  ${locator.addAsset.items[${index}].classification.code}         ${item.classification.id}
     Input Text  ${locator.addAsset.items[${index}].address1}                    ${item.deliveryAddress.streetAddress}
     Input Text  ${locator.addAsset.items[${index}].region}                      ${item.deliveryAddress.region}
     Input Text  ${locator.addAsset.items[${index}].city}                        ${item.deliveryAddress.locality}
-    Input Text  ${locator.addAsset.items[${index}].country}                     ${item.deliveryAddress.countryName}
+    Input Text  ${locator.addAsset.items[${index}].country}                     ${item.deliveryAddress.countryName_en}
     Input Text  ${locator.addAsset.items[${index}].postcode}                    ${item.deliveryAddress.postalCode}
     
 # Search for a bid identifier (KDR-1077)
@@ -387,7 +417,7 @@ Wait And Click Element
 Перейти до сторінки запитань
     [Documentation]    ${ARGUMENTS[0]} = username
     ...    ${ARGUMENTS[1]} = tenderUaId
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}   
     Click Element   ${locator.Questions.Q&A}
     Wait Until Page Contains Element    ${locator.Questions.DraftQuestions}
 
@@ -433,4 +463,23 @@ Wait And Click Element
     kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
     Задати питання    ${username}    ${tender_uaid}    ${question}
 
-
+#------------------------------------------------------------------------------
+#  WORKING WITH DOCUMENTS
+#------------------------------------------------------------------------------
+# Upload document
+Завантажити документ
+    [Arguments]    @{ARGUMENTS}
+    [Documentation]    ${ARGUMENTS[0]} == username
+    ...    ${ARGUMENTS[1]} == ${filepath}
+    ...    ${ARGUMENTS[2]} == ${TENDER}
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}     ${ARGUMENTS[2]}
+    Wait And Click Element      ${locator.Dataroom.Dataroom}            10
+    Click Element               ${locator.Dataroom.T&CYes}
+    Wait And Click Element      ${locator.Dataroom.UploadIcon}          10
+    Click Element               ${locator.Dataroom.SelectFiles}
+    Input Text                  ${locator.Dataroom.SelectFiles}         ${ARGUMENTS[1]}
+    # TODO : Select file type: Document
+    Click Element               ${locator.Dataroom.UploadFileButtond}
+    Sleep                       2
+    Reload Page
+    

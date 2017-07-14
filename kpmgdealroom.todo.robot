@@ -71,20 +71,7 @@
 
 
 
-# Upload document
-Завантажити документ
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == ${filepath}
-    ...    ${ARGUMENTS[2]} == ${TENDER}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
-    Wait Until Page Contains Element    id = update-btn
-    Click Element    id=update-btn
-    Select From List By Value    id = files-type    8
-    Choose File    id = auction-file    ${ARGUMENTS[1]}
-    Sleep    2
-    Click Element    id=lot-document-upload-btn
-    Reload Page
+
 
 
 
