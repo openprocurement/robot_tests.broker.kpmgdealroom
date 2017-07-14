@@ -3,27 +3,35 @@ Resource    kpmgdealroom.robot
 
 *** Variables ***
 # login page
-${locator.login.EmailField}                     id=Email
-${locator.login.PasswordField}                  id=Password
-${locator.login.LoginButton}                    id=login-submit
+${locator.login.EmailField}                                 id=Email
+${locator.login.PasswordField}                              id=Password
+${locator.login.LoginButton}                                id=login-submit
 
 # main toolbar
-${locator.toolbar.CreateExchangeButton}         //li[@id='top-nav-create-exchange']/a/div/span
-${locator.toolbar.LogoutButton}                 id=toolbar-logout
+${locator.toolbar.CreateExchangeButton}                     //li[@id='top-nav-create-exchange']/a/div/span
+${locator.toolbar.LogoutButton}                             id=toolbar-logout
 
 # exchange toolbar
-${locator.exchangeToolbar.Details}              id=li-exchange-toolbar-assets
-${locator.exchangeToolbar.DataRoom}             id=li-exchange-toolbar-data-room
-${locator.exchangeToolbar.FAQ}                  id=li-exchange-toolbar-data-faq
-${locator.exchangeToolbar.Bids}                 id=li-exchange-toolbar-data-bids
-${locator.exchangeToolbar.QandA}                id=li-exchange-toolbar-qanda	
-${locator.exchangeToolbar.Admin}                id=li-exchange-toolbar-admin
+${locator.exchangeToolbar.Details}                          id=li-exchange-toolbar-assets
+${locator.exchangeToolbar.DataRoom}                         id=li-exchange-toolbar-data-room
+${locator.exchangeToolbar.FAQ}                              id=li-exchange-toolbar-data-faq
+${locator.exchangeToolbar.Bids}                             id=li-exchange-toolbar-data-bids
+${locator.exchangeToolbar.QandA}                            id=li-exchange-toolbar-qanda	
+${locator.exchangeToolbar.Admin}                            id=li-exchange-toolbar-admin
 
 # exchange admin
-${locator.exchangeAdmin.nav.Publish}            id=leftNavLink_Publish_Exchange
-${locator.exchangeAdmin.publish.publishButton}  id=publish-exchange-submit
-${locator.exchangeAdmin.publish.confirmButton}  id=publishExchange-dialog-yes
-${locator.exchangeAdmin.publish.publishedID}    id=ProviderAuctionId
+${locator.exchangeAdmin.nav.Publish}                        id=leftNavLink_Publish_Exchange
+${locator.exchangeAdmin.nav.Teams}                          id=leftNavLink_Add/edit_teams
+${locator.exchangeAdmin.publish.publishButton}              id=publish-exchange-submit
+${locator.exchangeAdmin.publish.confirmButton}              id=publishExchange-dialog-yes
+${locator.exchangeAdmin.publish.publishedID}                id=ProviderAuctionId
+${locator.exchangeAdmin.teams.addTeamButton}                id=AddExchangeTeam
+
+${locator.exchangeAdmin.teams.newTeamName}                  id=Name
+${locator.exchangeAdmin.teams.newTeamTypeSelector}          //*[@id='_Type_dropdown']/div[2]
+${locator.exchangeAdmin.teams.newTeamTypeSelector.Buyer}    //*[@id='_Type_dropdown']/ul/li[1]/a
+${locator.exchangeAdmin.teams.newTeamQuestionCap}           id=QuestionsCap
+${locator.exchangeAdmin.teams.newTeamSave}                  //*[@id='SaveNewExchangeTeam']/span
 
 # create exchange
 ${locator.createExchange.ClientSelector}                    //div[@id='_ClientId_dropdown']/div[2]

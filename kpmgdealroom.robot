@@ -51,6 +51,10 @@ Wait And Click Element
     Wait Until Page Contains Element    ${locator}  ${delay}
     Click Element   ${locator}
 
+# Setup team
+Setup Team
+    [Arguments] @{ARGUMENTS}
+
 #------------------------------------------------------------------------------
 #  LOT OPERATIONS
 #------------------------------------------------------------------------------
@@ -64,21 +68,15 @@ Wait And Click Element
     ${title}=                   Get From Dictionary     ${ARGUMENTS[1].data}    title_en
     ${dgfID}=                     Get From Dictionary     ${ARGUMENTS[1].data}    dgfID
     ${dgfDecisionDate}=         convert_ISO_DMY         ${ARGUMENTS[1].data.dgfDecisionDate}
-    ${dgfDecisionID}=           Get From Dictionary     ${ARGUMENTS[1].data}    dgfDecisionID
     ${tenderAttempts}=          Get From Dictionary     ${ARGUMENTS[1].data}    tenderAttempts
     #${tenderAttempts}=         get_tenderAttempts      ${ARGUMENTS[1].data}
-    ${description}=             Get From Dictionary     ${ARGUMENTS[1].data}    description_en
     ${procurementMethodType}=   Get From Dictionary     ${ARGUMENTS[1].data}    procurementMethodType
     ${procuringEntity_name}=    Get From Dictionary     ${ARGUMENTS[1].data.procuringEntity}    name
     ${items}=                   Get From Dictionary     ${ARGUMENTS[1].data}    items
     ${number_of_items}=         Get Length              ${items}
     ${guarantee}=               convert_number_to_str   ${ARGUMENTS[1].data.guarantee.amount}
     ${budget}=                  convert_number_to_str   ${ARGUMENTS[1].data.value.amount}
-    #${budget}=                  Get From Dictionary     ${ARGUMENTS[1].data.value}  amount
-    #${budget}=                 get_budget              ${ARGUMENTS[1]}
     ${step_rate}=               convert_number_to_str   ${ARGUMENTS[1].data.minimalStep.amount}
-    #${step_rate}=               Get From Dictionary     ${ARGUMENTS[1].data.minimalStep}    amount
-    #${step_rate}=              get_step_rate           ${ARGUMENTS[1]}
     ${currency}=                Get From Dictionary     ${ARGUMENTS[1].data.value}    currency
     ${valueAddedTaxIncluded}=   Get From Dictionary     ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
     #${item0}=                   Get From List           ${items}    0
@@ -92,9 +90,10 @@ Wait And Click Element
     ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartDate
     ${start_time_auction}=      kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartTime
     ${name}=                    kpmgdealroom_service.cleanup_string                 ${title}
-    
+    ${dgfDecisionID}=           kpmgdealroom_service.cleanup_string                 ${ARGUMENTS[1].data.dgfDecisionID}
+    ${description}=             kpmgdealroom_service.cleanup_string                 ${ARGUMENTS[1].data.description_en}
+
     Switch Browser    ${ARGUMENTS[0]}
-    
     
     #  1. Click Create Exchange button
     Wait And Click Element    ${locator.toolbar.CreateExchangeButton}   5
@@ -111,7 +110,7 @@ Wait And Click Element
     Wait Until Element Is Visible       ${locator.createExchange.TypeSelector.Prozorro}  2
     Click Element                       ${locator.createExchange.TypeSelector.Prozorro}
     Wait Until Element Is Visible       ${locator.createExchange.StartDate}     2
-    Write Form Field                    ${locator.createExchange.StartDate}     ${start_day_auction}
+    Input Text                          ${locator.createExchange.StartDate}     ${start_day_auction}
         
     Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector}  5
     Click Element                       ${locator.createExchange.DgfCategorySelector}
@@ -126,12 +125,12 @@ Wait And Click Element
     Input Text                          ${locator.createExchange.dgfDecisionDate}   ${dgfDecisionDate}
     Input Text                          ${locator.createExchange.description}       ${description}    
     Input Text                          ${locator.createExchange.tenderAttempts}    ${tenderAttempts}
-    Wait Until Element Is Visible       ${locator.createExchange.MinimumStepValue}   
-    Input Text                          ${locator.createExchange.MinimumStepValue}  ${step_rate}  
+    #Wait Until Element Is Visible       ${locator.createExchange.MinimumStepValue}   
+    #Input Text                          ${locator.createExchange.MinimumStepValue}  ${step_rate}  
 
-    # 3. Submit exchange creations
-    Sleep       5
+    # 3. Submit exchange creation
     Click Element   ${locator.createExchange.SubmitButton}
+    Sleep       5
 
     # 4. Now we must add items before Prozorro actually accepts our submitted auction
     :FOR  ${index}  IN RANGE  ${number_of_items} 
@@ -156,7 +155,7 @@ Wait And Click Element
 Додати предмет
     [Arguments]    ${item}    ${index}
     Run Keyword If  ${index} != 0  Click Element  ${locator.addAsset.AddButton} 
-    Wait Until Page Contains Element    ${locator.addAsset.items[${index}].description}    5
+    Wait Until Page Contains Element    ${locator.addAsset.items[${index}].description}    20
     Input Text  ${locator.addAsset.items[${index}].description}                 ${item.description}
     Input Text  ${locator.addAsset.items[${index}].quantity}                    ${item.quantity}
     #Input Text  ${locator.addAsset.items[${index}].classification.scheme}       ${item.classification.scheme}

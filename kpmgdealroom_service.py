@@ -44,7 +44,7 @@ def convert_string_to_fake_email(username):
     return username + "@robottest.com"
 
 def cleanup_string(text):
-    return text.replace("[", "").replace("]", "")
+    return text.replace("[", "").replace("]", "").replace("/", "-").replace(".", "")
 
 def inc(value):
     return int(value) + 1

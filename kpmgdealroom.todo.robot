@@ -334,3 +334,219 @@
     kpmgdealroom.Завантажити угоду до тендера    ${username}    ${tender_uaid}    1    ${filepath}
     Wait Until Page Contains Element    xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
     Click Element    xpath=(//*[@id='pnAwardList']/div[last()]//span[contains(@class, 'contract_register')])
+
+
+#=====================Teams tests=============================================
+//Login as a organiser and click on exchange
+
+//Add first team
+Click Element ${locator.exchangeToolbar.Admin} 
+
+//Add teams
+Wait Until Page Contains Element ${locator.exchangeAdmin.nav.Teams} 10
+Click Element ${locator.AddTeam.AddNewteam}
+
+//need to input name of first team
+Input Text ${locator.AddTeam.Name}  ${title}
+Click Element ${locator.AddTeam.TeamDropDown}
+Click Element ${locator.AddTeam.Buyer}
+
+//need to give input as 100 
+Input Text ${locator.AddTeam.QuestionsCap}  ${title}
+Click Element ${locator.AddTeam.Save}
+
+//Add second team
+Wait Until Page Contains Element ${locator.AddTeam.Add/Edit teams} 10
+Click Element ${locator.AddTeam.AddNewteam}
+
+//need to input name of second team
+Input Text ${locator.AddTeam.Name}  ${title}
+Click Element ${locator.AddTeam.TeamDropDown}
+Click Element ${locator.AddTeam.Buyer}
+
+//need to give input as 100 
+Input Text ${locator.AddTeam.QuestionsCap}  ${title}
+Click Element ${locator.AddTeam.Save}
+
+//Add provider
+Click Element ${locator.Addusers.Addusers}
+//need to input name of the users
+Input Text ${locator.Addusers.Email}  ${title}
+
+Click Element ${locator.Addusers.AssignTeamDropdown} 
+Click Element ${locator.Addusers.AssignTeamBuyer}
+Click Element ${locator.Addusers.Add}
+
+// Add provider 1
+Click Element ${locator.Addusers.Addusers}
+//need to input name of the users
+Input Text ${locator.Addusers.Email}  ${title}
+
+Click Element ${locator.Addusers.AssignTeamDropdown} 
+Click Element ${locator.Addusers.AssignTeamBuyer}
+Click Element ${locator.Addusers.Add}
+
+#//-----------------------------------------------------------
+#//    remove this section
+#//ManageUsers
+#Click Element ${locator.ManageUsers.ManageUsers}
+
+#//For provider 1
+#Click Element ${locator.ManageUsers.EmailFilter}
+#
+#//need to input name of the user  provider 1
+#Input Text ${locator.ManageUsers.Name}  ${title}
+#
+#Click Element ${locator.ManageUsers.Filter}
+#Click Element ${locator.ManageUsers.Edit} 
+#
+#Click Element ${locator.ManageUsers.TeamDropDown}
+#Click Element ${locator.ManageUsers.Team1} 
+#
+#Click Element ${locator.ManageUsers.BuyerQAApprover}
+#Click Element ${locator.ManageUsers.BuyerBidder}
+#Click Element ${locator.ManageUsers.Save}
+#
+#//For provider 2
+#Click Element ${locator.ManageUsers.EmailFilter}
+##//to remove the text from field
+#Input Text (your web element locator ) ${empty}
+#
+#//need to input name of the user  provider 2
+#Input Text ${locator.ManageUsers.Name}  ${title}
+#
+#Click Element ${locator.ManageUsers.Filter}
+#Click Element ${locator.ManageUsers.Edit} 
+#
+#Click Element ${locator.ManageUsers.TeamDropDown}
+#Click Element ${locator.ManageUsers.Team2} 
+#
+#Click Element ${locator.ManageUsers.BuyerQAApprover}
+#Click Element ${locator.ManageUsers.BuyerBidder}
+#Click Element ${locator.ManageUsers.Save}
+#// end section to remove
+#//-----------------------------------------------------------
+
+//Adding Users to Bids
+
+//Adding teams to Documents submissions bid
+Click Element ${locator.Bids.Bids}
+
+Click Element ${locator.Bids.DefaultDocumentSubmission}
+Click Element ${locator.Bids.EditBid}
+
+Click Element ${locator.Bids.BuyerTeam1} 
+Click Element ${locator.Bids.BuyerTeam1} 
+Click Element ${locator.Bids.Save} 
+
+//Adding teams to Initail Bid phase
+Click Element ${locator.Bids.Bids}
+Click Element ${locator.Bids.DefaultInitialBidPhase}
+Click Element ${locator.Bids.EditBid}
+
+Click Element ${locator.Bids.BuyerTeam1} 
+Click Element ${locator.Bids.BuyerTeam1} 
+Click Element ${locator.Bids.Save} 
+
+//Set Teams Eligibility
+Click Element ${locator.Bids.Bids}
+
+
+//Locators
+
+# ${locator.exchangeToolbar.Admin} id=li-exchange-toolbar-admin
+# ${locator.AddTeam.Add/Edit teams} xpath=//ul[@id='sidebar']/li[2]/a
+# ${locator.AddTeam.AddNewteam} id=AddExchangeTeam
+# ${locator.AddTeam.Name} id=Name
+# ${locator.AddTeam.TeamDropDown} //*[@id='_Type_dropdown']/div[2]
+# ${locator.AddTeam.QuestionsCap} id=QuestionsCap
+# ${locator.AddTeam.Buyer} //*[@id='_Type_dropdown']/ul/li[1]/a
+# ${locator.AddTeam.Save} //*[@id='SaveNewExchangeTeam']/span
+
+
+${locator.Addusers.Addusers} xpath=//ul[@id='sidebar']/li[4]/a
+
+${locator.Addusers.Email} id=Emails
+${locator.Addusers.AssignTeamDropdown} //*
+
+[@id='_SelectedTeamId_dropdown']/div[2]
+
+// For the link we need to provide the name of the team
+${locator.Addusers.AssignTeamBuyer} link=Buyer team
+
+${locator.Addusers.Add} id=add-users-submit
+${locator.ManageUsers.ManageUsers} xpath=//ul[@id='sidebar']/li[4]/a
+${locator.ManageUsers.EmailFilter} //*[@id='exchangeUsersEmailCol']/a[1]/span
+${locator.ManageUsers.Email} css=.k-textbox
+${locator.ManageUsers.Filter} css=.k-button.k-primary
+${locator.ManageUsers.Edit} xpath=//div[@id='exchangeUsersGrid']/div[2]/table/tbody/tr[1]/td[5]/a[1]
+${locator.ManageUsers.TeamDropDown} //*[@id='_teamDropdown_3_dropdown']/div[2]
+//Specify the name of the team 1
+${locator.ManageUsers.Team1} link=
+
+//Specify the name of the team 2
+${locator.ManageUsers.Team2} link=
+
+${locator.ManageUsers.BuyerQAApprover} //*[@id='exchangeUsersGrid']/div[2]/table/tbody/tr[1]/td[4]/form/div[2]/div/ul/div[3]/label/span
+${locator.ManageUsers.BuyerBidder} //*[@id='exchangeUsersGrid']/div[2]/table/tbody/tr[1]/td[4]/form/div[2]/div/ul/div[6]/label/span
+${locator.ManageUsers.Save} xpath=//div[@id='exchangeUsersGrid']/div[2]/table/tbody/tr[1]/td[5]/a[1]
+
+
+// Adding users to Bids
+
+${locator.Bids.Bids} id=li-exchange-toolbar-bids
+${locator.Bids.DefaultDocumentSubmission}  xpath=//div[@id='phasesPartial']/div[1]/table/tbody/tr[1]/td[1]/a[1] 
+${locator.Bids.DefaultInitialBidPhase}  xpath=//div[@id='phasesPartial']/div[1]/table/tbody/tr[2]/td[1]/a[1]
+${locator.Bids.EditBid} //*[@id='edit-bid-phase']/span
+${locator.Bids.BuyerTeam1} //*[@id='form-create-bid']/div[6]/div/div[1]/label/span
+${locator.Bids.BuyerTeam2} //*[@id='form-create-bid']/div[6]/div/div[2]/label/span
+${locator.Bids.Save} id=save-bid-submit
+
+${locator.Bids.Team1Eligible} //*[@id='phasesPartial']/div/form/div/table/tbody/tr[1]/td[2]/label/span
+${locator.Bids.Team2Eligible} //*[@id='phasesPartial']/div/form/div/table/tbody/tr[2]/td[2]/label/span
+
+${locator.Bids.Team1Qualified} //*[@id='phasesPartial']/div/form/div/table/tbody/tr[1]/td[3]/label/span
+${locator.Bids.Team2Qualified} //*[@id='phasesPartial']/div/form/div/table/tbody/tr[2]/td[3]/label/span
+${locator.Bids.ElgibilitySave} //*[@id='phasesPartial']/div/form/div/div/button
+#====================================================================================
+
+
+#=====================Q&A tests=============================================
+//Login as a Provider and click on exchange
+
+Click Element ${locator.Questions.Q&A}
+Wait Until Page Contains Element ${locator.Questions.DraftQuestions} 10
+Click Element ${locator.Questions.DraftQuestions}
+Input Text ${locator.Questions.Subject} ${title}
+Input Text ${locator.Questions.Question}} ${ARGUMENTS[0]}
+Input Text ${locator.Questions.DocumentReference} ${ARGUMENTS[0]}
+Click Element ${locator.Questions.CategoryDropdown}
+Click Element ${locator.Questions.CategoryDocuments}
+Click Element ${locator.Questions.PriorityDropdown}
+Click Element ${locator.Questions.PriorityMedium}
+Click Element ${locator.Questions.ApproveQuestion}
+Click Element ${locator.Questions.Confirm}
+
+// We should find  a way to capture the id of newly created question id
+/Login as a Organiser and click on exchange
+Click Element ${locator.Questions.Q&A}
+Wait Until Page Contains Element ${locator.Answers.PageTitle} 10
+//Click on created question
+Input Text ${locator.Answers.Answer} ${title}
+Click Element ${locator.Answers.Publish}
+
+
+${locator.Questions.Q&A} //*[@id='li-exchange-toolbar-qanda']	
+${locator.Questions.DraftQuestions} //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]
+${locator.Questions.Subject} id= Subject
+${locator.Questions.Question} id=Question
+${locator.Questions.DocumentReference} id = DocumentReference
+${locator.Questions.CategoryDropdown} //*[@id='_Category_dropdown']/div[2]/i
+${locator.Questions.CategoryDocuments} //*[@id='_Category_dropdown']/ul/li[3]/a
+${locator.Questions.PriorityDropdown} //*[@id='_Priority_dropdown']/div[2]/i
+${locator.Questions.PriorityMedium} //*[@id='_Priority_dropdown']/ul/li[2]/a
+${locator.Questions.ApproveQuestion} id=question-Approved
+${locator.Questions.Confirm} id=confirm-edit-yes
+${locator.Answers.PageTitle} id=pageTitle
+${locator.Answers.Answer} id=Answer
+${locator.Answers.Publish} id=question-Published
