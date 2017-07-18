@@ -339,34 +339,6 @@
 #=====================Teams tests=============================================
 //Login as a organiser and click on exchange
 
-//Add first team
-Click Element ${locator.exchangeToolbar.Admin} 
-
-//Add teams
-Wait Until Page Contains Element ${locator.exchangeAdmin.nav.Teams} 10
-Click Element ${locator.AddTeam.AddNewteam}
-
-//need to input name of first team
-Input Text ${locator.AddTeam.Name}  ${title}
-Click Element ${locator.AddTeam.TeamDropDown}
-Click Element ${locator.AddTeam.Buyer}
-
-//need to give input as 100 
-Input Text ${locator.AddTeam.QuestionsCap}  ${title}
-Click Element ${locator.AddTeam.Save}
-
-//Add second team
-Wait Until Page Contains Element ${locator.AddTeam.Add/Edit teams} 10
-Click Element ${locator.AddTeam.AddNewteam}
-
-//need to input name of second team
-Input Text ${locator.AddTeam.Name}  ${title}
-Click Element ${locator.AddTeam.TeamDropDown}
-Click Element ${locator.AddTeam.Buyer}
-
-//need to give input as 100 
-Input Text ${locator.AddTeam.QuestionsCap}  ${title}
-Click Element ${locator.AddTeam.Save}
 
 //Add provider
 Click Element ${locator.Addusers.Addusers}
@@ -453,19 +425,7 @@ Click Element ${locator.Bids.Bids}
 
 
 //Locators
-
-# ${locator.exchangeToolbar.Admin} id=li-exchange-toolbar-admin
-# ${locator.AddTeam.Add/Edit teams} xpath=//ul[@id='sidebar']/li[2]/a
-# ${locator.AddTeam.AddNewteam} id=AddExchangeTeam
-# ${locator.AddTeam.Name} id=Name
-# ${locator.AddTeam.TeamDropDown} //*[@id='_Type_dropdown']/div[2]
-# ${locator.AddTeam.QuestionsCap} id=QuestionsCap
-# ${locator.AddTeam.Buyer} //*[@id='_Type_dropdown']/ul/li[1]/a
-# ${locator.AddTeam.Save} //*[@id='SaveNewExchangeTeam']/span
-
-
 ${locator.Addusers.Addusers} xpath=//ul[@id='sidebar']/li[4]/a
-
 ${locator.Addusers.Email} id=Emails
 ${locator.Addusers.AssignTeamDropdown} //*
 

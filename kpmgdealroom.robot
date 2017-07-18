@@ -33,12 +33,12 @@ Login
     Sleep    2
 
 #
-Write Form Field
-    [Arguments]     ${locator}  ${value}
-    Click Element   ${locator}
-    Clear Element Text      ${locator}
-    Input Text              ${locator}  ${value}
-    
+#Write Form Field
+#    [Arguments]     ${locator}  ${value}
+#    Focus           ${locator}
+#    Sleep   2
+#    Input Text      ${locator}  ${value}
+#    Sleep   2
 
 # Get text from auction info field
 Get Field Value
@@ -52,8 +52,30 @@ Wait And Click Element
     Click Element   ${locator}
 
 # Setup team
-Setup Team
-    [Arguments] @{ARGUMENTS}
+Setup Team 
+    [Arguments]                         ${team_name}    ${team_user}
+    Click Element                       ${locator.exchangeToolbar.Admin} 
+    Wait Until Page Contains Element    ${locator.exchangeAdmin.nav.Teams}     10
+    Click Element                       ${locator.AddTeam.AddNewteam}
+    Input Text                          ${locator.AddTeam.Name}  ${team_name}
+    Click Element                       ${locator.AddTeam.Save}
+
+    Click Element                       ${locator.Adduser.Addusers}
+    Input Text                          ${locator.Addusers.Email}   ${team_user}
+    Click Element                       ${locator.Addusers.AssignTeamDropdown}    
+    Click Element                       ${locator.Addusers.AssignTeamBuyer}
+    Click Element                       ${locator.Addusers.Add}
+
+# Add users to bids
+Setup User Bids
+    [Arguments]    @{ARGUMENTS}
+    Click Element                       ${locator.Bids.Bids}
+    Wait Until Page Contains Element    ${locator.Bids.Buyer1Eligible} 10
+    Click Element                       ${locator.Bids.Buyer1Eligible}
+    Click Element                       ${locator.Bids.Buyer1Qualified}
+    Click Element                       ${locator.Bids.Buyer2Eligible}
+    Click Element                       ${locator.Bids.Buyer2Qualified}
+    Click Element                       ${locator.Bids.Save}}
 
 #------------------------------------------------------------------------------
 #  LOT OPERATIONS
@@ -74,9 +96,9 @@ Setup Team
     ${procuringEntity_name}=    Get From Dictionary     ${ARGUMENTS[1].data.procuringEntity}    name
     ${items}=                   Get From Dictionary     ${ARGUMENTS[1].data}    items
     ${number_of_items}=         Get Length              ${items}
-    ${guarantee}=               convert_number_to_str   ${ARGUMENTS[1].data.guarantee.amount}
-    ${budget}=                  convert_number_to_str   ${ARGUMENTS[1].data.value.amount}
-    ${step_rate}=               convert_number_to_str   ${ARGUMENTS[1].data.minimalStep.amount}
+    ${guarantee}=               convert_number_to_currency_str   ${ARGUMENTS[1].data.guarantee.amount}
+    ${budget}=                  convert_number_to_currency_str   ${ARGUMENTS[1].data.value.amount}
+    ${step_rate}=               convert_number_to_currency_str   ${ARGUMENTS[1].data.minimalStep.amount}
     ${currency}=                Get From Dictionary     ${ARGUMENTS[1].data.value}    currency
     ${valueAddedTaxIncluded}=   Get From Dictionary     ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
     #${item0}=                   Get From List           ${items}    0
@@ -110,7 +132,7 @@ Setup Team
     Wait Until Element Is Visible       ${locator.createExchange.TypeSelector.Prozorro}  2
     Click Element                       ${locator.createExchange.TypeSelector.Prozorro}
     Wait Until Element Is Visible       ${locator.createExchange.StartDate}     2
-    Input Text                          ${locator.createExchange.StartDate}     ${start_day_auction}
+#    Input Text                          ${locator.createExchange.StartDate}     ${start_day_auction}
         
     Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector}  5
     Click Element                       ${locator.createExchange.DgfCategorySelector}
@@ -120,23 +142,22 @@ Setup Team
     Wait Until Element is Visible       ${locator.createExchange.GuaranteeAmount}   20
     Input Text                          ${locator.createExchange.GuaranteeAmount}   ${guarantee}
     Input Text                          ${locator.createExchange.StartPrice}        ${budget}
+    Input Text                          ${locator.createExchange.MinimumStepValue}  ${step_rate} 
     Input Text                          ${locator.createExchange.dgfID}             ${dgfID}
     Input Text                          ${locator.createExchange.dgfDecisionID}     ${dgfDecisionID}
-    Input Text                          ${locator.createExchange.dgfDecisionDate}   ${dgfDecisionDate}
+#    Input Text                          ${locator.createExchange.dgfDecisionDate}   ${dgfDecisionDate}
     Input Text                          ${locator.createExchange.description}       ${description}    
     Input Text                          ${locator.createExchange.tenderAttempts}    ${tenderAttempts}
-    #Wait Until Element Is Visible       ${locator.createExchange.MinimumStepValue}   
-    #Input Text                          ${locator.createExchange.MinimumStepValue}  ${step_rate}  
+    Log To Console                      "${start_day_auction}"
 
     # 3. Submit exchange creation
     Click Element   ${locator.createExchange.SubmitButton}
-    Sleep       5
+    Wait And Click Element  ${locator.Dataroom.T&CYes}  20
 
     # 4. Now we must add items before Prozorro actually accepts our submitted auction
     :FOR  ${index}  IN RANGE  ${number_of_items} 
     \  Додати предмет  ${items[${index}]}   ${index}
     Click Element   ${locator.addAsset.SaveButton}
-    Sleep   1
 
     # 5. Publish 
     Click Element                   ${locator.exchangeToolbar.Admin}
@@ -146,16 +167,25 @@ Setup Team
     Click Element                   ${locator.exchangeAdmin.publish.confirmButton}
 
     Wait Until Page Contains Element   ${locator.exchangeAdmin.publish.publishedID}  30
-    ${tender_id}=    Get Text    ${locator.exchangeAdmin.publish.publishedID}
+    #${tender_id}=    Get Text    ${locator.exchangeAdmin.publish.publishedID}
     ${TENDER}=    Get Text    ${locator.exchangeAdmin.publish.publishedID}
     Log To Console    ${TENDER}
+
+
+    # team and user setup
+    #Click Element                       ${locator.toolbar.ExchangesButton}
+    #Пошук тендера по ідентифікатору     
+    #Setup Team                          Buyer Team 1        pzProvider@kpmg.co.uk
+    #Setup Team                          Buyer Team 2  
+    #Setup User Bids  ARGUMENTS
+
     [Return]    ${TENDER}
     
 # Add item/asset (KDR-1129)
 Додати предмет
     [Arguments]    ${item}    ${index}
     Run Keyword If  ${index} != 0  Click Element  ${locator.addAsset.AddButton} 
-    Wait Until Page Contains Element    ${locator.addAsset.items[${index}].description}    20
+    Wait Until Element Is Visible   ${locator.addAsset.items[${index}].description}    20
     Input Text  ${locator.addAsset.items[${index}].description}                 ${item.description}
     Input Text  ${locator.addAsset.items[${index}].quantity}                    ${item.quantity}
     #Input Text  ${locator.addAsset.items[${index}].classification.scheme}       ${item.classification.scheme}
@@ -173,14 +203,21 @@ Setup Team
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == ${TENDER}
     Switch Browser    ${ARGUMENTS[0]}
-    Go to    ${USERS.users['${ARGUMENTS[0]}'].default_page}
+    Go to                               ${USERS.users['${ARGUMENTS[0]}'].default_page}
+    # filter by ID
     Wait Until Page Contains Element    ${locator.exchangeList.FilterByIdButton}
-    Click Element   ${locator.exchangeList.FilterByIdButton}
-    Input Text  ${locator.exchangeList.FilterTextField}    ${ARGUMENTS[1]}
-    Click Element   ${locator.exchangeList.FilterSubmitButton}
-    Sleep    2
-    Wait Until Page Contains Element    ${locator.exchangeList.FilteredResult}
-    Click Element    ${locator.exchangeList.FilteredResult}
+    Click Element                       ${locator.exchangeList.FilterByIdButton}
+    Input Text                          ${locator.exchangeList.FilterTextField}    ${ARGUMENTS[1]}
+    Click Element                       ${locator.exchangeList.FilterSubmitButton}
+    Wait Until Page Contain Element     link=$ARGUMENTS[1]  20
+    
+    # filter for external exchanges
+    Click Element                       ${locator.exchangeListFilterByTypeButton}
+    Input Text                          External
+    ClickElement                        ${locator.exchangeList.FilterSubmitButton}
+    Sleep                               5
+    Wait Until Page Contain Element     link=$ARGUMENTS[1]  20
+    Click Element                       ${locator.exchangeList.FilteredResult}
 
 # Refresh the page with the tender
 Оновити сторінку з тендером

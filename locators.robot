@@ -8,7 +8,8 @@ ${locator.login.PasswordField}                              id=Password
 ${locator.login.LoginButton}                                id=login-submit
 
 # main toolbar
-${locator.toolbar.CreateExchangeButton}                     //li[@id='top-nav-create-exchange']/a/div/span
+${locator.toolbar.ExchangesButton}                          //*[@id='top-nav-exchange-dashboard']/a/div[2]
+${locator.toolbar.CreateExchangeButton}                     //*[@id='top-nav-create-exchange']/a/div/span
 ${locator.toolbar.LogoutButton}                             id=toolbar-logout
 
 # exchange toolbar
@@ -19,19 +20,33 @@ ${locator.exchangeToolbar.Bids}                             id=li-exchange-toolb
 ${locator.exchangeToolbar.QandA}                            id=li-exchange-toolbar-qanda	
 ${locator.exchangeToolbar.Admin}                            id=li-exchange-toolbar-admin
 
-# exchange admin
+# publish exchange
 ${locator.exchangeAdmin.nav.Publish}                        id=leftNavLink_Publish_Exchange
-${locator.exchangeAdmin.nav.Teams}                          id=leftNavLink_Add/edit_teams
 ${locator.exchangeAdmin.publish.publishButton}              id=publish-exchange-submit
 ${locator.exchangeAdmin.publish.confirmButton}              id=publishExchange-dialog-yes
-${locator.exchangeAdmin.publish.publishedID}                id=ProviderAuctionId
-${locator.exchangeAdmin.teams.addTeamButton}                id=AddExchangeTeam
+${locator.exchangeAdmin.publish.publishedID}                id=#providerAuctionId
 
-${locator.exchangeAdmin.teams.newTeamName}                  id=Name
-${locator.exchangeAdmin.teams.newTeamTypeSelector}          //*[@id='_Type_dropdown']/div[2]
-${locator.exchangeAdmin.teams.newTeamTypeSelector.Buyer}    //*[@id='_Type_dropdown']/ul/li[1]/a
-${locator.exchangeAdmin.teams.newTeamQuestionCap}           id=QuestionsCap
-${locator.exchangeAdmin.teams.newTeamSave}                  //*[@id='SaveNewExchangeTeam']/span
+# team management
+${locator.Admin.Admin}                                      id=li-exchange-toolbar-admin
+${locator.AddTeam.Add/Edit teams}                           xpath=//ul[@id='sidebar']/li[2]/a
+${locator.AddTeam.AddNewteam}                               id=AddExchangeTeam
+${locator.AddTeam.Name}                                     id=Name
+${locator.AddTeam.Save}                                     //*[@id='SaveNewExchangeTeam']/span
+
+# user management
+${locator.Addusers.Addusers}            xpath=//ul[@id='sidebar']/li[3]/a
+${locator.Addusers.Email}               id=Emails
+${locator.Addusers.AssignTeamDropdown}  //*[@id='_SelectedTeamId_dropdown']/div[2]
+${locator.Addusers.AssignTeamBuyer}     link=Buyer team
+${locator.Addusers.Add}                 id=add-users-submit
+
+# adding users to bids
+${locator.Bids.Bids}                    id=li-exchange-toolbar-bids
+${locator.Bids.Buyer1Eligible}          //div[@class='form-group']/table/tbody/tr[1]/td[2]/label/span
+${locator.Bids.Buyer1Qualified}         //div[@class='form-group']/table/tbody/tr[1]/td[3]/label/span
+${locator.Bids.Buyer2Eligible}          //div[@class='form-group']/table/tbody/tr[2]/td[2]/label/span
+${locator.Bids.Buyer1Qualified}         //div[@class='form-group']/table/tbody/tr[2]/td[3]/label/span
+${locator.Bids.Save}                    css=.btn.btn-default.btn-primary
 
 # create exchange
 ${locator.createExchange.ClientSelector}                    //div[@id='_ClientId_dropdown']/div[2]
@@ -48,7 +63,7 @@ ${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contain
 ${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'dgfOtherAssets')]
 ${locator.createExchange.GuaranteeAmount}                   id=guaranteeAmount
 ${locator.createExchange.StartPrice}                        id=startingPrice
-${locator.createExchange.MinimumStepValue}                  id=mimimumStepValue
+${locator.createExchange.MinimumStepValue}                  id=minimumStepValue
 
 ${locator.createExchange.dgfID}                             id=dgfId
 ${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails.DgfDecisionId
@@ -59,7 +74,7 @@ ${locator.createExchange.tenderAttempts}                    name=ExchangeDetails
 ${locator.createExchange.SubmitButton}                      id=create-exchange-submit
 
 # add item / asset
-${locator.addAsset.items[0].description}                    xpath=(//textarea[@name='Assets[0].Description'])[2]
+${locator.addAsset.items[0].description}                    xpath=(//input[@name='Assets[0].Description'])[2]
 ${locator.addAsset.items[0].quantity}                       xpath=(//input[@name='Assets[0].Quantity'])[2]
 ${locator.addAsset.items[0].classification.scheme}          xpath=(//input[@name='Assets[0].Classification.Scheme'])[2]
 ${locator.addAsset.items[0].classification.description}     xpath=(//input[@name='Assets[0].Classification.Description'])[2]
@@ -122,57 +137,58 @@ ${locator.viewExchange.enquiryPeriod.endDate}
 ${locator.viewExchange.status}
 
 # search exchange list
+${locator.exchangeListFilterByTypeButton}   //th[@id='exchangeDashboardTypeCol']/a/span
 ${locator.exchangeList.FilterByIdButton}    //th[@id='exchangeDashboardIdCol']/a/span
 ${locator.exchangeList.FilterTextField}     //input[@type='text']
 ${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
 ${locator.exchangeList.FilteredResult}      //tr[1]/td/a
 
 # questions and answers
-${locator.Questions.DraftQuestions}     //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]
-${locator.Questions.Subject}            id=Subject
-${locator.Questions.Question}           id=Question
-${locator.Questions.DocumentReference}  id = DocumentReference
-${locator.Questions.CategoryDropdown}   //*[@id='_Category_dropdown']/div[2]/i
-${locator.Questions.CategoryDocuments}  //*[@id='_Category_dropdown']/ul/li[3]/a
-${locator.Questions.PriorityDropdown}   //*[@id='_Priority_dropdown']/div[2]/i
-${locator.Questions.PriorityMedium}     //*[@id='_Priority_dropdown']/ul/li[2]/a
-${locator.Questions.ApproveQuestion}    id=question-Approved
-${locator.Questions.Confirm}            id=confirm-edit-yes
-${locator.Answers.PageTitle}            id=pageTitle
-${locator.Answers.Answer}               id=Answer
-${locator.Answers.Publish}              id=question-Published
+${locator.Questions.DraftQuestions}         //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]
+${locator.Questions.Subject}                id=Subject
+${locator.Questions.Question}               id=Question
+${locator.Questions.DocumentReference}      id = DocumentReference
+${locator.Questions.CategoryDropdown}       //*[@id='_Category_dropdown']/div[2]/i
+${locator.Questions.CategoryDocuments}      //*[@id='_Category_dropdown']/ul/li[3]/a
+${locator.Questions.PriorityDropdown}       //*[@id='_Priority_dropdown']/div[2]/i
+${locator.Questions.PriorityMedium}         //*[@id='_Priority_dropdown']/ul/li[2]/a
+${locator.Questions.ApproveQuestion}        id=question-Approved
+${locator.Questions.Confirm}                id=confirm-edit-yes
+${locator.Answers.PageTitle}                id=pageTitle
+${locator.Answers.Answer}                   id=Answer
+${locator.Answers.Publish}                  id=question-Published
 
 # file operations
-${locator.Dataroom.DataRoom}            id=li-exchange-toolbar-data-room
-${locator.Dataroom.Upload}              id=dataroom-upload
-${locator.Dataroom.T&CYes}              id=exchangerules-dialog-yes
-${locator.Dataroom.UploadSelect}        id=dataroom-upload
-${locator.Dataroom.SelectFiles}         id=files
-${locator.Dataroom.UploadFileButton}    //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
-${locator.Dataroom.CloseButton}         id=dataroom-upload-btn-close
+${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room
+${locator.Dataroom.Upload}                  id=dataroom-upload
+${locator.Dataroom.T&CYes}                  id=exchangerules-dialog-yes
+${locator.Dataroom.UploadSelect}            id=dataroom-upload
+${locator.Dataroom.SelectFiles}             id=files
+${locator.Dataroom.UploadFileButton}        //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
+${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close
 
 
 # Edwin - The below locators are from UISCE's driver.  To eventually delete...
-${locator.edit.description}    id = auction-description
-${locator.items[0].quantity}    id=item-quantity-1
-${locator.items[0].description}    id = item-description-1
-${locator.items[0].unit.code}    id = item-unit_code1
-${locator.items[0].unit.name}    id = item-unit_name-1
+${locator.edit.description}                 id = auction-description
+${locator.items[0].quantity}                id=item-quantity-1
+${locator.items[0].description}             id = item-description-1
+${locator.items[0].unit.code}               id = item-unit_code1
+${locator.items[0].unit.name}               id = item-unit_name-1
 ${locator.items[0].deliveryAddress.postalCode}    id=item-postalCode1
-${locator.items[0].deliveryAddress.region}    id=item-region1
+${locator.items[0].deliveryAddress.region}  id=item-region1
 ${locator.items[0].deliveryAddress.locality}    id=item-locality1
 ${locator.items[0].deliveryAddress.streetAddress}    id=item-streetAddress1
-${locator.items[0].classification.scheme}    id=tw_item_0_classification_scheme
-${locator.items[0].classification.id}    id = item-classification_id1
+${locator.items[0].classification.scheme}   id=tw_item_0_classification_scheme
+${locator.items[0].classification.id}       id = item-classification_id1
 ${locator.items[0].classification.description}    id = item-classification_description1
 ${locator.items[0].additionalClassifications[0].scheme}    id=tw_item_0_additionalClassifications_description
 ${locator.items[0].additionalClassifications[0].id}    id=tew_item_0_additionalClassifications_id
 ${locator.items[0].additionalClassifications[0].description}    id=tw_item_0_additionalClassifications_description
-${locator.items[1].description}    id = item-description-2
-${locator.items[1].classification.id}    id = item-classification_id2
+${locator.items[1].description}             id = item-description-2
+${locator.items[1].classification.id}       id = item-classification_id2
 ${locator.items[1].classification.description}    id = item-classification_description2
-${locator.items[1].classification.scheme}    id=tw_item_1_classification_scheme
-${locator.items[1].unit.code}    id = item-unit_code2
+${locator.items[1].classification.scheme}   id=tw_item_1_classification_scheme
+${locator.items[1].unit.code}               id = item-unit_code2
 ${locator.items[1].unit.name}    id=item-unit_name-2
 ${locator.items[1].quantity}    id=tew_item_1_quantity
 ${locator.items[2].description}    id = item-description-3

@@ -40,6 +40,9 @@ def convert_date_to_iso(v_date, v_time):
 def convert_number_to_str(number):
     return str(number)
 
+def convert_number_to_currency_str(number):
+    return "%.2f" % number
+
 def convert_string_to_fake_email(username):
     return username + "@robottest.com"
 
@@ -48,3 +51,16 @@ def cleanup_string(text):
 
 def inc(value):
     return int(value) + 1
+
+def set_field(locator, value):
+    driver = get_webdriver()
+    print ("The value is : " + value)
+    stringValue = value.replace("-", "/")
+    driver.find_element_by_id(locator).clear()
+    driver.find_element_by_id(locator).send_keys(stringValue)
+
+def set_numeric_field(locator, value):
+    driver = get_webdriver()
+    #driver.find_element_by_id(locator).clear()
+    driver.find_element_by_id(locator).send_keys(Keys.HELLO,Keys.chord(Keys.SHIFT,Keys.END),value)
+    
