@@ -28,7 +28,7 @@ ${locator.exchangeAdmin.publish.publishedID}                id=#providerAuctionI
 
 # team management
 ${locator.Admin.Admin}                                      id=li-exchange-toolbar-admin
-${locator.AddTeam.Add/Edit teams}                           xpath=//ul[@id='sidebar']/li[2]/a
+${locator.AddTeam.AddEditTeams}                           xpath=//ul[@id='sidebar']/li[2]/a
 ${locator.AddTeam.AddNewteam}                               id=AddExchangeTeam
 ${locator.AddTeam.Name}                                     id=Name
 ${locator.AddTeam.Save}                                     //*[@id='SaveNewExchangeTeam']/span
@@ -138,7 +138,7 @@ ${locator.viewExchange.status}
 
 # search exchange list
 ${locator.exchangeListFilterByTypeButton}   //th[@id='exchangeDashboardTypeCol']/a/span
-${locator.exchangeList.FilterByIdButton}    //th[@id='exchangeDashboardIdCol']/a/span
+${locator.exchangeList.FilterByIdButton}    //th[@id='exchangeDashboardAuctionIdCol']/a/span
 ${locator.exchangeList.FilterTextField}     //input[@type='text']
 ${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
 ${locator.exchangeList.FilteredResult}      //tr[1]/td/a

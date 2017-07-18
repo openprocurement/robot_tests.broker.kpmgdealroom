@@ -55,15 +55,14 @@ Wait And Click Element
 Setup Team 
     [Arguments]                         ${team_name}    ${team_user}
     Click Element                       ${locator.exchangeToolbar.Admin} 
-    Wait Until Page Contains Element    ${locator.exchangeAdmin.nav.Teams}     10
-    Click Element                       ${locator.AddTeam.AddNewteam}
+    Click Element                       ${locator.AddTeam.AddEditTeams}
+    Click Element                       ${locator.AddTeam.AddNewTeam}
     Input Text                          ${locator.AddTeam.Name}  ${team_name}
     Click Element                       ${locator.AddTeam.Save}
-
     Click Element                       ${locator.Adduser.Addusers}
     Input Text                          ${locator.Addusers.Email}   ${team_user}
     Click Element                       ${locator.Addusers.AssignTeamDropdown}    
-    Click Element                       ${locator.Addusers.AssignTeamBuyer}
+    Click Element                       link=${team_name}
     Click Element                       ${locator.Addusers.Add}
 
 # Add users to bids
@@ -131,11 +130,13 @@ Setup User Bids
     Wait And Click Element              ${locator.createExchange.TypeSelector}  10
     Wait Until Element Is Visible       ${locator.createExchange.TypeSelector.Prozorro}  2
     Click Element                       ${locator.createExchange.TypeSelector.Prozorro}
-    Wait Until Element Is Visible       ${locator.createExchange.StartDate}     2
-#    Input Text                          ${locator.createExchange.StartDate}     ${start_day_auction}
-        
+    #Wait Until Element Is Visible       ${locator.createExchange.StartDate}     2
+    #Sleep  2
+    #Input Text                          ${locator.createExchange.StartDate}     ${start_day_auction}
+    #sleep  5
     Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector}  5
     Click Element                       ${locator.createExchange.DgfCategorySelector}
+    #sleep  5
     Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}  2
     Click Element                       ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}
     
@@ -145,10 +146,9 @@ Setup User Bids
     Input Text                          ${locator.createExchange.MinimumStepValue}  ${step_rate} 
     Input Text                          ${locator.createExchange.dgfID}             ${dgfID}
     Input Text                          ${locator.createExchange.dgfDecisionID}     ${dgfDecisionID}
-#    Input Text                          ${locator.createExchange.dgfDecisionDate}   ${dgfDecisionDate}
+    #Input Text                          ${locator.createExchange.dgfDecisionDate}   ${dgfDecisionDate}
     Input Text                          ${locator.createExchange.description}       ${description}    
     Input Text                          ${locator.createExchange.tenderAttempts}    ${tenderAttempts}
-    Log To Console                      "${start_day_auction}"
 
     # 3. Submit exchange creation
     Click Element   ${locator.createExchange.SubmitButton}
@@ -167,16 +167,14 @@ Setup User Bids
     Click Element                   ${locator.exchangeAdmin.publish.confirmButton}
 
     Wait Until Page Contains Element   ${locator.exchangeAdmin.publish.publishedID}  30
-    #${tender_id}=    Get Text    ${locator.exchangeAdmin.publish.publishedID}
-    ${TENDER}=    Get Text    ${locator.exchangeAdmin.publish.publishedID}
-    Log To Console    ${TENDER}
-
-
+    #${tender_id}=      Get Text    ${locator.exchangeAdmin.publish.publishedID}
+    ${TENDER}=          Get Text    ${locator.exchangeAdmin.publish.publishedID}
+    
     # team and user setup
-    #Click Element                       ${locator.toolbar.ExchangesButton}
-    #Пошук тендера по ідентифікатору     
-    #Setup Team                          Buyer Team 1        pzProvider@kpmg.co.uk
-    #Setup Team                          Buyer Team 2  
+    Click Element                       ${locator.toolbar.ExchangesButton}
+    kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}     ${TENDER}
+    Setup Team                          Buyer Team 1        pzProvider@kpmg.co.uk
+    Setup Team                          Buyer Team 2        pzProvider1@kpmg.co.uk
     #Setup User Bids  ARGUMENTS
 
     [Return]    ${TENDER}
@@ -198,18 +196,18 @@ Setup User Bids
     Input Text  ${locator.addAsset.items[${index}].postcode}                    ${item.deliveryAddress.postalCode}
     
 # Search for a bid identifier (KDR-1077)
-Пошук тендера по ідентифікатору
+kpmgdealroom.Пошук тендера по ідентифікатору
     [Arguments]    @{ARGUMENTS}
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[1]} == ${TENDER}
     Switch Browser    ${ARGUMENTS[0]}
     Go to                               ${USERS.users['${ARGUMENTS[0]}'].default_page}
     # filter by ID
-    Wait Until Page Contains Element    ${locator.exchangeList.FilterByIdButton}
+    Wait Until Element Is Visible       ${locator.exchangeList.FilterByIdButton}
     Click Element                       ${locator.exchangeList.FilterByIdButton}
     Input Text                          ${locator.exchangeList.FilterTextField}    ${ARGUMENTS[1]}
     Click Element                       ${locator.exchangeList.FilterSubmitButton}
-    Wait Until Page Contain Element     link=$ARGUMENTS[1]  20
+    Wait Until Element Is Visible       link=$ARGUMENTS[1]  20
     
     # filter for external exchanges
     Click Element                       ${locator.exchangeListFilterByTypeButton}
@@ -234,11 +232,11 @@ Setup User Bids
     ...    ${ARGUMENTS[1]} == tender_uaid
     ...    ${ARGUMENTS[2]} == item_id
     ...    ${ARGUMENTS[3]} == field_name
-    ${return_value}=    Run Keyword And Return  Отримати інформацію із тендера    ${username}    ${tender_uaid}    ${field_name}
+    ${return_value}=    Run Keyword And Return  kpmgdealroom.Отримати інформацію із тендера    ${username}    ${tender_uaid}    ${field_name}
     [Return]    ${return_value}
 
 # Get information about the tender
-Отримати інформацію із тендера
+kpmgdealroom.Отримати інформацію із тендера
     [Arguments]    @{ARGUMENTS}
     [Documentation]    ${ARGUMENTS[0]} == username
     ...    ${ARGUMENTS[2]} == fieldname

@@ -15,7 +15,7 @@ def get_tender_dates(initial_tender_data, key):
     data_period = initial_tender_data.data.auctionPeriod
     start_dt = dateutil.parser.parse(data_period['startDate'])
     data = {
-        'StartDate': start_dt.strftime("%d/%m/%Y"),
+        'StartDate': start_dt.strftime("%d-%m-%Y"),
         'StartTime': start_dt.strftime("%H:%M"),
     }
     return data.get(key, '')
@@ -28,14 +28,14 @@ def convert_ISO_DMY(isodate):
     return dateutil.parser.parse(isodate).strftime("%d/%m/%Y")
 
 def convert_date(isodate):
-    return datetime.strptime(isodate, '%d/%m/%Y').date().isoformat()
+    return datetime.strptime(isodate, '%d-%m-%Y').date().isoformat()
 
 def convert_date_to_iso(v_date, v_time):
     full_value = v_date+" "+v_time
     date_obj = datetime.strptime(full_value, "%d/%m/%Y %H:%M")
     time_zone = pytz.timezone('Europe/Kiev')
     localized_date = time_zone.localize(date_obj)
-    return localized_date.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+    return localized_date.strftime("%Y/%m/%dT%H:%M:%S.%f%z")
 
 def convert_number_to_str(number):
     return str(number)
