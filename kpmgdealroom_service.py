@@ -49,18 +49,17 @@ def convert_string_to_fake_email(username):
 def cleanup_string(text):
     return text.replace("[", "").replace("]", "").replace("/", "-").replace(".", "")
 
+def cleanup_name_string(text):
+    return text.replace("[TESTING]", "")[:21] + " _kdrtest"
+
 def inc(value):
     return int(value) + 1
 
+
+# ----- temporary code from here onwards -----
 def set_field(locator, value):
     driver = get_webdriver()
     print ("The value is : " + value)
     stringValue = value.replace("-", "/")
     driver.find_element_by_id(locator).clear()
     driver.find_element_by_id(locator).send_keys(stringValue)
-
-def set_numeric_field(locator, value):
-    driver = get_webdriver()
-    #driver.find_element_by_id(locator).clear()
-    driver.find_element_by_id(locator).send_keys(Keys.HELLO,Keys.chord(Keys.SHIFT,Keys.END),value)
-    

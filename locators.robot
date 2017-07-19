@@ -24,7 +24,7 @@ ${locator.exchangeToolbar.Admin}                            id=li-exchange-toolb
 ${locator.exchangeAdmin.nav.Publish}                        id=leftNavLink_Publish_Exchange
 ${locator.exchangeAdmin.publish.publishButton}              id=publish-exchange-submit
 ${locator.exchangeAdmin.publish.confirmButton}              id=publishExchange-dialog-yes
-${locator.exchangeAdmin.publish.publishedID}                id=#providerAuctionId
+${locator.exchangeAdmin.publish.publishedID}                id=providerAuctionId
 
 # team management
 ${locator.Admin.Admin}                                      id=li-exchange-toolbar-admin
@@ -45,7 +45,7 @@ ${locator.Bids.Bids}                    id=li-exchange-toolbar-bids
 ${locator.Bids.Buyer1Eligible}          //div[@class='form-group']/table/tbody/tr[1]/td[2]/label/span
 ${locator.Bids.Buyer1Qualified}         //div[@class='form-group']/table/tbody/tr[1]/td[3]/label/span
 ${locator.Bids.Buyer2Eligible}          //div[@class='form-group']/table/tbody/tr[2]/td[2]/label/span
-${locator.Bids.Buyer1Qualified}         //div[@class='form-group']/table/tbody/tr[2]/td[3]/label/span
+${locator.Bids.Buyer2Qualified}         //div[@class='form-group']/table/tbody/tr[2]/td[3]/label/span
 ${locator.Bids.Save}                    css=.btn.btn-default.btn-primary
 
 # create exchange
@@ -56,7 +56,7 @@ ${locator.createExchange.SellerName}                        id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}                      id=SponsorEmail
 ${locator.createExchange.AdminEmails}                       id=PrincipalAdministratorEmails
 ${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[2]
-${locator.createExchange.TypeSelector.Prozorro}             xpath=(//a[contains(text(),'Prozorro')])[7]
+${locator.createExchange.TypeSelector.Prozorro}             xpath=(//a[contains(text(),'Prozorro')])[8]
 ${locator.createExchange.StartDate}                         id=AuctionStartDateInput
 ${locator.createExchange.DgfCategorySelector}               //div[@id='_ProzorroCategoryId_dropdown']/div[2]
 ${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'dgfFinancialAssets')]
@@ -135,13 +135,14 @@ ${locator.viewExchange.tenderPeriod.endDate}
 ${locator.viewExchange.enquiryPeriod.startDate}
 ${locator.viewExchange.enquiryPeriod.endDate}
 ${locator.viewExchange.status}
+${locator.viewExchange.items[0].description}
 
 # search exchange list
-${locator.exchangeListFilterByTypeButton}   //th[@id='exchangeDashboardTypeCol']/a/span
+#${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
 ${locator.exchangeList.FilterByIdButton}    //th[@id='exchangeDashboardAuctionIdCol']/a/span
 ${locator.exchangeList.FilterTextField}     //input[@type='text']
 ${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
-${locator.exchangeList.FilteredResult}      //tr[1]/td/a
+${locator.exchangeList.FilteredResult}      //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
 
 # questions and answers
 ${locator.Questions.DraftQuestions}         //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]

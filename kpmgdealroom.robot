@@ -59,7 +59,7 @@ Setup Team
     Click Element                       ${locator.AddTeam.AddNewTeam}
     Input Text                          ${locator.AddTeam.Name}  ${team_name}
     Click Element                       ${locator.AddTeam.Save}
-    Click Element                       ${locator.Adduser.Addusers}
+    Click Element                       ${locator.Addusers.Addusers}
     Input Text                          ${locator.Addusers.Email}   ${team_user}
     Click Element                       ${locator.Addusers.AssignTeamDropdown}    
     Click Element                       link=${team_name}
@@ -69,12 +69,12 @@ Setup Team
 Setup User Bids
     [Arguments]    @{ARGUMENTS}
     Click Element                       ${locator.Bids.Bids}
-    Wait Until Page Contains Element    ${locator.Bids.Buyer1Eligible} 10
+    Wait Until Page Contains Element    ${locator.Bids.Buyer1Eligible}   10
     Click Element                       ${locator.Bids.Buyer1Eligible}
     Click Element                       ${locator.Bids.Buyer1Qualified}
     Click Element                       ${locator.Bids.Buyer2Eligible}
     Click Element                       ${locator.Bids.Buyer2Qualified}
-    Click Element                       ${locator.Bids.Save}}
+    Click Element                       ${locator.Bids.Save}
 
 #------------------------------------------------------------------------------
 #  LOT OPERATIONS
@@ -90,7 +90,6 @@ Setup User Bids
     ${dgfID}=                     Get From Dictionary     ${ARGUMENTS[1].data}    dgfID
     ${dgfDecisionDate}=         convert_ISO_DMY         ${ARGUMENTS[1].data.dgfDecisionDate}
     ${tenderAttempts}=          Get From Dictionary     ${ARGUMENTS[1].data}    tenderAttempts
-    #${tenderAttempts}=         get_tenderAttempts      ${ARGUMENTS[1].data}
     ${procurementMethodType}=   Get From Dictionary     ${ARGUMENTS[1].data}    procurementMethodType
     ${procuringEntity_name}=    Get From Dictionary     ${ARGUMENTS[1].data.procuringEntity}    name
     ${items}=                   Get From Dictionary     ${ARGUMENTS[1].data}    items
@@ -100,17 +99,11 @@ Setup User Bids
     ${step_rate}=               convert_number_to_currency_str   ${ARGUMENTS[1].data.minimalStep.amount}
     ${currency}=                Get From Dictionary     ${ARGUMENTS[1].data.value}    currency
     ${valueAddedTaxIncluded}=   Get From Dictionary     ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
-    #${item0}=                   Get From List           ${items}    0
-    #${descr_lot}=               Get From Dictionary     ${item0}    description
-    ##${unit}=                    Get From Dictionary     ${items[0].unit}    code
-    ##${cav_id}=                  Get From Dictionary     ${items[0].classification}    id
-    ##${quanity}=                 Get From Dictionary     ${items[0]}  quantity
-    ##${quantity}=               get_quantity            ${items[0]}
     ${admin_email}=             kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
     ${sponsor_email}=           kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
     ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartDate
     ${start_time_auction}=      kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartTime
-    ${name}=                    kpmgdealroom_service.cleanup_string                 ${title}
+    ${name}=                    kpmgdealroom_service.cleanup_name_string            ${title}
     ${dgfDecisionID}=           kpmgdealroom_service.cleanup_string                 ${ARGUMENTS[1].data.dgfDecisionID}
     ${description}=             kpmgdealroom_service.cleanup_string                 ${ARGUMENTS[1].data.description_en}
 
@@ -167,7 +160,6 @@ Setup User Bids
     Click Element                   ${locator.exchangeAdmin.publish.confirmButton}
 
     Wait Until Page Contains Element   ${locator.exchangeAdmin.publish.publishedID}  30
-    #${tender_id}=      Get Text    ${locator.exchangeAdmin.publish.publishedID}
     ${TENDER}=          Get Text    ${locator.exchangeAdmin.publish.publishedID}
     
     # team and user setup
@@ -175,8 +167,7 @@ Setup User Bids
     kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}     ${TENDER}
     Setup Team                          Buyer Team 1        pzProvider@kpmg.co.uk
     Setup Team                          Buyer Team 2        pzProvider1@kpmg.co.uk
-    #Setup User Bids  ARGUMENTS
-
+    Setup User Bids
     [Return]    ${TENDER}
     
 # Add item/asset (KDR-1129)
@@ -194,36 +185,29 @@ Setup User Bids
     Input Text  ${locator.addAsset.items[${index}].city}                        ${item.deliveryAddress.locality}
     Input Text  ${locator.addAsset.items[${index}].country}                     ${item.deliveryAddress.countryName_en}
     Input Text  ${locator.addAsset.items[${index}].postcode}                    ${item.deliveryAddress.postalCode}
-    
-# Search for a bid identifier (KDR-1077)
-kpmgdealroom.Пошук тендера по ідентифікатору
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == ${TENDER}
-    Switch Browser    ${ARGUMENTS[0]}
-    Go to                               ${USERS.users['${ARGUMENTS[0]}'].default_page}
-    # filter by ID
-    Wait Until Element Is Visible       ${locator.exchangeList.FilterByIdButton}
-    Click Element                       ${locator.exchangeList.FilterByIdButton}
-    Input Text                          ${locator.exchangeList.FilterTextField}    ${ARGUMENTS[1]}
-    Click Element                       ${locator.exchangeList.FilterSubmitButton}
-    Wait Until Element Is Visible       link=$ARGUMENTS[1]  20
-    
-    # filter for external exchanges
-    Click Element                       ${locator.exchangeListFilterByTypeButton}
-    Input Text                          External
-    ClickElement                        ${locator.exchangeList.FilterSubmitButton}
-    Sleep                               5
-    Wait Until Page Contain Element     link=$ARGUMENTS[1]  20
-    Click Element                       ${locator.exchangeList.FilteredResult}
 
 # Refresh the page with the tender
 Оновити сторінку з тендером
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
-    Switch Browser    ${ARGUMENTS[0]}
-    Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    [Arguments]     ${username}  ${tender_uaid}
+    Switch Browser  ${username}
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}     ${tender_uaid}
+    Reload Page
+
+# Search for a bid identifier (KDR-1077)
+kpmgdealroom.Пошук тендера по ідентифікатору
+    [Arguments]   ${username}   ${tender_uaid}
+    Switch Browser    ${username}
+    Go to                               ${USERS.users['${username}'].default_page}
+    Wait Until Element Is Visible       ${locator.exchangeList.FilterByIdButton}
+    Wait Until Element Is Not Visible   css=div.k-loading-image
+    Click Element                       ${locator.exchangeList.FilterByIdButton}
+    Wait Until Element Is Enabled       ${locator.exchangeList.FilterTextField}    10
+    Input Text                          ${locator.exchangeList.FilterTextField}    ${tender_uaid}
+    Click Element                       ${locator.exchangeList.FilterSubmitButton}
+    Sleep                               1
+    Wait Until Element Is Not Visible   css=div.k-loading-image
+    Click Element                       ${locator.exchangeList.FilteredResult}
+    Wait And Click Element              ${locator.exchangeToolbar.Details}  10
 
 # Obtain information from field
 Отримати інформацію із предмету
