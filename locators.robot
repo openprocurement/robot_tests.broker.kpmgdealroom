@@ -58,7 +58,7 @@ ${locator.createExchange.AdminEmails}                       id=PrincipalAdminist
 ${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[2]
 ${locator.createExchange.TypeSelector.Prozorro}             link=Prozorro
 ${locator.createExchange.StartDate}                         id=AuctionStartDateInput
-${locator.createExchange.DgfCategorySelector}               //div[@id='_ProzorroCategoryId_dropdown']/div[2]
+${locator.createExchange.DgfCategorySelector}               //div[@id='_ExchangeDetails.ProzorroCategory_dropdown']/div[2]/i
 ${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'dgfFinancialAssets')]
 ${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'dgfOtherAssets')]
 ${locator.createExchange.GuaranteeAmount}                   id=guaranteeAmount
@@ -167,9 +167,6 @@ ${locator.Dataroom.UploadSelect}            id=dataroom-upload
 ${locator.Dataroom.SelectFiles}             id=files
 ${locator.Dataroom.UploadFileButton}        //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
 ${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close
-
-
-
 
 # Edwin - The below locators are from UISCE's driver.  To eventually delete...
 ${locator.edit.description}                 id = auction-description

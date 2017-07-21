@@ -15,10 +15,24 @@ def get_tender_dates(initial_tender_data, key):
     data_period = initial_tender_data.data.auctionPeriod
     start_dt = dateutil.parser.parse(data_period['startDate'])
     data = {
-        'StartDate': start_dt.strftime("%d-%m-%Y"),
+        'StartDate': start_dt.strftime("%d/%m/%Y"),
         'StartTime': start_dt.strftime("%H:%M"),
     }
     return data.get(key, '')
+
+
+def adapt_tender_data(tender_data):
+    tender_data['data']['procuringEntity']['name'] = u"Prozorro Test"
+    tender_data['data']['title'] = tender_data['data']['title'].replace("[", "").replace("]", "")
+    tender_data['data']['title_en'] = tender_data['data']['title_en'].replace("[", "").replace("]", "").replace("TESTING", "")
+    tender_data['data']['title_ru'] = tender_data['data']['title_ru'].replace("[", "").replace("]", "")
+    tender_data['data']['dgfDecisionID'] = tender_data['data']['dgfDecisionID'].replace("/", "-")
+    tender_data['data']['description'] = tender_data['data']['description_en'].replace(".","")
+    tender_data['data']['minimalStep']['amount'] = 10000000
+
+    # todo - remove on completion of KDR-1237
+    tender_data['data']['title'] = tender_data['data']['title_en'][:21] + " _kdrtest"
+    return tender_data
 
 def is_checked(locator): 
     driver = get_webdriver() 
@@ -46,11 +60,11 @@ def convert_number_to_currency_str(number):
 def convert_string_to_fake_email(username):
     return username + "@robottest.com"
 
-def cleanup_string(text):
-    return text.replace("[", "").replace("]", "").replace("/", "-").replace(".", "")
+#def cleanup_string(text):
+#    return text.replace("[", "").replace("]", "").replace("/", "-").replace(".", "")
 
-def cleanup_name_string(text):
-    return text.replace("[TESTING]", "")[:21] + " _kdrtest"
+#def cleanup_name_string(text):
+#    return text.replace("[TESTING]", "")[:21] + " _kdrtest"
 
 def inc(value):
     return int(value) + 1

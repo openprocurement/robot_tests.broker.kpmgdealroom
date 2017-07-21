@@ -22,6 +22,8 @@ Resource          locators.robot
 # Prepare data for tender announcement
 Підготувати дані для оголошення тендера
     [Arguments]    ${username}    ${tender_data}    ${role_name}
+    ${tender_data}=     kpmgdealroom_service.adapt_tender_data      ${tender_data}
+
     [Return]    ${tender_data}
 
 # Updated for KDR
@@ -87,8 +89,8 @@ Setup User Bids
     ...    ${ARGUMENTS[1]} == tender_data
     ...    ${ARGUMENTS[2]} == ${filepath}
     Set Global Variable    ${TENDER_INIT_DATA_LIST}     ${ARGUMENTS[1]}
-    ${title}=                   Get From Dictionary     ${ARGUMENTS[1].data}    title_en
-    ${dgfID}=                     Get From Dictionary     ${ARGUMENTS[1].data}    dgfID
+    ${title}=                   Get From Dictionary     ${ARGUMENTS[1].data}    title
+    ${dgfID}=                   Get From Dictionary     ${ARGUMENTS[1].data}    dgfID
     ${dgfDecisionDate}=         convert_ISO_DMY         ${ARGUMENTS[1].data.dgfDecisionDate}
     ${tenderAttempts}=          Get From Dictionary     ${ARGUMENTS[1].data}    tenderAttempts
     ${procurementMethodType}=   Get From Dictionary     ${ARGUMENTS[1].data}    procurementMethodType
@@ -104,9 +106,8 @@ Setup User Bids
     ${sponsor_email}=           kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
     ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartDate
     ${start_time_auction}=      kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartTime
-    ${name}=                    kpmgdealroom_service.cleanup_name_string            ${title}
-    ${dgfDecisionID}=           kpmgdealroom_service.cleanup_string                 ${ARGUMENTS[1].data.dgfDecisionID}
-    ${description}=             kpmgdealroom_service.cleanup_string                 ${ARGUMENTS[1].data.description_en}
+    ${dgfDecisionID}=           Get From Dictionary     ${ARGUMENTS[1].data}    dgfDecisionID
+    ${description}=             Get From Dictionary     ${ARGUMENTS[1].data}    description
 
     Switch Browser    ${ARGUMENTS[0]}
     
@@ -118,7 +119,7 @@ Setup User Bids
     Wait Until Element Is Visible       ${locator.createExchange.ClientSelector.Prozorro}  2
     Click Element                       ${locator.createExchange.ClientSelector.Prozorro}
     
-    Input Text                          ${locator.createExchange.Name}  ${name}
+    Input Text                          ${locator.createExchange.Name}  ${title}
     Input Text                          ${locator.createExchange.SponsorEmail}  ${sponsor_email}
     Input Text                          ${locator.createExchange.AdminEmails}   ${admin_email}
     Wait And Click Element              ${locator.createExchange.TypeSelector}  10
@@ -169,7 +170,7 @@ Setup User Bids
     Setup Team                          Buyer Team 1        pzProvider@kpmg.co.uk
     Setup Team                          Buyer Team 2        pzProvider1@kpmg.co.uk
     Setup User Bids
-    Go To   https://test.kpmgdealroom.com/api/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
+    #Go To   https://test.kpmgdealroom.com/api/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
 
     [Return]    ${TENDER}
     
@@ -232,122 +233,122 @@ kpmgdealroom.Отримати інформацію із тендера
 
 # Get information from title
 Отримати інформацію про title
-    ${return_value}=    Get Text    ${locator.viewExchange.title}
-    [Return]    ${return_value}
+    ${return_value}=    Get Text    ${locator.viewExchange.title}
+    [Return]    ${return_value}
 
 # Get information from description
 Отримати інформацію про description
-    ${return_value}=    Get Field Value    description
-    [Return]    ${return_value}
+    ${return_value}=    Get Field Value    description
+    [Return]    ${return_value}
 
 # Get information from procurementMethodType
 Отримати інформацію про procurementMethodType
-  ${return_value}=    Get Value    ${locator.viewExchange.procurementMethodType}
-    [Return]    ${return_value}
+    ${return_value}=    Get Value    ${locator.viewExchange.procurementMethodType}
+    [Return]    ${return_value}
 
 # Get information from  dgfID
 Отримати інформацію про dgfID
-    ${return_value}=    Get Field Value    dgfID
-    [Return]    ${return_value}
+    ${return_value}=    Get Field Value    dgfID
+    [Return]    ${return_value}
 
 # Get information from dgfDecisionID
 Отримати інформацію про dgfDecisionID
-    ${return_value}=    Get Field Value    dgfDecisionID
-    [Return]    ${return_value}
+    ${return_value}=    Get Field Value    dgfDecisionID
+    [Return]    ${return_value}
 
 # Get information from dgfDecisionDate
 Отримати інформацію про dgfDecisionDate
-    ${date_value}=    Get Field Value    dgfDecisionDate
-    ${return_value}=    kpmgdealroom_service.convert_date    ${date_value}
-    [Return]    ${return_value}
+    ${date_value}=    Get Field Value    dgfDecisionDate
+    ${return_value}=    kpmgdealroom_service.convert_date    ${date_value}
+    [Return]    ${return_value}
 
 # Get information from tenderAttempts
 Отримати інформацію про tenderAttempts
-    ${return_value}=    Get Field Value    tenderAttempts
-    ${return_value}=    Convert To Integer    ${return_value}
-    [Return]    ${return_value}
+    ${return_value}=    Get Field Value    tenderAttempts
+    ${return_value}=    Convert To Integer    ${return_value}
+    [Return]    ${return_value}
 
 # Get information from eligiblityCriteria
 Отримати інформацію про eligibilityCriteria
-    ${return_value}=    Get Field Value    eligibilityCriteria
+    ${return_value}=    Get Field Value    eligibilityCriteria
 
 # Get information from value.amount
 Отримати інформацію про value.amount
-    ${return_value}=    Get Value    ${locator.viewExchange.value.amount}
-    ${return_value}=    Convert To Number    ${return_value.replace(' ', '').replace(',', '.')}
-    [Return]    ${return_value}
+    ${return_value}=    Get Value    ${locator.viewExchange.value.amount}
+    ${return_value}=    Convert To Number    ${return_value.replace(' ', '').replace(',', '.')}
+    [Return]    ${return_value}
 
 # Get information from minimialStep.amount
 Отримати інформацію про minimalStep.amount
- ${return_value}=    Get Value    ${locator.viewExchange.minimalStep.amount}
-    ${return_value}=    Convert To Number    ${return_value.replace(' ', '').replace(',', '.')}
-    [Return]    ${return_value}
+    ${return_value}=    Get Value    ${locator.viewExchange.minimalStep.amount}
+    ${return_value}=    Convert To Number    ${return_value.replace(' ', '').replace(',', '.')}
+    [Return]    ${return_value}
 
 # Get information from value.currency
 Отримати інформацію про value.currency
-    ${return_value}=    Get Field Value    value.currency
-    [Return]    ${return_value}
+    ${return_value}=    Get Field Value    value.currency
+    [Return]    ${return_value}
 
 # Get information from value.valueAddedTaxIncluded
 #TODO & FIXME
 Отримати інформацію про value.valueAddedTaxIncluded
-    ${return_value}=    kpmgdealroom_service.is_checked    ${locator.viewExchange.value.valueAddedTaxIncluded}
-    [Return]    ${return_value}
+    ${return_value}=    kpmgdealroom_service.is_checked    ${locator.viewExchange.value.valueAddedTaxIncluded}
+    [Return]    ${return_value}
 
 # Get information from auctionID
 Отримати інформацію про auctionID
-    ${return_value}=    Get Field Value    tenderId
-    [Return]    ${return_value}
+    ${return_value}=    Get Field Value    tenderId
+    [Return]    ${return_value}
 
 # Get information from procuringEntity.name
 Отримати інформацію про procuringEntity.name
-    ${return_value}=    Get Field Value    procuringEntity.name
-    [Return]    ${return_value}
+    ${return_value}=    Get Field Value    procuringEntity.name
+    [Return]    ${return_value}
 
 # Get information from auctionPeriod.startDate
 Отримати інформацію про auctionPeriod.startDate
-    ${date_value}=    Get Value    ${locator.viewExchange.auctionPeriod.startDate}
-    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
-    [Return]    ${return_value}
+    ${date_value}=    Get Value    ${locator.viewExchange.auctionPeriod.startDate}
+    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
+    [Return]    ${return_value}
 
 # Get information from auctionPeriod.endDate
 Отримати інформацію про auctionPeriod.endDate
-   ${date_value}=    Get Value    ${locator.viewExchange.auctionPeriod.endDate}
-    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
-    [Return]    ${return_value}
+    ${date_value}=    Get Value    ${locator.viewExchange.auctionPeriod.endDate}
+    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
+    [Return]    ${return_value}
 
 # Get information from tenderPeriod.startDate
 Отримати інформацію про tenderPeriod.startDate
- ${date_value}=    Get Value    ${locator.viewExchange.tenderPeriod.startDate}
-    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
-    [Return]    ${return_value}
+    ${date_value}=    Get Value    ${locator.viewExchange.tenderPeriod.startDate}
+    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
+    [Return]    ${return_value}
 
 # Get information from tenderPeriod.endDate
 Отримати інформацію про tenderPeriod.endDate
- ${date_value}=    Get Value    ${locator.viewExchange.tenderPeriod.endDate}
-    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
-    [Return]    ${return_value}
+    ${date_value}=    Get Value    ${locator.viewExchange.tenderPeriod.endDate}
+    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
+    [Return]    ${return_value}
 
 # Get information from enquiryPeriod.startDate
 Отримати інформацію про enquiryPeriod.startDate
- ${date_value}=    Get Value    ${locator.viewExchange.enquiryPeriod.startDate}
-    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
-    [Return]    ${return_value}
+    ${date_value}=    Get Value    ${locator.viewExchange.enquiryPeriod.startDate}
+    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
+    [Return]    ${return_value}
 
 # Get information from enquiryPeriod.endDate
 Отримати інформацію про enquiryPeriod.endDate
- ${return_value}=    Get Value    ${locator.viewExchange.enquiryPeriod.endDate}
-   # ${date_value}=    Get Field Value    enquiryPeriod.endDate
-    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
-    [Return]    ${return_value}
+    ${return_value}=    Get Value    ${locator.viewExchange.enquiryPeriod.endDate}
+    # ${date_value}=    Get Field Value    enquiryPeriod.endDate
+    ${return_value}=    kpmgdealroom_service.convert_date_to_iso    ${date_value}    ${time_value}
+    [Return]    ${return_value}
 
 # Get information from status
 Отримати інформацію про status
-    Reload Page
-    Wait Until Page Contains Element    ${locator.viewExchange.status}
-    Sleep    2
-    ${return_value}=    Get Field Value    status
-    [Return]    ${return_value}
+    Reload Page
+    Wait Until Page Contains Element    ${locator.viewExchange.status}
+    Sleep    2
+    ${return_value}=    Get Field Value    status
+    [Return]    ${return_value}
 
 #------------------------------------------------------------------------------
 #  WORK WITH EXCHANGE ASSETS
