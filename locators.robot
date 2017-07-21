@@ -137,6 +137,39 @@ ${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='
 ${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
 ${locator.viewExchange.status}
 
+# search exchange list
+#${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
+${locator.exchangeList.FilterByIdButton}    //th[@id='exchangeDashboardAuctionIdCol']/a/span
+${locator.exchangeList.FilterTextField}     //input[@type='text']
+${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
+${locator.exchangeList.FilteredResult}      //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
+
+# questions and answers
+${locator.Questions.DraftQuestions}         //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]
+${locator.Questions.Subject}                id=Subject
+${locator.Questions.Question}               id=Question
+${locator.Questions.DocumentReference}      id = DocumentReference
+${locator.Questions.CategoryDropdown}       //*[@id='_Category_dropdown']/div[2]/i
+${locator.Questions.CategoryDocuments}      //*[@id='_Category_dropdown']/ul/li[3]/a
+${locator.Questions.PriorityDropdown}       //*[@id='_Priority_dropdown']/div[2]/i
+${locator.Questions.PriorityMedium}         //*[@id='_Priority_dropdown']/ul/li[2]/a
+${locator.Questions.ApproveQuestion}        id=question-Approved
+${locator.Questions.Confirm}                id=confirm-edit-yes
+${locator.Answers.PageTitle}                id=pageTitle
+${locator.Answers.Answer}                   id=Answer
+${locator.Answers.Publish}                  id=question-Published
+
+# file operations
+${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room
+${locator.Dataroom.Upload}                  id=dataroom-upload
+${locator.Dataroom.T&CYes}                  id=exchangerules-dialog-yes
+${locator.Dataroom.UploadSelect}            id=dataroom-upload
+${locator.Dataroom.SelectFiles}             id=files
+${locator.Dataroom.UploadFileButton}        //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
+${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close
+
+
+
 
 # Edwin - The below locators are from UISCE's driver.  To eventually delete...
 ${locator.edit.description}                 id = auction-description
