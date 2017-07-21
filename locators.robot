@@ -113,60 +113,29 @@ ${locator.addAsset.items[2].postcode}                       name=Assets[2].Addre
 ${locator.addAsset.SaveButton}                              css=.btn.btn-default.btn-primary
 ${locator.addAsset.AddButton}                               id=add-asset
 
+
 # view exchange information
-${locator.viewExchange.title}
-${locator.viewExchange.description}
+${locator.viewExchange.title}                               id=exchangeName
+${locator.viewExchange.description}                         
 ${locator.viewExchange.procurementMethodType}
 ${locator.viewExchange.dgfID}
 ${locator.viewExchange.dgfDecisionID}
 ${locator.viewExchange.dgfDecisionDate}
 ${locator.viewExchange.tenderAttempts}
 ${locator.viewExchange.eligibilityCriteria}
-${locator.viewExchange.value.amount}
-${locator.viewExchange.minimalStep.amount}
+${locator.viewExchange.value.amount}                        id=ExchangeDetails_StartingPrice
+${locator.viewExchange.minimalStep.amount}                  id=ExchangeDetails_MinimumStepValue
 ${locator.viewExchange.value.currency}
 ${locator.viewExchange.value.valueAddedTaxIncluded}
 ${locator.viewExchange.tenderId}
 ${locator.viewExchange.procuringEntity.name}
-${locator.viewExchange.auctionPeriod.startDate}
-${locator.viewExchange.auctionPeriod.endDate}
-${locator.viewExchange.tenderPeriod.startDate}
-${locator.viewExchange.tenderPeriod.endDate}
-${locator.viewExchange.enquiryPeriod.startDate}
-${locator.viewExchange.enquiryPeriod.endDate}
+${locator.viewExchange.auctionPeriod.startDate}             xpath=//div[@class='form-group']/div[3]/div[1]/div[1]/input[1]
+${locator.viewExchange.auctionPeriod.endDate}               xpath=//div[@class='form-group']/div[3]/div[1]/div[1]/input[2]
+${locator.viewExchange.tenderPeriod.startDate}              xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[1]
+${locator.viewExchange.tenderPeriod.endDate}                xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[2]
+${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[1]
+${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
 ${locator.viewExchange.status}
-${locator.viewExchange.items[0].description}
-
-# search exchange list
-#${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
-${locator.exchangeList.FilterByIdButton}    //th[@id='exchangeDashboardAuctionIdCol']/a/span
-${locator.exchangeList.FilterTextField}     //input[@type='text']
-${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
-${locator.exchangeList.FilteredResult}      //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
-
-# questions and answers
-${locator.Questions.DraftQuestions}         //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]
-${locator.Questions.Subject}                id=Subject
-${locator.Questions.Question}               id=Question
-${locator.Questions.DocumentReference}      id = DocumentReference
-${locator.Questions.CategoryDropdown}       //*[@id='_Category_dropdown']/div[2]/i
-${locator.Questions.CategoryDocuments}      //*[@id='_Category_dropdown']/ul/li[3]/a
-${locator.Questions.PriorityDropdown}       //*[@id='_Priority_dropdown']/div[2]/i
-${locator.Questions.PriorityMedium}         //*[@id='_Priority_dropdown']/ul/li[2]/a
-${locator.Questions.ApproveQuestion}        id=question-Approved
-${locator.Questions.Confirm}                id=confirm-edit-yes
-${locator.Answers.PageTitle}                id=pageTitle
-${locator.Answers.Answer}                   id=Answer
-${locator.Answers.Publish}                  id=question-Published
-
-# file operations
-${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room
-${locator.Dataroom.Upload}                  id=dataroom-upload
-${locator.Dataroom.T&CYes}                  id=exchangerules-dialog-yes
-${locator.Dataroom.UploadSelect}            id=dataroom-upload
-${locator.Dataroom.SelectFiles}             id=files
-${locator.Dataroom.UploadFileButton}        //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
-${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close
 
 
 # Edwin - The below locators are from UISCE's driver.  To eventually delete...
