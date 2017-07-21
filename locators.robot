@@ -56,7 +56,7 @@ ${locator.createExchange.SellerName}                        id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}                      id=SponsorEmail
 ${locator.createExchange.AdminEmails}                       id=PrincipalAdministratorEmails
 ${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[2]
-${locator.createExchange.TypeSelector.Prozorro}             xpath=(//a[contains(text(),'Prozorro')])[8]
+${locator.createExchange.TypeSelector.Prozorro}             link=Prozorro
 ${locator.createExchange.StartDate}                         id=AuctionStartDateInput
 ${locator.createExchange.DgfCategorySelector}               //div[@id='_ProzorroCategoryId_dropdown']/div[2]
 ${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'dgfFinancialAssets')]

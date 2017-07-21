@@ -16,6 +16,7 @@ Resource          locators.robot
     Open Browser    ${USERS.users['${ARGUMENTS[0]}'].homepage}    ${USERS.users['${ARGUMENTS[0]}'].browser}    alias=${ARGUMENTS[0]}
     Set Window Size    @{USERS.users['${ARGUMENTS[0]}'].size}
     Set Window Position    @{USERS.users['${ARGUMENTS[0]}'].position}
+    Set Browser Implicit Wait   10
     Run Keyword If    '${ARGUMENTS[0]}' != 'kpmgdealroom_Viewer'    Login    ${ARGUMENTS[0]}
 
 # Prepare data for tender announcement
@@ -168,6 +169,8 @@ Setup User Bids
     Setup Team                          Buyer Team 1        pzProvider@kpmg.co.uk
     Setup Team                          Buyer Team 2        pzProvider1@kpmg.co.uk
     Setup User Bids
+    Go To   https://test.kpmgdealroom.com/api/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
+
     [Return]    ${TENDER}
     
 # Add item/asset (KDR-1129)
