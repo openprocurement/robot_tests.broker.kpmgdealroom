@@ -16,8 +16,7 @@ ${locator.toolbar.LogoutButton}                             id=toolbar-logout
 ${locator.exchangeToolbar.Details}                          id=li-exchange-toolbar-assets
 ${locator.exchangeToolbar.DataRoom}                         id=li-exchange-toolbar-data-room
 ${locator.exchangeToolbar.FAQ}                              id=li-exchange-toolbar-data-faq
-${locator.exchangeToolbar.Bids}                             id=li-exchange-toolbar-data-bids
-${locator.exchangeToolbar.QandA}                            id=li-exchange-toolbar-qanda	
+${locator.exchangeToolbar.Bids}                             id=li-exchange-toolbar-data-bids	
 ${locator.exchangeToolbar.Admin}                            id=li-exchange-toolbar-admin
 
 # publish exchange
@@ -58,6 +57,7 @@ ${locator.createExchange.AdminEmails}                       id=PrincipalAdminist
 ${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[2]
 ${locator.createExchange.TypeSelector.Prozorro}             link=Prozorro
 ${locator.createExchange.StartDate}                         id=AuctionStartDateInput
+${locator.createExchange.StartDateField}                    AuctionStartDate
 ${locator.createExchange.DgfCategorySelector}               //div[@id='_ExchangeDetails.ProzorroCategory_dropdown']/div[2]/i
 ${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'dgfFinancialAssets')]
 ${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'dgfOtherAssets')]
@@ -68,6 +68,7 @@ ${locator.createExchange.MinimumStepValue}                  id=minimumStepValue
 ${locator.createExchange.dgfID}                             id=dgfId
 ${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails.DgfDecisionId
 ${locator.createExchange.dgfDecisionDate}                   id=DgfDecisionDateInput
+${locator.createExchange.dgfDecisionDateField}                   DgfDecisionDate
 ${locator.createExchange.description}                       name=ExchangeDetails.Description
 ${locator.createExchange.tenderAttempts}                    name=ExchangeDetails.TenderAttempts   
 
@@ -145,19 +146,29 @@ ${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
 ${locator.exchangeList.FilteredResult}      //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
 
 # questions and answers
-${locator.Questions.DraftQuestions}         //*[@id='questionsPartial']/div/div[1]/div[2]/a[2]
+${locator.Questions.DraftQuestionButton}    css=a.btn.btn-primary
 ${locator.Questions.Subject}                id=Subject
 ${locator.Questions.Question}               id=Question
-${locator.Questions.DocumentReference}      id = DocumentReference
-${locator.Questions.CategoryDropdown}       //*[@id='_Category_dropdown']/div[2]/i
-${locator.Questions.CategoryDocuments}      //*[@id='_Category_dropdown']/ul/li[3]/a
-${locator.Questions.PriorityDropdown}       //*[@id='_Priority_dropdown']/div[2]/i
-${locator.Questions.PriorityMedium}         //*[@id='_Priority_dropdown']/ul/li[2]/a
+${locator.Questions.SubmitQuestionButton}   //button[@type='submit']
 ${locator.Questions.ApproveQuestion}        id=question-Approved
 ${locator.Questions.Confirm}                id=confirm-edit-yes
+
 ${locator.Answers.PageTitle}                id=pageTitle
 ${locator.Answers.Answer}                   id=Answer
 ${locator.Answers.Publish}                  id=question-Published
+
+
+# bidding
+${locator.Bidding.UploadFilesButton}        //button[@type='submit']
+${locator.Bidding.EligibilityFile}          id=BidDocuments_EligibilityDocument
+${locator.Bidding.QualificationFile}        id=BidDocuments_QualificationDocument
+${locator.Bidding.InitialBiddingLink}       //td/a
+${locator.Bidding.BiddingAmount}            id=ExternalExchangeBid_Amount
+${locator.Bidding.SubmitBidButton}          id=submit-bid-submitbtn
+${locator.Bidding.ConfirmBidPassword}       id=Password
+${locator.Bidding.ConfirmBidButton}         id=submit-bid-dialog-yes
+${locator.Bidding.CancelBidButton}          id=submit-bid-cancelbtn
+${locator.Bidding.ConfirmCancelBidButton}   id=cancel-bid-dialog-yes
 
 # file operations
 ${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room
@@ -167,6 +178,12 @@ ${locator.Dataroom.UploadSelect}            id=dataroom-upload
 ${locator.Dataroom.SelectFiles}             id=files
 ${locator.Dataroom.UploadFileButton}        //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
 ${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close
+
+
+
+
+
+
 
 # Edwin - The below locators are from UISCE's driver.  To eventually delete...
 ${locator.edit.description}                 id = auction-description

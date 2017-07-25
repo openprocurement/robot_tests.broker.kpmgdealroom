@@ -5,6 +5,7 @@ import urllib
 import time
 
 from datetime import datetime
+from iso8601 import parse_date
 from robot.libraries.BuiltIn import BuiltIn
 
 def get_webdriver():
@@ -44,6 +45,11 @@ def convert_ISO_DMY(isodate):
 def convert_date(isodate):
     return datetime.strptime(isodate, '%d-%m-%Y').date().isoformat()
 
+def convert_date_to_slash_format(isodate):
+    iso_dt = parse_date(isodate)
+    date_string = iso_dt.strftime("%d/%m/%Y %H:%M:%S")
+    return date_string
+
 def convert_date_to_iso(v_date, v_time):
     full_value = v_date+" "+v_time
     date_obj = datetime.strptime(full_value, "%d/%m/%Y %H:%M")
@@ -68,6 +74,12 @@ def convert_string_to_fake_email(username):
 
 def inc(value):
     return int(value) + 1
+
+
+def get_upload_file_path(filename):
+    workingFolder = os.path.join(os.getcwd(), 'src/robot_tests.broker.kpmgdealroom/')
+    filename.replace('/','')
+    return os.path.join(workingFolder, filename)
 
 
 # ----- temporary code from here onwards -----

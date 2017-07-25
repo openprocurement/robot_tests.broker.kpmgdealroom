@@ -1,4 +1,3 @@
-
 #------------------------------------------------------------------------------
 #  QUESTIONS AND ANSWERS
 #------------------------------------------------------------------------------
@@ -66,15 +65,6 @@
     ${return_value}=    Get text    id = messages-notes
     [Return]    ${return_value}
 
-
-
-
-
-
-
-
-
-
 #------- get field data ---------
 
 
@@ -93,41 +83,6 @@
     ${result_field}=    Get Value    ${locator.edit.${ARGUMENTS[2]}}
     Should Be Equal    ${result_field}    ${ARGUMENTS[3]}
 
-# Submit a quote
-Подати цінову пропозицію
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == tenderId
-    ...    ${ARGUMENTS[2]} == ${test_bid_data}
-    ...    ${ARGUMENTS[3]} == ${filepath}
-    ${amount}=    get_str    ${ARGUMENTS[2].data.value.amount}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Wait Until Page Contains Element    id = view-btn
-    Click Element    id= view-btn
-    sleep    3s
-    Click Element    id = create-bid-btn
-    sleep    5s
-    Input Text    id=bids-value_amount    ${amount}
-    Choose File    id = upload-file-input
-    Click Element    id= create-bid-btn
-    sleep    3
-    ${resp}=    Get Value    id=bids-value_amount
-    [Return]    ${resp}
-
-# Cancel your bid
-Скасувати цінову пропозицію
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == tenderId
-    Go To    http://proumstrade.com.ua/bids/index
-    Wait Until Page Contains Element    id = view-bids-btn
-    Click Element    id = view-bids-btn
-    Sleep    3
-    Wait Until Page Contains Element    id = modal-btn
-    Click Element    id=modal-btn
-    Wait Until Page Contains Element    id = messages-notes
-    Input Text    id = messages-notes    Some reason
-    Click Element    id = decline-modal-id
 
 # Get information from the offer
 Отримати інформацію із пропозиції
@@ -135,7 +90,7 @@
     Go To    http://proumstrade.com.ua/bids/index    ${tender_uaid}
     Wait Until Page Contains Element    id = view-btn
     Click Element    id = view-btn
-    Wait Until Page Contains Element    id=bids-value-amount
+    Wait Until Page Contains Element    id=bids-value-amountEnhanced bifurcated  _kdrtest
     ${value}=    Get Value    id=bids-value_amount
     ${value}=    Convert To Number    ${value}
     [Return]    ${value}

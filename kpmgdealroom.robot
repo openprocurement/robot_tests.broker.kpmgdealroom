@@ -23,7 +23,6 @@ Resource          locators.robot
 Підготувати дані для оголошення тендера
     [Arguments]    ${username}    ${tender_data}    ${role_name}
     ${tender_data}=     kpmgdealroom_service.adapt_tender_data      ${tender_data}
-
     [Return]    ${tender_data}
 
 # Updated for KDR
@@ -34,6 +33,15 @@ Login
     Input text    ${locator.login.PasswordField}    ${USERS.users['${ARGUMENTS[0]}'].password}
     Click Element    ${locator.login.LoginButton}
     Sleep    2
+
+
+Input Date
+  [Arguments]  ${elem_name_locator}  ${date}
+  ${date}=   kpmgdealroom_service.convert_date_to_slash_format   ${date}
+  Log To Console    ${date}
+  Focus   ${elem_name_locator}
+  Execute Javascript   $("#${elem_name_locator}").val('${date}');
+  #Input Text    id=${elem_name_locator}  ${date}
 
 #
 #Write Form Field
@@ -84,32 +92,29 @@ Setup User Bids
 #------------------------------------------------------------------------------
 # Create a tender (KDR-1072)
 Створити тендер
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == tender_data
-    ...    ${ARGUMENTS[2]} == ${filepath}
-    Set Global Variable    ${TENDER_INIT_DATA_LIST}     ${ARGUMENTS[1]}
-    ${title}=                   Get From Dictionary     ${ARGUMENTS[1].data}    title
-    ${dgfID}=                   Get From Dictionary     ${ARGUMENTS[1].data}    dgfID
-    ${dgfDecisionDate}=         convert_ISO_DMY         ${ARGUMENTS[1].data.dgfDecisionDate}
-    ${tenderAttempts}=          Get From Dictionary     ${ARGUMENTS[1].data}    tenderAttempts
-    ${procurementMethodType}=   Get From Dictionary     ${ARGUMENTS[1].data}    procurementMethodType
-    ${procuringEntity_name}=    Get From Dictionary     ${ARGUMENTS[1].data.procuringEntity}    name
-    ${items}=                   Get From Dictionary     ${ARGUMENTS[1].data}    items
+    [Arguments]    ${username}  ${tender_data}
+    Set Global Variable    ${TENDER_INIT_DATA_LIST}     ${tender_data}
+    ${title}=                   Get From Dictionary     ${tender_data.data}    title
+    ${dgfID}=                   Get From Dictionary     ${tender_data.data}    dgfID
+    ${dgfDecisionDate}=         convert_ISO_DMY         ${tender_data.data.dgfDecisionDate}
+    ${tenderAttempts}=          Get From Dictionary     ${tender_data.data}    tenderAttempts
+    ${procurementMethodType}=   Get From Dictionary     ${tender_data.data}    procurementMethodType
+    ${procuringEntity_name}=    Get From Dictionary     ${tender_data.data.procuringEntity}    name
+    ${items}=                   Get From Dictionary     ${tender_data.data}    items
     ${number_of_items}=         Get Length              ${items}
-    ${guarantee}=               convert_number_to_currency_str   ${ARGUMENTS[1].data.guarantee.amount}
-    ${budget}=                  convert_number_to_currency_str   ${ARGUMENTS[1].data.value.amount}
-    ${step_rate}=               convert_number_to_currency_str   ${ARGUMENTS[1].data.minimalStep.amount}
-    ${currency}=                Get From Dictionary     ${ARGUMENTS[1].data.value}    currency
-    ${valueAddedTaxIncluded}=   Get From Dictionary     ${ARGUMENTS[1].data.value}    valueAddedTaxIncluded
-    ${admin_email}=             kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
-    ${sponsor_email}=           kpmgdealroom_service.convert_string_to_fake_email   ${ARGUMENTS[0]}
-    ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartDate
-    ${start_time_auction}=      kpmgdealroom_service.get_tender_dates               ${ARGUMENTS[1]}    StartTime
-    ${dgfDecisionID}=           Get From Dictionary     ${ARGUMENTS[1].data}    dgfDecisionID
-    ${description}=             Get From Dictionary     ${ARGUMENTS[1].data}    description
+    ${guarantee}=               convert_number_to_currency_str   ${tender_data.data.guarantee.amount}
+    ${budget}=                  convert_number_to_currency_str   ${tender_data.data.value.amount}
+    ${step_rate}=               convert_number_to_currency_str   ${tender_data.data.minimalStep.amount}
+    ${currency}=                Get From Dictionary     ${tender_data.data.value}    currency
+    ${valueAddedTaxIncluded}=   Get From Dictionary     ${tender_data.data.value}    valueAddedTaxIncluded
+    ${admin_email}=             kpmgdealroom_service.convert_string_to_fake_email   ${username}
+    ${sponsor_email}=           kpmgdealroom_service.convert_string_to_fake_email   ${username}
+    ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${tender_data}    StartDate
+    ${start_time_auction}=      kpmgdealroom_service.get_tender_dates               ${tender_data}    StartTime
+    ${dgfDecisionID}=           Get From Dictionary     ${tender_data.data}    dgfDecisionID
+    ${description}=             Get From Dictionary     ${tender_data.data}    description
 
-    Switch Browser    ${ARGUMENTS[0]}
+    Switch Browser    ${username}
     
     #  1. Click Create Exchange button
     Wait And Click Element    ${locator.toolbar.CreateExchangeButton}   5
@@ -125,13 +130,11 @@ Setup User Bids
     Wait And Click Element              ${locator.createExchange.TypeSelector}  10
     Wait Until Element Is Visible       ${locator.createExchange.TypeSelector.Prozorro}  2
     Click Element                       ${locator.createExchange.TypeSelector.Prozorro}
-    #Wait Until Element Is Visible       ${locator.createExchange.StartDate}     2
-    #Sleep  2
-    #Input Text                          ${locator.createExchange.StartDate}     ${start_day_auction}
-    #sleep  5
+    Sleep                               1
+    Wait Until Element Is Visible       ${locator.createExchange.StartDate}     2
+    Input Date                          ${locator.createExchange.StartDateField}     ${tender_data.data.auctionPeriod.startDate}
     Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector}  5
     Click Element                       ${locator.createExchange.DgfCategorySelector}
-    #sleep  5
     Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}  2
     Click Element                       ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}
     
@@ -141,7 +144,7 @@ Setup User Bids
     Input Text                          ${locator.createExchange.MinimumStepValue}  ${step_rate} 
     Input Text                          ${locator.createExchange.dgfID}             ${dgfID}
     Input Text                          ${locator.createExchange.dgfDecisionID}     ${dgfDecisionID}
-    #Input Text                          ${locator.createExchange.dgfDecisionDate}   ${dgfDecisionDate}
+    Input Date                          ${locator.createExchange.dgfDecisionDateField}   ${tender_data.data.dgfDecisionDate}
     Input Text                          ${locator.createExchange.description}       ${description}    
     Input Text                          ${locator.createExchange.tenderAttempts}    ${tenderAttempts}
 
@@ -166,12 +169,11 @@ Setup User Bids
     
     # team and user setup
     Click Element                       ${locator.toolbar.ExchangesButton}
-    kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}     ${TENDER}
+    kpmgdealroom.Пошук тендера по ідентифікатору  ${username}     ${TENDER}
     Setup Team                          Buyer Team 1        pzProvider@kpmg.co.uk
     Setup Team                          Buyer Team 2        pzProvider1@kpmg.co.uk
     Setup User Bids
-    #Go To   https://test.kpmgdealroom.com/api/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
-
+    
     [Return]    ${TENDER}
     
 # Add item/asset (KDR-1129)
@@ -181,7 +183,6 @@ Setup User Bids
     Wait Until Element Is Visible   ${locator.addAsset.items[${index}].description}    20
     Input Text  ${locator.addAsset.items[${index}].description}                 ${item.description}
     Input Text  ${locator.addAsset.items[${index}].quantity}                    ${item.quantity}
-    #Input Text  ${locator.addAsset.items[${index}].classification.scheme}       ${item.classification.scheme}
     Input Text  ${locator.addAsset.items[${index}].classification.description}  ${item.classification.description}
     Input Text  ${locator.addAsset.items[${index}].classification.code}         ${item.classification.id}
     Input Text  ${locator.addAsset.items[${index}].address1}                    ${item.deliveryAddress.streetAddress}
@@ -189,6 +190,24 @@ Setup User Bids
     Input Text  ${locator.addAsset.items[${index}].city}                        ${item.deliveryAddress.locality}
     Input Text  ${locator.addAsset.items[${index}].country}                     ${item.deliveryAddress.countryName_en}
     Input Text  ${locator.addAsset.items[${index}].postcode}                    ${item.deliveryAddress.postalCode}
+
+Додати предмет закупівлі
+  [Arguments]  ${username}  ${tender_uaid}  ${item}
+  kpmgdealroom.Пошук тендера по ідентифікатору      ${username}   ${tender_uaid}
+  # ${index}=     need to get index where to add item 
+  Run Keyword And Ignore Error  Додати предмет      ${item}  ${index}
+  Run Keyword And Ignore Error  Click Element       ${locator.addAsset.SaveButton}
+  
+Видалити предмет закупівлі
+  [Arguments]  ${username}  ${tender_uaid}  ${item_id}
+  dzo.Пошук тендера по ідентифікатору   ${username}   ${tender_uaid}
+  Клікнути по елементу   xpath=//a[./text()='Редагувати']
+  Execute Javascript   $(".topFixed").remove(); $('.blockedId').removeClass('blockedId');
+  Run Keyword And Ignore Error  Клікнути по елементу   xpath=//input[contains(@value, '${item_id}')]/ancestor::div[@class="tenderItemElement tenderItemPositionElement"]/descendant::a[@class="deleteMultiItem"]
+  Run Keyword And Ignore Error  Підтвердити дію
+  Run Keyword And Ignore Error  Клікнути по елементу   xpath=//button[@value="save"]
+
+
 
 # Refresh the page with the tender
 Оновити сторінку з тендером
@@ -211,6 +230,9 @@ kpmgdealroom.Пошук тендера по ідентифікатору
     Sleep                               1
     Wait Until Element Is Not Visible   css=div.k-loading-image
     Click Element                       ${locator.exchangeList.FilteredResult}
+
+
+
     Wait And Click Element              ${locator.exchangeToolbar.Details}  10
 
 # Get information about the tender
@@ -440,9 +462,8 @@ kpmgdealroom.Отримати інформацію із тендера
     [Documentation]    ${ARGUMENTS[0]} = username
     ...    ${ARGUMENTS[1]} = tenderUaId
     kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}   
-    Click Element   ${locator.Questions.Q&A}
-    Wait Until Page Contains Element    ${locator.Questions.DraftQuestions}
-
+    Click Element   ${locator.Questions.FAQ}
+  
 # Ask a question
 Задати питання
     [Arguments]    @{ARGUMENTS}
@@ -452,17 +473,11 @@ kpmgdealroom.Отримати інформацію із тендера
     ${title}=    Get From Dictionary    ${ARGUMENTS[2].data}    title
     ${description}=    Get From Dictionary    ${ARGUMENTS[2].data}    description
     Перейти до сторінки запитань    ${ARGUMENTS[0]}     ${ARGUMENTS[1]}
-    Wait And Click Element    ${locator.Questions.DraftQuestions}   10
+
+    Wait And Click Element              ${locator.Questions.DraftQuestionButton}   10
     Wait Until Page Contains Element    ${locator.Questions.Subject}
-    Input Text      ${locator.Questions.Subject}    ${title}
-    Input Text      ${locator.Questions.Question}   ${description}
-    Input Text      ${locator.Questions.DocumentReference} ${ARGUMENTS[1]}
-    Click Element   ${locator.Questions.CategoryDropdown}
-    Click Element   ${locator.Questions.CategoryDocuments}
-    Click Element   ${locator.Questions.PriorityDropdown}
-    Click Element   ${locator.Questions.PriorityMedium}
-    Click Element   ${locator.Questions.ApproveQuestion}
-    Wait And Click Element    ${locator.Questions.Confirm}  10
+    Input Text                          ${locator.Questions.Question}   ${description}
+    Click Element                       ${locator.Questions.SubmitQuestionButton}
 
 # Answer a question
 Відповісти на запитання
@@ -505,3 +520,41 @@ kpmgdealroom.Отримати інформацію із тендера
     Sleep                       2
     Reload Page
     
+
+#------------------------------------------------------------------------------
+#  BIDDING
+#-----------------------------------------------------------------------------
+# Submit a bid
+Подати цінову пропозицію
+    [Arguments]   ${username}  ${tender_uaid}  ${bid}
+    ${amount}=   add_second_sign_after_point   ${bid.data.value.amount}
+    ${eligibilityDocPath}=   get_upload_file_path   eligibility.doc
+    ${qualificationDocPath}=    get_upload_file_path    qualification.doc
+
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}   ${tender_uaid}
+    Click Element                                   ${locator.exchangeToolbar.Bids}
+    Wait Until Element Is Visible                   ${locator.Bidding.UploadFilesButton}    10
+    Choose File                                     ${locator.Bidding.EligibilityFile}      kpmgdealroom_service.get_upload_file_path   eligibility.doc
+    Choose File                                     ${locator.Bidding.QualificationFile}    kpmgdealroom_service.get_upload_file_path   qualification.doc
+    Click Element                                   ${locator.Bidding.SubmitFilesButton}
+    Sleep                                           20
+    Click Element                                   ${locator.Bidding.InitialBiddingLink}
+    Wait until Element Is Visible                   ${locator.Bidding.BiddingAmount}    10
+    Input Text                                      ${locator.Bidding.BiddingAmount}    ${amount}
+    Click Element                                   ${locator.Bidding.SubmitBidButton}
+    Wait Until Element Is Visible                   ${locator.Bidding.ConfirmBidPassword}   10
+    Input Text                                      Admin1234
+    Click Element                                   ${locator.Bidding.ConfirmBidButton}
+    Wait Until Page Contains                        ${locator.Bidding.CancelBidButton}
+    [return]  ${bid}
+
+# Cancel your bid
+Скасувати цінову пропозицію
+    [Arguments]  ${username}  ${tender_uaid}
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}   ${tender_uaid}
+    Click Element                                   ${locator.exchangeToolbar.Bids}
+    Sleep                                           20
+    Wait And Click Element                          ${locator.Bidding.InitialBiddingLink} 5
+    Wait And Click Element                          ${locator.Bidding.CancelBidButton} 10
+    Wait And Click Element                          ${locator.Bidding.CancelBidYesButton} 5
+    Wait Until Element Is Visible                   ${locator.Bidding.SubmitBidButton}
