@@ -63,15 +63,6 @@ def convert_number_to_str(number):
 def convert_number_to_currency_str(number):
     return "%.2f" % number
 
-def convert_string_to_fake_email(username):
-    return username + "@robottest.com"
-
-#def cleanup_string(text):
-#    return text.replace("[", "").replace("]", "").replace("/", "-").replace(".", "")
-
-#def cleanup_name_string(text):
-#    return text.replace("[TESTING]", "")[:21] + " _kdrtest"
-
 def inc(value):
     return int(value) + 1
 
