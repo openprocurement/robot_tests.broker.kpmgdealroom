@@ -75,41 +75,47 @@ ${locator.createExchange.tenderAttempts}                    name=ExchangeDetails
 ${locator.createExchange.SubmitButton}                      id=create-exchange-submit
 
 # add item / asset
-${locator.addAsset.items[0].description}                    xpath=(//input[@name='Assets[0].Description'])[2]
-${locator.addAsset.items[0].quantity}                       xpath=(//input[@name='Assets[0].Quantity'])[2]
-${locator.addAsset.items[0].classification.scheme}          xpath=(//input[@name='Assets[0].Classification.Scheme'])[2]
-${locator.addAsset.items[0].classification.description}     xpath=(//input[@name='Assets[0].Classification.Description'])[2]
-${locator.addAsset.items[0].classification.code}            xpath=(//input[@name='Assets[0].ClassificationCode'])[2]
-${locator.addAsset.items[0].address1}                       xpath=(//input[@name='Assets[0].Address.AddressLineOne'])[2]
-${locator.addAsset.items[0].address2}                       xpath=(//input[@name='Assets[0].Address.AddressLineTwo'])[2]
-${locator.addAsset.items[0].city}                           xpath=(//input[@name='Assets[0].Address.City'])[2]
-${locator.addAsset.items[0].country}                        xpath=(//input[@name='Assets[0].Address.Country'])[2]
-${locator.addAsset.items[0].region}                         xpath=(//input[@name='Assets[0].Address.Region'])[2]
-${locator.addAsset.items[0].postcode}                       xpath=(//input[@name='Assets[0].Address.PostCode'])[2]
+${locator.assetDetails.items[0].description}                    xpath=(//input[@name='Assets[0].Description'])[2]
+${locator.assetDetails.items[0].quantity}                       xpath=(//input[@name='Assets[0].Quantity'])[2]
+${locator.assetDetails.items[0].classification.scheme}          xpath=(//input[@name='Assets[0].Classification.Scheme'])[2]
+${locator.assetDetails.items[0].classification.description}     xpath=(//input[@name='Assets[0].Classification.Description'])[2]
+${locator.assetDetails.items[0].classification.code}            xpath=(//input[@name='Assets[0].ClassificationCode'])[2]
+${locator.assetDetails.items[0].address1}                       xpath=(//input[@name='Assets[0].Address.AddressLineOne'])[2]
+${locator.assetDetails.items[0].address2}                       xpath=(//input[@name='Assets[0].Address.AddressLineTwo'])[2]
+${locator.assetDetails.items[0].city}                           xpath=(//input[@name='Assets[0].Address.City'])[2]
+${locator.assetDetails.items[0].country}                        xpath=(//input[@name='Assets[0].Address.Country'])[2]
+${locator.assetDetails.items[0].region}                         xpath=(//input[@name='Assets[0].Address.Region'])[2]
+${locator.assetDetails.items[0].postcode}                       xpath=(//input[@name='Assets[0].Address.PostCode'])[2]
 
-${locator.addAsset.items[1].description}                    name=Assets[1].Description
-${locator.addAsset.items[1].quantity}                       name=Assets[1].Quantity
-${locator.addAsset.items[1].classification.scheme}          name=Assets[1].Classification.Scheme
-${locator.addAsset.items[1].classification.description}     name=Assets[1].Classification.Description
-${locator.addAsset.items[1].classification.code}            name=Assets[1].ClassificationCode
-${locator.addAsset.items[1].address1}                       name=Assets[1].Address.AddressLineOne
-${locator.addAsset.items[1].address2}                       name=Assets[1].Address.AddressLineTwo
-${locator.addAsset.items[1].city}                           name=Assets[1].Address.City
-${locator.addAsset.items[1].country}                        name=Assets[1].Address.Country
-${locator.addAsset.items[1].region}                         name=Assets[1].Address.Region
-${locator.addAsset.items[1].postcode}                       name=Assets[1].Address.PostCode
+${locator.assetDetails.items[1].description}                    name=Assets[1].Description
+${locator.assetDetails.items[1].quantity}                       name=Assets[1].Quantity
+${locator.assetDetails.items[1].classification.scheme}          name=Assets[1].Classification.Scheme
+${locator.assetDetails.items[1].classification.description}     name=Assets[1].Classification.Description
+${locator.assetDetails.items[1].classification.code}            name=Assets[1].ClassificationCode
+${locator.assetDetails.items[1].address1}                       name=Assets[1].Address.AddressLineOne
+${locator.assetDetails.items[1].address2}                       name=Assets[1].Address.AddressLineTwo
+${locator.assetDetails.items[1].city}                           name=Assets[1].Address.City
+${locator.assetDetails.items[1].country}                        name=Assets[1].Address.Country
+${locator.assetDetails.items[1].region}                         name=Assets[1].Address.Region
+${locator.assetDetails.items[1].postcode}                       name=Assets[1].Address.PostCode
 
-${locator.addAsset.items[2].description}                    name=Assets[2].Description
-${locator.addAsset.items[2].quantity}                       name=Assets[2].Quantity
-${locator.addAsset.items[2].classification.scheme}          name=Assets[2].Classification.Scheme
-${locator.addAsset.items[2].classification.description}     name=Assets[2].Classification.Description
-${locator.addAsset.items[2].classification.code}            name=Assets[2].ClassificationCode
-${locator.addAsset.items[2].address1}                       name=Assets[2].Address.AddressLineOne
-${locator.addAsset.items[2].address2}                       name=Assets[2].Address.AddressLineTwo
-${locator.addAsset.items[2].city}                           name=Assets[2].Address.City
-${locator.addAsset.items[2].country}                        name=Assets[2].Address.Country
-${locator.addAsset.items[2].region}                         name=Assets[2].Address.Region
-${locator.addAsset.items[2].postcode}                       name=Assets[2].Address.PostCode
+${locator.assetDetails.items[2].description}                    name=Assets[2].Description
+${locator.assetDetails.items[2].quantity}                       name=Assets[2].Quantity
+${locator.assetDetails.items[2].classification.scheme}          name=Assets[2].Classification.Scheme
+${locator.assetDetails.items[2].classification.description}     name=Assets[2].Classification.Description
+${locator.assetDetails.items[2].classification.code}            name=Assets[2].ClassificationCode
+${locator.assetDetails.items[2].address1}                       name=Assets[2].Address.AddressLineOne
+${locator.assetDetails.items[2].address2}                       name=Assets[2].Address.AddressLineTwo
+${locator.assetDetails.items[2].city}                           name=Assets[2].Address.City
+${locator.assetDetails.items[2].country}                        name=Assets[2].Address.Country
+${locator.assetDetails.items[2].region}                         name=Assets[2].Address.Region
+${locator.assetDetails.items[2].postcode}                       name=Assets[2].Address.PostCode
+
+# edit assets
+${locator.addAsset.item[0].delete}                          xpath=(//div[@id='at-asset-container-0']/a)[2]
+${locator.addAsset.item[1].delete}                          xpath=(//div[@id='at-asset-container-0']/a)[3]
+${locator.addAsset.item[2].delete}                          xpath=(//div[@id='at-asset-container-0']/a)[4]
+
 
 ${locator.addAsset.SaveButton}                              css=.btn.btn-default.btn-primary
 ${locator.addAsset.AddButton}                               id=add-asset
@@ -138,12 +144,15 @@ ${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='
 ${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
 ${locator.viewExchange.status}
 
+${locator.viewExchange.items[0].description}
+
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
 ${locator.exchangeList.FilterByIdButton}    //th[@id='exchangeDashboardAuctionIdCol']/a/span
 ${locator.exchangeList.FilterTextField}     //input[@type='text']
 ${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
-${locator.exchangeList.FilteredResult}      //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
+${locator.exchangeList.FilteredFirstRow}    //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
+${locator.exchangeList.FilteredSecondRow}   //*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td/a
 
 # questions and answers
 ${locator.Questions.DraftQuestionButton}    css=a.btn.btn-primary
@@ -168,7 +177,7 @@ ${locator.Bidding.SubmitBidButton}          id=submit-bid-submitbtn
 ${locator.Bidding.ConfirmBidPassword}       id=Password
 ${locator.Bidding.ConfirmBidButton}         id=submit-bid-dialog-yes
 ${locator.Bidding.CancelBidButton}          id=submit-bid-cancelbtn
-${locator.Bidding.ConfirmCancelBidButton}   id=cancel-bid-dialog-yes
+${locator.Bidding.CancelBidYesButton}       id=cancel-bid-dialog-yes
 
 # file operations
 ${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room

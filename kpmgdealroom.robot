@@ -59,7 +59,8 @@ Get Field Value
 
 Wait And Click Element
     [Arguments]     ${locator}  ${delay}
-    Wait Until Page Contains Element    ${locator}  ${delay}
+    # Wait Until Page Contains Element    ${locator}  ${delay} # removed for testing purposes, may be needed
+    Wait Until Element Is Visible       ${locator}  ${delay}
     Click Element   ${locator}
 
 # Setup team
@@ -107,17 +108,19 @@ Setup User Bids
     ${step_rate}=               convert_number_to_currency_str   ${tender_data.data.minimalStep.amount}
     ${currency}=                Get From Dictionary     ${tender_data.data.value}    currency
     ${valueAddedTaxIncluded}=   Get From Dictionary     ${tender_data.data.value}    valueAddedTaxIncluded
-    ${admin_email}=             kpmgdealroom_service.convert_string_to_fake_email   ${username}
-    ${sponsor_email}=           kpmgdealroom_service.convert_string_to_fake_email   ${username}
+    ${admin_email}=             Get From Dictionary     ${USERS.users['${username}']}   login
     ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${tender_data}    StartDate
     ${start_time_auction}=      kpmgdealroom_service.get_tender_dates               ${tender_data}    StartTime
     ${dgfDecisionID}=           Get From Dictionary     ${tender_data.data}    dgfDecisionID
     ${description}=             Get From Dictionary     ${tender_data.data}    description
 
+#    ${providerLogin}=           Get From Dictionary     ${USERS.users['kpmgdealroom_provider']}  login
+#    ${provider1Login}=          Get From Dictionary     ${USERS.users['kpmgdealroom_provider1']}  login
+
     Switch Browser    ${username}
     
     #  1. Click Create Exchange button
-    Wait And Click Element    ${locator.toolbar.CreateExchangeButton}   5
+    Wait And Click Element              ${locator.toolbar.CreateExchangeButton}   5
             
     # 2. Fill in form details
     Wait And Click Element              ${locator.createExchange.ClientSelector}    5
@@ -125,7 +128,7 @@ Setup User Bids
     Click Element                       ${locator.createExchange.ClientSelector.Prozorro}
     
     Input Text                          ${locator.createExchange.Name}  ${title}
-    Input Text                          ${locator.createExchange.SponsorEmail}  ${sponsor_email}
+    Input Text                          ${locator.createExchange.SponsorEmail}  ${admin_email}
     Input Text                          ${locator.createExchange.AdminEmails}   ${admin_email}
     Wait And Click Element              ${locator.createExchange.TypeSelector}  10
     Wait Until Element Is Visible       ${locator.createExchange.TypeSelector.Prozorro}  2
@@ -168,10 +171,12 @@ Setup User Bids
     ${TENDER}=          Get Text    ${locator.exchangeAdmin.publish.publishedID}
     
     # team and user setup
-    Click Element                       ${locator.toolbar.ExchangesButton}
+    Click Element                   ${locator.toolbar.ExchangesButton}
     kpmgdealroom.Пошук тендера по ідентифікатору  ${username}     ${TENDER}
-    Setup Team                          Buyer Team 1        pzProvider@kpmg.co.uk
-    Setup Team                          Buyer Team 2        pzProvider1@kpmg.co.uk
+    #Setup Team                      Buyer Team 1  ${providerLogin}
+    #Setup Team                      Buyer Team 2  ${provider1Login}
+    Setup Team                      Buyer Team 1   pzprovider@kpmg.co.uk
+    Setup Team                      Buyer Team 2   pzprovider1@kpmg.co.uk
     Setup User Bids
     
     [Return]    ${TENDER}
@@ -180,34 +185,31 @@ Setup User Bids
 Додати предмет
     [Arguments]    ${item}    ${index}
     Run Keyword If  ${index} != 0  Click Element  ${locator.addAsset.AddButton} 
-    Wait Until Element Is Visible   ${locator.addAsset.items[${index}].description}    20
-    Input Text  ${locator.addAsset.items[${index}].description}                 ${item.description}
-    Input Text  ${locator.addAsset.items[${index}].quantity}                    ${item.quantity}
-    Input Text  ${locator.addAsset.items[${index}].classification.description}  ${item.classification.description}
-    Input Text  ${locator.addAsset.items[${index}].classification.code}         ${item.classification.id}
-    Input Text  ${locator.addAsset.items[${index}].address1}                    ${item.deliveryAddress.streetAddress}
-    Input Text  ${locator.addAsset.items[${index}].region}                      ${item.deliveryAddress.region}
-    Input Text  ${locator.addAsset.items[${index}].city}                        ${item.deliveryAddress.locality}
-    Input Text  ${locator.addAsset.items[${index}].country}                     ${item.deliveryAddress.countryName_en}
-    Input Text  ${locator.addAsset.items[${index}].postcode}                    ${item.deliveryAddress.postalCode}
+    Wait Until Element Is Visible   ${locator.assetDetails.items[${index}].description}    20
+    Input Text  ${locator.assetDetails.items[${index}].description}                 ${item.description}
+    Input Text  ${locator.assetDetails.items[${index}].quantity}                    ${item.quantity}
+    Input Text  ${locator.assetDetails.items[${index}].classification.description}  ${item.classification.description}
+    Input Text  ${locator.assetDetails.items[${index}].classification.code}         ${item.classification.id}
+    Input Text  ${locator.assetDetails.items[${index}].address1}                    ${item.deliveryAddress.streetAddress}
+    Input Text  ${locator.assetDetails.items[${index}].region}                      ${item.deliveryAddress.region}
+    Input Text  ${locator.assetDetails.items[${index}].city}                        ${item.deliveryAddress.locality}
+    Input Text  ${locator.assetDetails.items[${index}].country}                     ${item.deliveryAddress.countryName_en}
+    Input Text  ${locator.assetDetails.items[${index}].postcode}                    ${item.deliveryAddress.postalCode}
 
+# Add item to auction
 Додати предмет закупівлі
-  [Arguments]  ${username}  ${tender_uaid}  ${item}
-  kpmgdealroom.Пошук тендера по ідентифікатору      ${username}   ${tender_uaid}
-  # ${index}=     need to get index where to add item 
-  Run Keyword And Ignore Error  Додати предмет      ${item}  ${index}
-  Run Keyword And Ignore Error  Click Element       ${locator.addAsset.SaveButton}
+    [Arguments]  ${username}  ${tender_uaid}  ${item}
+    kpmgdealroom.Пошук тендера по ідентифікатору      ${username}   ${tender_uaid}
+    # ToDo: ${index}=     need to get index where to add item 
+    Run Keyword And Ignore Error  Додати предмет      ${item}  ${index}
+    Run Keyword And Ignore Error  Click Element       ${locator.addAsset.SaveButton}
   
+# remove item from auction
 Видалити предмет закупівлі
-  [Arguments]  ${username}  ${tender_uaid}  ${item_id}
-  dzo.Пошук тендера по ідентифікатору   ${username}   ${tender_uaid}
-  Клікнути по елементу   xpath=//a[./text()='Редагувати']
-  Execute Javascript   $(".topFixed").remove(); $('.blockedId').removeClass('blockedId');
-  Run Keyword And Ignore Error  Клікнути по елементу   xpath=//input[contains(@value, '${item_id}')]/ancestor::div[@class="tenderItemElement tenderItemPositionElement"]/descendant::a[@class="deleteMultiItem"]
-  Run Keyword And Ignore Error  Підтвердити дію
-  Run Keyword And Ignore Error  Клікнути по елементу   xpath=//button[@value="save"]
-
-
+    [Arguments]  ${username}  ${tender_uaid}  ${item_id}
+    kpmgdealroom.Пошук тендера по ідентифікатору   ${username}   ${tender_uaid}
+    Wait And Click Element  ${locator.addAsset.item[${item_id}].delete}  10
+    Run Keyword And Ignore Error  Click Element       ${locator.addAsset.SaveButton}]
 
 # Refresh the page with the tender
 Оновити сторінку з тендером
@@ -219,7 +221,23 @@ Setup User Bids
 # Search for a bid identifier (KDR-1077)
 kpmgdealroom.Пошук тендера по ідентифікатору
     [Arguments]   ${username}   ${tender_uaid}
-    Switch Browser    ${username}
+    Search Auction  ${username}  ${tender_uaid}
+
+    # click first row
+    Click Element                   ${locator.exchangeList.FilteredFirstRow}
+    Wait And Click Element          ${locator.exchangeToolbar.Details}  5
+
+Search KDR Auction
+    [Arguments]  ${username}        ${tender_uaid}
+     Search Auction  ${username}    ${tender_uaid}
+
+    # click second row
+    Click Element                   ${locator.exchangeList.FilteredSecondRow}
+    Wait And Click Element          ${locator.exchangeToolbar.Details}  5
+
+Search Auction
+    [Arguments]  ${username}     ${tender_uaid}
+    Switch Browser                      ${username}
     Go to                               ${USERS.users['${username}'].default_page}
     Wait Until Element Is Visible       ${locator.exchangeList.FilterByIdButton}
     Wait Until Element Is Not Visible   css=div.k-loading-image
@@ -229,12 +247,7 @@ kpmgdealroom.Пошук тендера по ідентифікатору
     Click Element                       ${locator.exchangeList.FilterSubmitButton}
     Sleep                               1
     Wait Until Element Is Not Visible   css=div.k-loading-image
-    Click Element                       ${locator.exchangeList.FilteredResult}
-
-
-
-    Wait And Click Element              ${locator.exchangeToolbar.Details}  10
-
+  
 # Get information about the tender
 kpmgdealroom.Отримати інформацію із тендера
     [Arguments]    @{ARGUMENTS}
@@ -296,7 +309,7 @@ kpmgdealroom.Отримати інформацію із тендера
 
 # Get information from value.amount
 Отримати інформацію про value.amount
-    ${return_value}=    Get Value    ${locator.viewExchange.value.amount}
+    ${return_value}=    Get Value   ${locator.viewExchange.value.amount}
     ${return_value}=    Convert To Number    ${return_value.replace(' ', '').replace(',', '.')}
     [Return]    ${return_value}
 

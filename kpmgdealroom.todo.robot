@@ -124,24 +124,6 @@
     Choose File    css = div.file-caption-name    ${ARGUMENTS[3]}
     Click Element    id = create-bid-btn
 
-# Get a link to the auction for the viewer
-Отримати посилання на аукціон для глядача
-    [Arguments]    @{ARGUMENTS}
-    Switch Browser    ${ARGUMENTS[0]}
-    Wait Until Page Contains Element    xpath=(//*[@id='aPosition_auctionUrl' and not(contains(@style,'display: none'))])
-    Sleep    5
-    ${result} =    Get Text    id=aPosition_auctionUrl
-    [Return]    ${result}
-
-# Get a link to the auction for a member
-Отримати посилання на аукціон для учасника
-    [Arguments]    @{ARGUMENTS}
-    Switch Browser    ${ARGUMENTS[0]}
-    Wait Until Page Contains Element    xpath=(//*[@id='aPosition_auctionUrl' and not(contains(@style,'display: none'))])
-    Sleep    5
-    ${result}=    Get Text    id=aPosition_auctionUrl
-    [Return]    ${result}
-
 # Upload a document in a tender with a type
 Завантажити документ в тендер з типом
     [Arguments]    ${username}    ${tender_uaid}    ${filepath}    ${doc_type}
