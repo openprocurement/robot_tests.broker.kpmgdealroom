@@ -32,20 +32,11 @@ Login
     Input text    ${locator.login.EmailField}    ${USERS.users['${username}'].login}
     Input text    ${locator.login.PasswordField}    ${USERS.users['${username}'].password}
     Click Element    ${locator.login.LoginButton}
-    Sleep    2
 
 Input Date
   [Arguments]  ${elem_name_locator}  ${date}
   ${date}=   kpmgdealroom_service.convert_date_to_slash_format   ${date}
-  Log To Console    ${date}
-  Focus   ${elem_name_locator}
   Execute Javascript   $("#${elem_name_locator}").val('${date}');
-
-# Get text from auction info field
-Get Field Value
-    [Arguments]    ${fieldname}
-    ${return_value}=    Get Text    ${locator.viewExchange.${fieldname}}
-    [Return]    ${return_value}
 
 Wait And Click Element
     [Arguments]     ${locator}  ${delay}
@@ -116,7 +107,6 @@ Setup User Bids
     Wait And Click Element              ${locator.createExchange.ClientSelector}    5
     Wait Until Element Is Visible       ${locator.createExchange.ClientSelector.Prozorro}  2
     Click Element                       ${locator.createExchange.ClientSelector.Prozorro}
-    
     Input Text                          ${locator.createExchange.Name}  ${title}
     Input Text                          ${locator.createExchange.SponsorEmail}  ${admin_email}
     Input Text                          ${locator.createExchange.AdminEmails}   ${admin_email}
@@ -130,7 +120,6 @@ Setup User Bids
     Click Element                       ${locator.createExchange.DgfCategorySelector}
     Wait Until Element Is Visible       ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}  2
     Click Element                       ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}
-    
     Wait Until Element is Visible       ${locator.createExchange.GuaranteeAmount}   20
     Input Text                          ${locator.createExchange.GuaranteeAmount}   ${guarantee}
     Input Text                          ${locator.createExchange.StartPrice}        ${budget}
@@ -145,19 +134,21 @@ Setup User Bids
     Click Element   ${locator.createExchange.SubmitButton}
     Wait And Click Element  ${locator.Dataroom.T&CYes}  20
 
-    # 4. Now we must add items before Prozorro actually accepts our submitted auction
+    # 4. Add items to auction
     :FOR  ${index}  IN RANGE  ${number_of_items} 
     \  Додати предмет  ${items[${index}]}   ${index}
     Click Element   ${locator.addAsset.SaveButton}
 
     # 5. Publish 
     Click Element                   ${locator.exchangeToolbar.Admin}
+    
+    # may need retry loop here
     Wait And Click Element          ${locator.exchangeAdmin.nav.Publish}    20
     Wait And Click Element          ${locator.exchangeAdmin.publish.PublishButton}  5
     Wait Until Element Is Visible   ${locator.exchangeAdmin.publish.confirmButton}  5
     Click Element                   ${locator.exchangeAdmin.publish.confirmButton}
-
     Wait Until Page Contains Element   ${locator.exchangeAdmin.publish.publishedID}  30
+
     ${TENDER}=          Get Text    ${locator.exchangeAdmin.publish.publishedID}
     
     # team and user setup
@@ -238,11 +229,13 @@ Search Auction
     Sleep                               1
     Wait Until Element Is Not Visible   css=div.k-loading-image
   
+
+
 # Get information about the tender
 kpmgdealroom.Отримати інформацію із тендера
     [Arguments]    @{ARGUMENTS}
     [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[2]} == fieldname
+    ...    ${ARGUMENTS[2]} == fieldnameu
     ${return_value}=    Run Keyword    Отримати інформацію про ${ARGUMENTS[2]}
     [Return]    ${return_value}
 
@@ -462,46 +455,42 @@ kpmgdealroom.Отримати інформацію із тендера
 #------------------------------------------------------------------------------
 # Go to the questions page
 Перейти до сторінки запитань
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = tenderUaId
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}   
+    [Arguments]  ${username}  ${tender_uaid}
+    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}   
     Click Element   ${locator.Questions.FAQ}
   
 # Ask a question
 Задати питання
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == tenderUaId
-    ...    ${ARGUMENTS[2]} == questionId
-    ${title}=    Get From Dictionary    ${ARGUMENTS[2].data}    title
-    ${description}=    Get From Dictionary    ${ARGUMENTS[2].data}    description
-    Перейти до сторінки запитань    ${ARGUMENTS[0]}     ${ARGUMENTS[1]}
+    [Arguments]    ${username}  ${tender_uaid}  ${question}
+    ${title}=    Get From Dictionary    ${question.data}    title
+    ${description}=    Get From Dictionary    ${question.data}    description
+    Перейти до сторінки запитань    ${username}     ${tender_uaid}
 
     Wait And Click Element              ${locator.Questions.DraftQuestionButton}   10
     Wait Until Page Contains Element    ${locator.Questions.Subject}
     Input Text                          ${locator.Questions.Question}   ${description}
     Click Element                       ${locator.Questions.SubmitQuestionButton}
 
-# Answer a question
-Відповісти на запитання
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
-    ...    ${ARGUMENTS[2]} = 0
-    ...    ${ARGUMENTS[3]} = answer_data
-    ${answer}=    Get From Dictionary    ${ARGUMENTS[3].data}    answer
-    Перейти до сторінки запитань
-    Click Element    id = create-answer-btn
-    Sleep    3
-    Input Text    id=questions-answer    ${answer}
-    Click Element    id=create-question-btn
-    sleep    1
+# Ask a question about an item
+Задати запитання на предмет
+    [Arguments]  ${username}  ${tender_uaid}  ${question}
+    kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+    Задати питання  ${username}  ${tender_uaid}  ${question}
 
 # Ask a question about the tender
 Задати запитання на тендер
-    [Arguments]    ${username}    ${tender_uaid}    ${question}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Задати питання    ${username}    ${tender_uaid}    ${question}
+    [Arguments]  ${username}  ${tender_uaid}  ${question}
+    kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+    Задати питання  ${username}  ${tender_uaid}  ${question}
+
+# Answer a question
+Відповісти на запитання
+  [Arguments]  ${username}  ${tender_uaid}  ${answer_data}  ${question_id}
+  dzo.Пошук тендера по ідентифікатору   ${username}   ${tender_uaid}
+  Клікнути по елементу   xpath=//section[@class="content"]/descendant::a[contains(@href, 'questions')]
+  Execute Javascript   $(".topFixed").remove(); $(".bottomFixed").remove();
+  Ввести текст   xpath=//div[contains(text(), '${question_id}')]/../following-sibling::div/descendant::textarea[@name="answer"]   ${answer_data.data.answer}
+  Клікнути по елементу   xpath=//button[contains(text(), 'Опублікувати відповідь')]
 
 #------------------------------------------------------------------------------
 #  WORKING WITH DOCUMENTS
