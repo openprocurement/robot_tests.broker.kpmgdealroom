@@ -49,7 +49,7 @@ ${locator.Bids.Save}                    css=.btn.btn-default.btn-primary
 
 # create exchange
 ${locator.createExchange.ClientSelector}                    //div[@id='_ClientId_dropdown']/div[2]
-${locator.createExchange.ClientSelector.Prozorro}           //a[contains(text(),'Prozorro Test')]
+${locator.createExchange.ClientSelector.Prozorro}           //a[contains(text(),'Prozorro Entity')]
 ${locator.createExchange.Name}                              id=Name
 ${locator.createExchange.SellerName}                        id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}                      id=SponsorEmail
