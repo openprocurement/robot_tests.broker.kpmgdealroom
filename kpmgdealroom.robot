@@ -12,12 +12,12 @@ Resource          locators.robot
 #------------------------------------------------------------------------------
 # Prepare client for user
 Підготувати клієнт для користувача
-    [Arguments]    @{ARGUMENTS}
-    Open Browser    ${USERS.users['${ARGUMENTS[0]}'].homepage}    ${USERS.users['${ARGUMENTS[0]}'].browser}    alias=${ARGUMENTS[0]}
-    Set Window Size    @{USERS.users['${ARGUMENTS[0]}'].size}
-    Set Window Position    @{USERS.users['${ARGUMENTS[0]}'].position}
+    [Arguments]    ${username}
+    Open Browser    ${USERS.users['${username}'].homepage}    ${USERS.users['${username}'].browser}    alias=${username}
+    Set Window Size    @{USERS.users['${username}'].size}
+    Set Window Position    @{USERS.users['${username}'].position}
     Set Browser Implicit Wait   10
-    Run Keyword If    '${ARGUMENTS[0]}' != 'kpmgdealroom_Viewer'    Login    ${ARGUMENTS[0]}
+    Run Keyword If    '${username}' != 'kpmgdealroom_Viewer'    Login    ${username}
 
 # Prepare data for tender announcement
 Підготувати дані для оголошення тендера
@@ -27,13 +27,12 @@ Resource          locators.robot
 
 # Updated for KDR
 Login
-    [Arguments]   @{ARGUMENTS}
+    [Arguments]   ${username}
     Wait Until Element Is Visible    ${locator.login.EmailField}    10
-    Input text    ${locator.login.EmailField}    ${USERS.users['${ARGUMENTS[0]}'].login}
-    Input text    ${locator.login.PasswordField}    ${USERS.users['${ARGUMENTS[0]}'].password}
+    Input text    ${locator.login.EmailField}    ${USERS.users['${username}'].login}
+    Input text    ${locator.login.PasswordField}    ${USERS.users['${username}'].password}
     Click Element    ${locator.login.LoginButton}
     Sleep    2
-
 
 Input Date
   [Arguments]  ${elem_name_locator}  ${date}
@@ -41,15 +40,6 @@ Input Date
   Log To Console    ${date}
   Focus   ${elem_name_locator}
   Execute Javascript   $("#${elem_name_locator}").val('${date}');
-  #Input Text    id=${elem_name_locator}  ${date}
-
-#
-#Write Form Field
-#    [Arguments]     ${locator}  ${value}
-#    Focus           ${locator}
-#    Sleep   2
-#    Input Text      ${locator}  ${value}
-#    Sleep   2
 
 # Get text from auction info field
 Get Field Value
@@ -59,7 +49,6 @@ Get Field Value
 
 Wait And Click Element
     [Arguments]     ${locator}  ${delay}
-    # Wait Until Page Contains Element    ${locator}  ${delay} # removed for testing purposes, may be needed
     Wait Until Element Is Visible       ${locator}  ${delay}
     Click Element   ${locator}
 
@@ -114,6 +103,7 @@ Setup User Bids
     ${dgfDecisionID}=           Get From Dictionary     ${tender_data.data}    dgfDecisionID
     ${description}=             Get From Dictionary     ${tender_data.data}    description
 
+#    TODO: check why this does not work!!
 #    ${providerLogin}=           Get From Dictionary     ${USERS.users['kpmgdealroom_provider']}  login
 #    ${provider1Login}=          Get From Dictionary     ${USERS.users['kpmgdealroom_provider1']}  login
 
@@ -200,7 +190,7 @@ Setup User Bids
 Додати предмет закупівлі
     [Arguments]  ${username}  ${tender_uaid}  ${item}
     kpmgdealroom.Пошук тендера по ідентифікатору      ${username}   ${tender_uaid}
-    # ToDo: ${index}=     need to get index where to add item 
+    # TODO: ${index}=     need to get index where to add item 
     Run Keyword And Ignore Error  Додати предмет      ${item}  ${index}
     Run Keyword And Ignore Error  Click Element       ${locator.addAsset.SaveButton}
   
@@ -229,7 +219,7 @@ kpmgdealroom.Пошук тендера по ідентифікатору
 
 Search KDR Auction
     [Arguments]  ${username}        ${tender_uaid}
-     Search Auction  ${username}    ${tender_uaid}
+    Search Auction  ${username}    ${tender_uaid}
 
     # click second row
     Click Element                   ${locator.exchangeList.FilteredSecondRow}
@@ -268,12 +258,12 @@ kpmgdealroom.Отримати інформацію із тендера
 
 # Get information from title
 Отримати інформацію про title
-    ${return_value}=    Get Text    ${locator.viewExchange.title}
+    ${return_value}=    Get Value   ${locator.viewExchange.title}
     [Return]    ${return_value}
 
 # Get information from description
 Отримати інформацію про description
-    ${return_value}=    Get Field Value    description
+    ${return_value}=    Get Value   ${locator.viewExchange.description}
     [Return]    ${return_value}
 
 # Get information from procurementMethodType
@@ -283,23 +273,23 @@ kpmgdealroom.Отримати інформацію із тендера
 
 # Get information from  dgfID
 Отримати інформацію про dgfID
-    ${return_value}=    Get Field Value    dgfID
+    ${return_value}=    Get Text    ${locator.viewExchange.dgfID}
     [Return]    ${return_value}
 
 # Get information from dgfDecisionID
 Отримати інформацію про dgfDecisionID
-    ${return_value}=    Get Field Value    dgfDecisionID
+    ${return_value}=    Get Text    ${locator.viewExchange.dgfDecisionID}
     [Return]    ${return_value}
 
 # Get information from dgfDecisionDate
 Отримати інформацію про dgfDecisionDate
-    ${date_value}=    Get Field Value    dgfDecisionDate
+    ${date_value}=    Get Text      ${locator.viewExchange.dgfDecisionDate}
     ${return_value}=    kpmgdealroom_service.convert_date    ${date_value}
     [Return]    ${return_value}
 
 # Get information from tenderAttempts
 Отримати інформацію про tenderAttempts
-    ${return_value}=    Get Field Value    tenderAttempts
+    ${return_value}=    Get Text    ${locator.viewExchange.tenderAttempts}
     ${return_value}=    Convert To Integer    ${return_value}
     [Return]    ${return_value}
 

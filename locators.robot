@@ -68,7 +68,7 @@ ${locator.createExchange.MinimumStepValue}                  id=minimumStepValue
 ${locator.createExchange.dgfID}                             id=dgfId
 ${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails.DgfDecisionId
 ${locator.createExchange.dgfDecisionDate}                   id=DgfDecisionDateInput
-${locator.createExchange.dgfDecisionDateField}                   DgfDecisionDate
+${locator.createExchange.dgfDecisionDateField}              DgfDecisionDate
 ${locator.createExchange.description}                       name=ExchangeDetails.Description
 ${locator.createExchange.tenderAttempts}                    name=ExchangeDetails.TenderAttempts   
 
@@ -116,23 +116,22 @@ ${locator.addAsset.item[0].delete}                          xpath=(//div[@id='at
 ${locator.addAsset.item[1].delete}                          xpath=(//div[@id='at-asset-container-0']/a)[3]
 ${locator.addAsset.item[2].delete}                          xpath=(//div[@id='at-asset-container-0']/a)[4]
 
-
 ${locator.addAsset.SaveButton}                              css=.btn.btn-default.btn-primary
 ${locator.addAsset.AddButton}                               id=add-asset
 
 
 # view exchange information
-${locator.viewExchange.title}                               id=exchangeName
-${locator.viewExchange.description}                         
-${locator.viewExchange.procurementMethodType}
-${locator.viewExchange.dgfID}
-${locator.viewExchange.dgfDecisionID}
-${locator.viewExchange.dgfDecisionDate}
-${locator.viewExchange.tenderAttempts}
+${locator.viewExchange.title}                               id=Exchange_Title
+${locator.viewExchange.description}                             id=description
+${locator.viewExchange.procurementMethodType}               
+${locator.viewExchange.dgfID}                               id=dgfId
+${locator.viewExchange.dgfDecisionID}                       id=dgfDecisionId
+${locator.viewExchange.dgfDecisionDate}                     id=DgfDecisionDate
+${locator.viewExchange.tenderAttempts}                      id=tenderAttempts
 ${locator.viewExchange.eligibilityCriteria}
-${locator.viewExchange.value.amount}                        id=ExchangeDetails_StartingPrice
+${locator.viewExchange.value.amount}                        id=startingPrice
 ${locator.viewExchange.minimalStep.amount}                  id=ExchangeDetails_MinimumStepValue
-${locator.viewExchange.value.currency}
+${locator.viewExchange.value.currency}                      
 ${locator.viewExchange.value.valueAddedTaxIncluded}
 ${locator.viewExchange.tenderId}
 ${locator.viewExchange.procuringEntity.name}
