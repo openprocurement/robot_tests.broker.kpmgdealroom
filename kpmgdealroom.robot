@@ -59,7 +59,6 @@ Setup Team
 
 # Add users to bids
 Setup User Bids
-    [Arguments]    @{ARGUMENTS}
     Click Element                       ${locator.Bids.Bids}
     Wait Until Page Contains Element    ${locator.Bids.Buyer1Eligible}   10
     Click Element                       ${locator.Bids.Buyer1Eligible}
@@ -74,25 +73,13 @@ Setup User Bids
 # Create a tender (KDR-1072)
 Створити тендер
     [Arguments]    ${username}  ${tender_data}
-    Set Global Variable    ${TENDER_INIT_DATA_LIST}     ${tender_data}
-    ${title}=                   Get From Dictionary     ${tender_data.data}    title
-    ${dgfID}=                   Get From Dictionary     ${tender_data.data}    dgfID
     ${dgfDecisionDate}=         convert_ISO_DMY         ${tender_data.data.dgfDecisionDate}
-    ${tenderAttempts}=          Get From Dictionary     ${tender_data.data}    tenderAttempts
     ${procurementMethodType}=   Get From Dictionary     ${tender_data.data}    procurementMethodType
-    ${procuringEntity_name}=    Get From Dictionary     ${tender_data.data.procuringEntity}    name
     ${items}=                   Get From Dictionary     ${tender_data.data}    items
     ${number_of_items}=         Get Length              ${items}
     ${guarantee}=               convert_number_to_currency_str   ${tender_data.data.guarantee.amount}
     ${budget}=                  convert_number_to_currency_str   ${tender_data.data.value.amount}
     ${step_rate}=               convert_number_to_currency_str   ${tender_data.data.minimalStep.amount}
-    ${currency}=                Get From Dictionary     ${tender_data.data.value}    currency
-    ${valueAddedTaxIncluded}=   Get From Dictionary     ${tender_data.data.value}    valueAddedTaxIncluded
-    ${admin_email}=             Get From Dictionary     ${USERS.users['${username}']}   login
-    ${start_day_auction}=       kpmgdealroom_service.get_tender_dates               ${tender_data}    StartDate
-    ${start_time_auction}=      kpmgdealroom_service.get_tender_dates               ${tender_data}    StartTime
-    ${dgfDecisionID}=           Get From Dictionary     ${tender_data.data}    dgfDecisionID
-    ${description}=             Get From Dictionary     ${tender_data.data}    description
 
 #    TODO: check why this does not work!!
 #    ${providerLogin}=           Get From Dictionary     ${USERS.users['kpmgdealroom_provider']}  login
@@ -107,9 +94,9 @@ Setup User Bids
     Wait And Click Element              ${locator.createExchange.ClientSelector}    5
     Wait Until Element Is Visible       ${locator.createExchange.ClientSelector.Prozorro}  2
     Click Element                       ${locator.createExchange.ClientSelector.Prozorro}
-    Input Text                          ${locator.createExchange.Name}  ${title}
-    Input Text                          ${locator.createExchange.SponsorEmail}  ${admin_email}
-    Input Text                          ${locator.createExchange.AdminEmails}   ${admin_email}
+    Input Text                          ${locator.createExchange.Name}  ${tender_data.data.title}
+    Input Text                          ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
+    Input Text                          ${locator.createExchange.AdminEmails}   ${USERS.users['${username}'].login}
     Wait And Click Element              ${locator.createExchange.TypeSelector}  10
     Wait Until Element Is Visible       ${locator.createExchange.TypeSelector.Prozorro}  2
     Click Element                       ${locator.createExchange.TypeSelector.Prozorro}
@@ -124,11 +111,11 @@ Setup User Bids
     Input Text                          ${locator.createExchange.GuaranteeAmount}   ${guarantee}
     Input Text                          ${locator.createExchange.StartPrice}        ${budget}
     Input Text                          ${locator.createExchange.MinimumStepValue}  ${step_rate} 
-    Input Text                          ${locator.createExchange.dgfID}             ${dgfID}
-    Input Text                          ${locator.createExchange.dgfDecisionID}     ${dgfDecisionID}
+    Input Text                          ${locator.createExchange.dgfID}             ${tender_data.data.dgfID}
+    Input Text                          ${locator.createExchange.dgfDecisionID}     ${tender_data.data.dgfDecisionID}
     Input Date                          ${locator.createExchange.dgfDecisionDateField}   ${tender_data.data.dgfDecisionDate}
-    Input Text                          ${locator.createExchange.description}       ${description}    
-    Input Text                          ${locator.createExchange.tenderAttempts}    ${tenderAttempts}
+    Input Text                          ${locator.createExchange.description}       ${tender_data.data.description}
+    Input Text                          ${locator.createExchange.tenderAttempts}    ${tender_data.data.tenderAttempts}
 
     # 3. Submit exchange creation
     Click Element   ${locator.createExchange.SubmitButton}
