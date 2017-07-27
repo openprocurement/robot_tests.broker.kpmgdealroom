@@ -68,20 +68,6 @@
 #------- get field data ---------
 
 
-# Make changes to the tender
-Внести зміни в тендер
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} = username
-    ...    ${ARGUMENTS[1]} = ${TENDER_UAID}
-    ...    ${ARGUMENTS[2]} == fieldname
-    ...    ${ARGUMENTS[3]} == fieldvalue
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Click Element    id = update-btn
-    Input Text    ${locator.edit.${ARGUMENTS[2]}}    ${ARGUMENTS[3]}
-    Click Element    id=submissive-btn
-    Wait Until Page Contains    Успішно оновлено    5
-    ${result_field}=    Get Value    ${locator.edit.${ARGUMENTS[2]}}
-    Should Be Equal    ${result_field}    ${ARGUMENTS[3]}
 
 
 # Get information from the offer
@@ -106,64 +92,6 @@
     sleep    3s
     Input Text    id=bids-value_amount    ${amount}
     Click Element    id= update-bid-btn
-
-# Upload a financial license
-Завантажити фінансову ліцензію
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == tenderId
-    ...    ${ARGUMENTS[2]} == ${test_bid_data}
-    ...    ${ARGUMENTS[3]} == ${filepath}
-    ${amount}=    get_str    ${ARGUMENTS[2].data.value.amount}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
-    Wait Until Page Contains Element    id = update-btn
-    Click Element    id= update-btn
-    sleep    3s
-    Click Element    id = create-bid-btn
-    sleep    5s
-    Choose File    css = div.file-caption-name    ${ARGUMENTS[3]}
-    Click Element    id = create-bid-btn
-
-# Upload a document in a tender with a type
-Завантажити документ в тендер з типом
-    [Arguments]    ${username}    ${tender_uaid}    ${filepath}    ${doc_type}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    id = update-btn
-    Click Element    id=update-btn
-    Select From List By Value    id = files-type    ${doc_type}
-    Choose File    css = div.file-caption-name    ${filepath}
-    Sleep    2
-    Click Element    id=upload_button
-
-# Upload the illustration
-Завантажити ілюстрацію
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == \ ${filepath}
-    ...    ${ARGUMENTS[2]} == ${tender_uaid}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
-    Wait Until Page Contains Element    id = update-btn
-    Click Element    id=update-btn
-    Select From List By Value    id = files-type    6
-    Choose File    id = auction-file    ${ARGUMENTS[1]}
-    Sleep    2
-    Click Element    id=upload_button
-    Reload Page
-
-#Add virtual data room
-Додати Virtual Data Room
-    [Arguments]    @{ARGUMENTS}
-    [Documentation]    ${ARGUMENTS[0]} == username
-    ...    ${ARGUMENTS[1]} == tenderId
-    ...    ${ARGUMENTS[2]} == ${vdr_url}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[2]}
-    Wait Until Page Contains Element    id = update-btn
-    Click Element    id=update-btn
-    Select From List By Value    id = files-type    10
-    Choose File    id = auction-file    ${ARGUMENTS[1]}
-    Sleep    2
-    Click Element    id=upload_button
-    Reload Page
 
 #Add a public passport to the asset
 Додати публічний паспорт активу
@@ -193,12 +121,7 @@
     ${doc_value}=    Get Text    id = doc_id
     [Return]    ${doc_value}
 
-# Get the number of documents in the tender
-Отримати кількість документів в тендері
-    [Arguments]    ${username}    ${tender_uaid}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    ${tender_doc_number}=    Get Matching Xpath Count    xpath=(//*[@id=' doc_id']/)
-    [Return]    ${tender_doc_number}
+
 
 # Get a document
 Отримати документ
@@ -237,19 +160,7 @@
     Click Element    id=upload_button
     Reload Page
 
-# Upload the auction protocol
-Завантажити протокол аукціону
-    [Arguments]    ${username}    ${tender_uaid}    ${filepath}    ${award_index}
-    kpmgdealroom.Пошук тендера по ідентифікатору    ${username}    ${tender_uaid}
-    Wait Until Page Contains Element    xpath=(//*[@id='btnShowBid' and not(contains(@style,'display: none'))])
-    Click Element    id=btnShowBid
-    Sleep    1
-    Wait Until Page Contains Element    xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-    Click Element    id=btn_documents_add
-    Select From List By Value    id=slFile_documentType    auctionProtocol
-    Choose File    xpath=(//*[@id='upload_form']/input[2])    ${filepath}
-    Sleep    2
-    Click Element    id=upload_button
+
 
 # Upload an agreement to the tender
 Завантажити угоду до тендера
