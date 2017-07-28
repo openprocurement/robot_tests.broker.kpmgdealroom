@@ -25,6 +25,14 @@ ${locator.exchangeAdmin.publish.publishButton}              id=publish-exchange-
 ${locator.exchangeAdmin.publish.confirmButton}              id=publishExchange-dialog-yes
 ${locator.exchangeAdmin.publish.publishedID}                id=providerAuctionId
 
+# cancel exchange
+${locator.exchangeAdmin.nav.Cancel}  id=leftNavLink_Cancel_Exchange
+${locator.exchangeAdmin.cancel.reason}  id=Reason
+${locator.exchangeAdmin.cancel.date}  id=CancellationDateHidden
+${locator.exchangeAdmin.cancel.file}  id=cancellation-file-upload
+${locator.exchangeAdmin.cancel.submitButton}  id=close-cancel-exchange-submit
+${locator.exchangeAdmin.cancel.confirmButton}  id=closeCancelExchange-dialog-yes
+
 # team management
 ${locator.Admin.Admin}                                      id=li-exchange-toolbar-admin
 ${locator.AddTeam.AddEditTeams}                           xpath=//ul[@id='sidebar']/li[2]/a
@@ -74,6 +82,14 @@ ${locator.createExchange.tenderAttempts}                    name=ExchangeDetails
 
 ${locator.createExchange.SubmitButton}                      id=create-exchange-submit
 
+# edit exchange
+${locator.editExchange.title}  name=Exchange.Title
+${locator.editExchange.dgfId}  name=ExchangeDetails.DgfId
+${locator.editExchange.dgfDecisionID}  name=ExchangeDetails.DgfDecisionId
+${locator.editExchange.description}  name=DgfDecisionDateInput
+${locator.editExchange.tenderAttempts}  name=ExchangeDetails.TenderAttempts
+${locator.editExchange.SubmitButton}  //form/div/input
+
 # add item / asset
 ${locator.assetDetails.items[0].description}                    xpath=(//input[@name='Assets[0].Description'])[2]
 ${locator.assetDetails.items[0].quantity}                       xpath=(//input[@name='Assets[0].Quantity'])[2]
@@ -120,38 +136,44 @@ ${locator.addAsset.SaveButton}                              css=.btn.btn-default
 ${locator.addAsset.AddButton}                               id=add-asset
 
 
+
 # view exchange information
-${locator.viewExchange.title}                               id=Exchange_Title
+${locator.viewExchange.title}                               id=exchangeName
 ${locator.viewExchange.description}                             id=description
-${locator.viewExchange.procurementMethodType}               
+${locator.viewExchange.procurementMethodType}               xpath= //div[2]/div/div/div/div/div[2]/div/div[2]/input
 ${locator.viewExchange.dgfID}                               id=dgfId
 ${locator.viewExchange.dgfDecisionID}                       id=dgfDecisionId
-${locator.viewExchange.dgfDecisionDate}                     id=DgfDecisionDate
-${locator.viewExchange.tenderAttempts}                      id=tenderAttempts
-${locator.viewExchange.eligibilityCriteria}
-${locator.viewExchange.value.amount}                        id=startingPrice
+${locator.viewExchange.dgfDecisionDate}                     id=ExchangeDetails_DgfDecisionDate
+#${locator.viewExchange.tenderAttempts}                      
+${locator.viewExchange.eligibilityCriteria}                 xpath= //div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
+${locator.viewExchange.value.amount}                        id=ExchangeDetails_StartingPrice
 ${locator.viewExchange.minimalStep.amount}                  id=ExchangeDetails_MinimumStepValue
-${locator.viewExchange.value.currency}                      
-${locator.viewExchange.value.valueAddedTaxIncluded}
-${locator.viewExchange.tenderId}
-${locator.viewExchange.procuringEntity.name}
-${locator.viewExchange.auctionPeriod.startDate}             xpath=//div[@class='form-group']/div[3]/div[1]/div[1]/input[1]
-${locator.viewExchange.auctionPeriod.endDate}               xpath=//div[@class='form-group']/div[3]/div[1]/div[1]/input[2]
-${locator.viewExchange.tenderPeriod.startDate}              xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[1]
-${locator.viewExchange.tenderPeriod.endDate}                xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[2]
-${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[1]
-${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
-${locator.viewExchange.status}
+#${locator.viewExchange.value.currency}                      
+#${locator.viewExchange.value.valueAddedTaxIncluded}
+${locator.viewExchange.tenderId}  id=ExchangeDetails_AuctionCode
+${locator.viewExchange.procuringEntity.name}  
+${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
+
+#${locator.viewExchange.auctionPeriod.endDate}               xpath=//div[@class='form-group']/div[3]/div[1]/div[1]/input[2]
+#${locator.viewExchange.tenderPeriod.startDate}              xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[1]
+#${locator.viewExchange.tenderPeriod.endDate}                xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[2]
+#${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[1]
+#${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
+#${locator.viewExchange.status}
 
 ${locator.viewExchange.items[0].description}
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
-${locator.exchangeList.FilterByIdButton}    //th[@id='exchangeDashboardAuctionIdCol']/a/span
-${locator.exchangeList.FilterTextField}     //input[@type='text']
+${locator.exchangeList.Prozorro.FilterByIdButton}  //th[@id='prozorroDashboardIdCol']/a/span
+${locator.exchangeList.FilterByIdButton}  //th[@id='exchangeDashboardAuctionIdCol']/a/span
+${locator.exchangeList.FilterTextField}  //input[@type='text']
 ${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
-${locator.exchangeList.FilteredFirstRow}    //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
-${locator.exchangeList.FilteredSecondRow}   //*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td/a
+${locator.exchangeList.FilteredFirstRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
+${locator.exchangeList.FilteredSecondRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td/a
+${locator.exchangeList.MyExchangesTab}  //li/span[2]
+${locator.exchangeList.ProzorroExchangesTab}  //li[2]/span[2]
+
 
 # questions and answers
 ${locator.Questions.DraftQuestionButton}    css=a.btn.btn-primary
@@ -181,52 +203,8 @@ ${locator.Bidding.CancelBidYesButton}       id=cancel-bid-dialog-yes
 # file operations
 ${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room
 ${locator.Dataroom.Upload}                  id=dataroom-upload
-${locator.Dataroom.T&CYes}                  id=exchangerules-dialog-yes
+${locator.Dataroom.RulesDialogYes}          id=exchangerules-dialog-yes
 ${locator.Dataroom.UploadSelect}            id=dataroom-upload
 ${locator.Dataroom.SelectFiles}             id=files
 ${locator.Dataroom.UploadFileButton}        //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
 ${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close
-
-
-
-
-
-
-
-# Edwin - The below locators are from UISCE's driver.  To eventually delete...
-${locator.edit.description}                 id = auction-description
-${locator.items[0].quantity}                id=item-quantity-1
-${locator.items[0].description}             id = item-description-1
-${locator.items[0].unit.code}               id = item-unit_code1
-${locator.items[0].unit.name}               id = item-unit_name-1
-${locator.items[0].deliveryAddress.postalCode}    id=item-postalCode1
-${locator.items[0].deliveryAddress.region}  id=item-region1
-${locator.items[0].deliveryAddress.locality}    id=item-locality1
-${locator.items[0].deliveryAddress.streetAddress}    id=item-streetAddress1
-${locator.items[0].classification.scheme}   id=tw_item_0_classification_scheme
-${locator.items[0].classification.id}       id = item-classification_id1
-${locator.items[0].classification.description}    id = item-classification_description1
-${locator.items[0].additionalClassifications[0].scheme}    id=tw_item_0_additionalClassifications_description
-${locator.items[0].additionalClassifications[0].id}    id=tew_item_0_additionalClassifications_id
-${locator.items[0].additionalClassifications[0].description}    id=tw_item_0_additionalClassifications_description
-${locator.items[1].description}             id = item-description-2
-${locator.items[1].classification.id}       id = item-classification_id2
-${locator.items[1].classification.description}    id = item-classification_description2
-${locator.items[1].classification.scheme}   id=tw_item_1_classification_scheme
-${locator.items[1].unit.code}               id = item-unit_code2
-${locator.items[1].unit.name}    id=item-unit_name-2
-${locator.items[1].quantity}    id=tew_item_1_quantity
-${locator.items[2].description}    id = item-description-3
-${locator.items[2].classification.id}    id = item-classification_id3
-${locator.items[2].classification.description}    id = item-classification_description3
-${locator.items[2].classification.scheme}    id=tw_item_2_classification_scheme
-${locator.items[2].unit.code}    id = item-unit_code3
-${locator.items[2].unit.name}    id = item-unit_name-3
-${locator.items[2].quantity}    id=tew_item_2_quantity
-${locator.questions[0].title}    id = question-title1
-${locator.questions[0].description}    id=question-description1
-${locator.questions[0].date}    id = question-date1
-${locator.questions[0].answer}    id = question-answer1
-${locator.cancellations[0].status}    id = status
-${locator.cancellations[0].reason}    id = messages-notes
-${locator.contracts.status}    css=.contract_status

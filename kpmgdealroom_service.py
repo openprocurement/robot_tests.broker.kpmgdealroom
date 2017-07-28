@@ -19,15 +19,16 @@ def get_tender_dates(initial_tender_data, key):
 
 
 def adapt_tender_data(tender_data):
-    tender_data['data']['procuringEntity']['name'] = u"Prozorro Test"
-    tender_data['data']['title'] = tender_data['data']['title'].replace("[", "").replace("]", "")
-    tender_data['data']['title_en'] = tender_data['data']['title_en'].replace("[", "").replace("]", "").replace("TESTING", "")
-    tender_data['data']['title_ru'] = tender_data['data']['title_ru'].replace("[", "").replace("]", "")
-    tender_data['data']['dgfDecisionID'] = tender_data['data']['dgfDecisionID'].replace("/", "-")
-    tender_data['data']['description'] = tender_data['data']['description_en'].replace(".","")
+    tender_data['data']['procuringEntity']['name'] = u"Prozorro Entity"
+    #tender_data['data']['title'] = tender_data['data']['title'].replace("[", "").replace("]", "")
+    #tender_data['data']['title_en'] = tender_data['data']['title_en'].replace("[", "").replace("]", "").replace("TESTING", "")
+    #tender_data['data']['title_ru'] = tender_data['data']['title_ru'].replace("[", "").replace("]", "")
+    #tender_data['data']['dgfDecisionID'] = tender_data['data']['dgfDecisionID'].replace("/", "-")
+    #tender_data['data']['description'] = tender_data['data']['description'].replace(".","")
 
     # todo - remove on completion of KDR-1237
-    tender_data['data']['title'] = tender_data['data']['title_en'][:21] + " _kdrtest"
+    #tender_data['data']['title'] = tender_data['data']['title_en'][:21] + " _kdrtest"
+    tender_data['data']['title'] = tender_data['data']['title'][:21] + " _kdrtest"
     return tender_data
 
 def convert_ISO_DMY(isodate):

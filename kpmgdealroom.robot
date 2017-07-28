@@ -28,23 +28,33 @@ Wait And Click Element
   Click Element  ${locator}
 
 Search KDR Auction
-    [Arguments]  ${username}        ${tender_uaid}
-    Search Auction  ${username}    ${tender_uaid}
-    Click Element                   ${locator.exchangeList.FilteredSecondRow}
-    Wait And Click Element          ${locator.exchangeToolbar.Details}  5
+  [Arguments]  ${username}  ${tender_uaid}
+  Search Auction  ${username}  ${tender_uaid}  internal
+  Wait And Click Element  ${locator.exchangeToolbar.Details}  5
 
 Search Auction
-    [Arguments]  ${username}     ${tender_uaid}
-    Switch Browser                      ${username}
-    Go to                               ${USERS.users['${username}'].default_page}
-    Wait Until Element Is Visible       ${locator.exchangeList.FilterByIdButton}
-    Wait Until Element Is Not Visible   css=div.k-loading-image
-    Click Element                       ${locator.exchangeList.FilterByIdButton}
-    Wait Until Element Is Enabled       ${locator.exchangeList.FilterTextField}    10
-    Input Text                          ${locator.exchangeList.FilterTextField}    ${tender_uaid}
-    Click Element                       ${locator.exchangeList.FilterSubmitButton}
-    Sleep                               1
-    Wait Until Element Is Not Visible   css=div.k-loading-image
+  [Arguments]  ${username}  ${tender_uaid}  ${type}
+ 
+  Switch Browser  ${username}
+  Go to  ${USERS.users['${username}'].default_page}
+  
+  #${exchangeListTab}=  Set Variable If  '${type}' == 'internal'  ${locator.exchangeList.MyExchangesTab}  ${locator.exchangeList.ProzorroExchangesTab}
+  ${filterByIdButton}=  Set Variable If  '${username}' == 'kpmgdealroom_Viewer'  ${locator.exchangeList.Prozorro.FilterByIdButton}  ${locator.exchangeList.FilterByIdButton}
+
+  #Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Click Element  ${exchangeListTab}
+  Wait Until Element Is Visible  ${filterByIdButton}
+  Wait Until Element Is Not Visible  css=div.k-loading-image
+  Click Element  ${filterByIdButton}
+  Wait Until Element Is Enabled  ${locator.exchangeList.FilterTextField}  10
+  Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
+  Click Element  ${locator.exchangeList.FilterSubmitButton}
+  Sleep  1
+  Wait Until Element Is Not Visible  css=div.k-loading-image
+
+  Run Keyword If  '${username}' == 'kpmgdealroom_Viewer'  Click Element  ${locator.exchangeList.FilteredFirstRow}
+  ...  ELSE  Run Keyword If  '${type}' == 'internal'  Click Element  ${locator.exchangeList.FilteredFirstRow}
+  ...  ELSE  Click Element  ${locator.exchangeList.FilteredSecondRow}
+
 
 Setup Team
   [Arguments]  ${team_name}  ${team_user}
@@ -142,7 +152,7 @@ Add Item
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
   Input Text  ${locator.createExchange.tenderAttempts}  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
-  Wait And Click Element  ${locator.Dataroom.T&CYes}  20
+  Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
 
   # Add items to auction
   :FOR  ${index}  IN RANGE  ${number_of_items} 
@@ -173,10 +183,7 @@ Add Item
 # Search for a bid identifier (KDR-1077)
 kpmgdealroom.Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}
-  Search Auction  ${username}  ${tender_uaid}
-
-  # click first row
-  Click Element  ${locator.exchangeList.FilteredFirstRow}
+  Search Auction  ${username}  ${tender_uaid}  external
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
 
 # Refresh the page with the tender
@@ -195,17 +202,11 @@ kpmgdealroom.Отримати інформацію із тендера
 # Make changes to the tender
 Внести зміни в тендер
   [Arguments]  @{ARGUMENTS}
-  [Documentation]  ${ARGUMENTS[0]} = username
-  ...  ${ARGUMENTS[1]} = ${TENDER_UAID}
-  ...  ${ARGUMENTS[2]} == fieldname
-  ...  ${ARGUMENTS[3]} == fieldvalue
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}  ${ARGUMENTS[1]}
-  Click Element  id = update-btn
-  Input Text  ${locator.edit.${ARGUMENTS[2]}}  ${ARGUMENTS[3]}
-  Click Element  id=submissive-btn
-  Wait Until Page Contains  Успішно оновлено  5
-  ${result_field}=  Get Value  ${locator.edit.${ARGUMENTS[2]}}
-  Should Be Equal  ${result_field}  ${ARGUMENTS[3]}
+  Search KDR Auction  ${username}  ${tender_uaid}
+  Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
+
+  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
+  Click Element  ${locator.editExchange.SubmitButton}
 
 # Get the number of documents in the tender
 Отримати кількість документів в тендері
@@ -214,29 +215,21 @@ kpmgdealroom.Отримати інформацію із тендера
   ${tender_doc_number}=  Get Matching Xpath Count  xpath=(//*[@id=' doc_id']/)
   [Return]  ${tender_doc_number}
 
-
 #--------------------------------------------------------------------------
 #  CANCELLATION - СКАСУВАННЯ 
 #--------------------------------------------------------------------------
 # Cancel a tender
 Скасувати закупівлю
   [Arguments]  ${username}  ${tender_uaid}  ${cancellation_reason}  ${document}  ${new_description}
-  dzo.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Клікнути по елементу  xpath=//a[contains(@class,'tenderCancelCommand')]
-  Підтвердити дію
-  Execute Javascript  $("input[type|='file']").css({height: "20px", width: "40px", opacity: 1, left: 0, top: 0, position: "static"});
-  Choose File  xpath=//input[@type="file"]  ${document}
-  Ввести текст  name=title  ${document.split('/')[-1]}
-  Клікнути по елементу  xpath=//button[text()="Додати"]
-  Wait Until Element Is Not Visible  xpath=/html/body[@class="blocked"]
-  Capture Page Screenshot
-  Клікнути по елементу  xpath=//span[text()='${cancellation_reason}']
-  Клікнути по елементу  xpath=//button[@class="bidAction"]
-  Capture Page Screenshot
-  Wait Until Element Is Visible  xpath=//div[@class="mertBlock"]
-  Capture Page Screenshot
-  Wait Until Keyword Succeeds  10 x  1 m  Звірити статус тендера  ${username}  ${tender_uaid}  cancelled
-
+  Search KDR Auction  ${username}  ${tender_uaid}
+  Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
+  Click Element  ${locator.exchangeToolbar.Admin}
+  Wait And Click Element  ${locator.exchangeAdmin.nav.Cancel}  5
+  Wait Until Element Is Visible  ${locator.exchangeAdmin.cancel.submitButton}  10
+  Input Date  ${locator.exchangeAdmin.cancel.date} 
+  Choose File  ${locatorexchangeAdming.cancel.file}  ${document}
+  Click Element  ${locator.exchangeAdmin.cancel.submitButton}
+  Wait And Click Element  ${locator.exchangeAdmin.cancel.confirmButton}  5
 
 #--------------------------------------------------------------------------
 #  ПИТАННЯ
@@ -244,7 +237,7 @@ kpmgdealroom.Отримати інформацію із тендера
 Отримати посилання на аукціон для глядача
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
   Sleep  120
-  dzo.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ${url}=  Get Element Attribute  xpath=//section/h3/a[@class="reverse"]@href
   [return]  ${url}
 
@@ -256,7 +249,7 @@ kpmgdealroom.Отримати інформацію із тендера
   ...  ${ARGUMENTS[2]} == ${TENDER}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}  ${ARGUMENTS[2]}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  Click Element  ${locator.Dataroom.T&CYes}
+  Click Element  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.Dataroom.UploadIcon}  10
   Click Element  ${locator.Dataroom.SelectFiles}
   Input Text  ${locator.Dataroom.SelectFiles}  ${ARGUMENTS[1]}
@@ -337,7 +330,7 @@ kpmgdealroom.Отримати інформацію із тендера
 
 Додати офлайн документ
   [Arguments]  ${username}  ${tender_uaid}  ${accessDetails}  ${title}=Familiarization with bank asset
-  dzo.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Клікнути по елементу  xpath=//a[contains(text(),'Редагувати')]
   Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
   Клікнути по елементу  xpath=//h3[contains(text(),'Документація до лоту')]/following-sibling::a
@@ -399,7 +392,7 @@ kpmgdealroom.Отримати інформацію із тендера
 
 Отримати кількість предметів в тендері
   [Arguments]  ${username}  ${tender_uaid}
-  dzo.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ${number_of_items}=  Get Matching Xpath Count  //div[@class="tenderItemElement"]
   [return]  ${number_of_items}
 
@@ -431,7 +424,7 @@ kpmgdealroom.Отримати інформацію із тендера
 # Answer a question
 Відповісти на запитання
   [Arguments]  ${username}  ${tender_uaid}  ${answer_data}  ${question_id}
-  dzo.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Клікнути по елементу  xpath=//section[@class="content"]/descendant::a[contains(@href, 'questions')]
   Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
   Ввести текст  xpath=//div[contains(text(), '${question_id}')]/../following-sibling::div/descendant::textarea[@name="answer"]  ${answer_data.data.answer}
@@ -490,11 +483,11 @@ kpmgdealroom.Отримати інформацію із тендера
 # Upload a financial license
 Завантажити фінансову ліцензію
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}
-  dzo.Завантажити документ в ставку  ${username}  ${filepath}  ${tender_uaid}
+  kpmgdealroom.Завантажити документ в ставку  ${username}  ${filepath}  ${tender_uaid}
 
 Змінити документ в ставці
   [Arguments]  ${username}  ${tender_uaid}  ${path}  ${docid}
-  dzo.Завантажити документ в ставку  ${username}  ${path}  ${tender_uaid}
+  kpmgdealroom.Завантажити документ в ставку  ${username}  ${path}  ${tender_uaid}
 
 # Get information from the offer
 Отримати інформацію із пропозиції
@@ -510,7 +503,7 @@ kpmgdealroom.Отримати інформацію із тендера
 Отримати кількість документів в ставці
   [Arguments]  ${username}  ${tender_uaid}  ${bid_index}
 #  Дочекатись синхронізації з майданчиком  ${username}
-  dzo.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait Until Keyword Succeeds  15 x  1 m  Run Keywords
   ...  Reload Page
   ...  AND  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
@@ -528,7 +521,7 @@ kpmgdealroom.Отримати інформацію із тендера
 
 Отримати посилання на аукціон для учасника
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
-  dzo.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Клікнути по елементу  xpath=//a[@class="reverse getAuctionUrl"]
   Wait Until Page Contains Element  xpath=//a[contains(text(),"Перейдіть до аукціону")]
   ${url}=  Get Element Attribute  xpath=//a[contains(text(),"Перейдіть до аукціону")]@href
@@ -550,7 +543,7 @@ kpmgdealroom.Отримати інформацію із тендера
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
-  dzo.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait Until Keyword Succeeds  15 x  1 m  Run Keywords
   ...  Reload Page
   ...  AND  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
@@ -608,3 +601,52 @@ kpmgdealroom.Отримати інформацію із тендера
   Sleep  2
   Click Element  id=upload_button
   Reload Page
+
+#------------------------------------------------------------------------------
+#  GET FIELD DATA - PRIORITY 1
+#------------------------------------------------------------------------------
+# Get information from title
+Отримати інформацію про title
+  ${return_value}=    Get Value  ${locator.viewExchange.title}
+  [Return]    ${return_value}
+
+# Get information from description
+Отримати інформацію про description
+  ${return_value}=    Get Value  ${locator.viewExchange.description}
+  [Return]    ${return_value}
+
+  # Get information from procurementMethodType
+Отримати інформацію про procurementMethodType
+  ${return_value}=    Get Value  ${locator.viewExchange.procurementMethodType}
+  [Return]    ${return_value}
+
+# Get information from  dgfID
+Отримати інформацію про dgfID
+  ${return_value}=    Get Text  ${locator.viewExchange.dgfID}
+  [Return]    ${return_value}
+
+# Get information from  dgfDecisionID
+Отримати інформацію про dgfDecisionID
+  ${return_value}=    Get Text  ${locator.viewExchange.dgfDecisionID}
+  [Return]    ${return_value}
+
+# Get information from  dgfDecisionDate
+Отримати інформацію про dgfDecisionDate
+  ${return_value}=    Get Text  ${locator.viewExchange.dgfDecisionDate}
+  [Return]    ${return_value}
+
+# Get information from eligibilityCriteria
+Отримати інформацію про eligibilityCriteria
+  ${return_value}=    Get Text  ${locator.viewExchange.eligibilityCriteria}
+  [Return]    ${return_value}
+
+# Get information from value.amount
+Отримати інформацію про value.amount
+  ${return_value}=  Get Value  ${locator.viewExchange.value.amount}
+  ${return_value}=  Convert To Number  ${return_value.replace(' ', '').replace(',', '.')}
+  [Return]  ${return_value}
+
+# Get information from auctionPeriod.startDate
+Отримати інформацію про auctionPeriod.startDate
+  ${return_value}=  Get Value  ${locator.auctionPeriod.startDate}
+  [Return]  ${return_value}
