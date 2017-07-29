@@ -144,7 +144,7 @@ Add Item
   Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
   Input Text  ${locator.createExchange.dgfID}  ${tender_data.data.dgfID}
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
-  Input Date  ${locator.createExchange.dgfDecisionDateField}  ${tender_data.data.dgfDecisionDate}
+  Execute Javascript  $("#DgfDecisionDateInput").val('${tender_data.data.dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
   Input Text  ${locator.createExchange.tenderAttempts}  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
@@ -152,6 +152,7 @@ Add Item
   # Add items to auction
   :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
+  Execute Javascript  $("#DgfDecisionDateInput").val('${tender_data.data.dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
   Click Element  ${locator.addAsset.SaveButton}
   Click Element  ${locator.exchangeToolbar.Admin}
 
