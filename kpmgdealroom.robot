@@ -43,13 +43,13 @@ Search Auction
 
   #Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Click Element  ${exchangeListTab}
   Wait Until Element Is Visible  ${filterByIdButton}
-  Wait Until Element Is Not Visible  css=div.k-loading-image
+  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
   Click Element  ${filterByIdButton}
   Wait Until Element Is Enabled  ${locator.exchangeList.FilterTextField}  10
   Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Sleep  1
-  Wait Until Element Is Not Visible  css=div.k-loading-image
+  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
 
   Run Keyword If  '${username}' == 'kpmgdealroom_Viewer'  Click Element  ${locator.exchangeList.FilteredFirstRow}
   ...  ELSE  Run Keyword If  '${type}' == 'internal'  Click Element  ${locator.exchangeList.FilteredFirstRow}
