@@ -120,10 +120,6 @@ Add Item
   ${guarantee}=  convert_number_to_currency_str  ${tender_data.data.guarantee.amount}
   ${budget}=  convert_number_to_currency_str  ${tender_data.data.value.amount}
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
-#  TODO: check why this does not work!!
-#  ${providerLogin}=  Get From Dictionary  ${USERS.users['kpmgdealroom_provider']}  login
-#  ${provider1Login}=  Get From Dictionary  ${USERS.users['kpmgdealroom_provider1']}  login
-  
   Switch Browser  ${username}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
@@ -145,7 +141,7 @@ Add Item
   Wait Until Element is Visible  ${locator.createExchange.GuaranteeAmount}  20
   Input Text  ${locator.createExchange.GuaranteeAmount}  ${guarantee}
   Input Text  ${locator.createExchange.StartPrice}  ${budget}
-  Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate} 
+  Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
   Input Text  ${locator.createExchange.dgfID}  ${tender_data.data.dgfID}
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
   Input Date  ${locator.createExchange.dgfDecisionDateField}  ${tender_data.data.dgfDecisionDate}
@@ -153,32 +149,45 @@ Add Item
   Input Text  ${locator.createExchange.tenderAttempts}  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
   Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
-
   # Add items to auction
-  :FOR  ${index}  IN RANGE  ${number_of_items} 
+  :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
   Click Element  ${locator.addAsset.SaveButton}
+  Click Element  ${locator.exchangeToolbar.Admin}
 
-  Click Element  ${locator.exchangeToolbar.Admin}  
-  # may need retry loop here
+
+  ################ DIRTY HACK !!!! DELETE THIS AFTER SHITCODERS WILL DO THEIR JOB !!!! ##################
+  #  Trick for "Object reference not set to an instance of an object." exeption after auction publishing
+  Wait Until Keyword Succeeds  10 x  1 s  Publish Auction
+  #######################################################################################################
+
+
+  ################ DIRTY HACK !!!! DELETE THIS AFTER SHITCODERS WILL DO THEIR JOB !!!! ##################
+  #  Triggering this url change auction status from Draft to Tendering
+  ${last_url}=  Get Location
+  Go To  https://test.kpmgdealroom.com/public/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
+  Go To  ${last_url}
+  #######################################################################################################
+
+
+  # team and user setup
+  Click Element  ${locator.toolbar.ExchangesButton}
+#  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${TENDER}
+  #Setup Team  Buyer Team 1  ${providerLogin}
+  #Setup Team  Buyer Team 2  ${provider1Login}
+#  Setup Team  Buyer Team 1  pzprovider@kpmg.co.uk
+#  Setup Team  Buyer Team 2  pzprovider1@kpmg.co.uk
+#  Setup User Bids
+  [Return]  ${auction_id}
+
+Publish Auction
   Wait And Click Element  ${locator.exchangeAdmin.nav.Publish}  20
   Wait And Click Element  ${locator.exchangeAdmin.publish.PublishButton}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.publish.confirmButton}  5
   Click Element  ${locator.exchangeAdmin.publish.confirmButton}
   Wait Until Page Contains Element  ${locator.exchangeAdmin.publish.publishedID}  30
-
-  ${TENDER}=  Get Text  ${locator.exchangeAdmin.publish.publishedID}
-  
-  # team and user setup
-  Click Element  ${locator.toolbar.ExchangesButton}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${TENDER}
-  #Setup Team  Buyer Team 1  ${providerLogin}
-  #Setup Team  Buyer Team 2  ${provider1Login}
-  Setup Team  Buyer Team 1  pzprovider@kpmg.co.uk
-  Setup Team  Buyer Team 2  pzprovider1@kpmg.co.uk
-  Setup User Bids
-  
-  [Return]  ${TENDER}
+  ${auction_id}=  Get Text  ${locator.exchangeAdmin.publish.publishedID}
+  Set Test Variable  ${auction_id}
 
 # Search for a bid identifier (KDR-1077)
 kpmgdealroom.Пошук тендера по ідентифікатору
