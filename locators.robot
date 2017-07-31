@@ -76,7 +76,7 @@ ${locator.createExchange.MinimumStepValue}                  id=minimumStepValue
 ${locator.createExchange.dgfID}                             id=dgfId
 ${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails.DgfDecisionId
 ${locator.createExchange.dgfDecisionDate}                   id=DgfDecisionDateInput
-${locator.createExchange.dgfDecisionDateField}              DgfDecisionDate
+${locator.createExchange.dgfDecisionDateField}              DgfDecisionDateInput
 ${locator.createExchange.description}                       name=ExchangeDetails.Description
 ${locator.createExchange.tenderAttempts}                    name=ExchangeDetails.TenderAttempts   
 

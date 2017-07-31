@@ -43,13 +43,13 @@ Search Auction
 
   #Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Click Element  ${exchangeListTab}
   Wait Until Element Is Visible  ${filterByIdButton}
-  Wait Until Element Is Not Visible  css=div.k-loading-image
+  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
   Click Element  ${filterByIdButton}
   Wait Until Element Is Enabled  ${locator.exchangeList.FilterTextField}  10
   Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Sleep  1
-  Wait Until Element Is Not Visible  css=div.k-loading-image
+  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
 
   Run Keyword If  '${username}' == 'kpmgdealroom_Viewer'  Click Element  ${locator.exchangeList.FilteredFirstRow}
   ...  ELSE  Run Keyword If  '${type}' == 'internal'  Click Element  ${locator.exchangeList.FilteredFirstRow}
@@ -120,10 +120,6 @@ Add Item
   ${guarantee}=  convert_number_to_currency_str  ${tender_data.data.guarantee.amount}
   ${budget}=  convert_number_to_currency_str  ${tender_data.data.value.amount}
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
-#  TODO: check why this does not work!!
-#  ${providerLogin}=  Get From Dictionary  ${USERS.users['kpmgdealroom_provider']}  login
-#  ${provider1Login}=  Get From Dictionary  ${USERS.users['kpmgdealroom_provider1']}  login
-  
   Switch Browser  ${username}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
@@ -145,40 +141,75 @@ Add Item
   Wait Until Element is Visible  ${locator.createExchange.GuaranteeAmount}  20
   Input Text  ${locator.createExchange.GuaranteeAmount}  ${guarantee}
   Input Text  ${locator.createExchange.StartPrice}  ${budget}
-  Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate} 
+  Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
   Input Text  ${locator.createExchange.dgfID}  ${tender_data.data.dgfID}
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
-  Input Date  ${locator.createExchange.dgfDecisionDateField}  ${tender_data.data.dgfDecisionDate}
+  Execute Javascript  $("#DgfDecisionDateInput").val('${tender_data.data.dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
   Input Text  ${locator.createExchange.tenderAttempts}  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
   Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
-
   # Add items to auction
-  :FOR  ${index}  IN RANGE  ${number_of_items} 
+  :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
+  Execute Javascript  $("#DgfDecisionDateInput").val('${tender_data.data.dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
   Click Element  ${locator.addAsset.SaveButton}
+  Click Element  ${locator.exchangeToolbar.Admin}
 
-  Click Element  ${locator.exchangeToolbar.Admin}  
-  # may need retry loop here
+
+  ################ DIRTY HACK !!!! DELETE THIS AFTER SHITCODERS WILL DO THEIR JOB !!!! ##################
+  #  Trick for "Object reference not set to an instance of an object." exeption after auction publishing
+  Wait Until Keyword Succeeds  10 x  1 s  Publish Auction
+  #######################################################################################################
+
+
+  ################ DIRTY HACK !!!! DELETE THIS AFTER SHITCODERS WILL DO THEIR JOB !!!! ##################
+  #  Triggering this url change auction status from Draft to Tendering
+  ${last_url}=  Get Location
+  Go To  https://test.kpmgdealroom.com/public/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
+  Go To  ${last_url}
+  #######################################################################################################
+
+
+  ################ DIRTY HACK !!!! DELETE THIS AFTER SHITCODERS WILL DO THEIR JOB !!!! ##################
+  #  Needed to wait for auction change status for Tendering
+  #  Delete this code and Check Auction Status kwd after bug fixing
+  Wait Until Keyword Succeeds  10 x  60 s  Check Auction Status  ${username}  Tendering
+  #######################################################################################################
+
+
+  # team and user setup
+  Click Element  ${locator.toolbar.ExchangesButton}
+#  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${TENDER}
+  #Setup Team  Buyer Team 1  ${providerLogin}
+  #Setup Team  Buyer Team 2  ${provider1Login}
+#  Setup Team  Buyer Team 1  pzprovider@kpmg.co.uk
+#  Setup Team  Buyer Team 2  pzprovider1@kpmg.co.uk
+#  Setup User Bids
+  [Return]  ${auction_id}
+
+Publish Auction
   Wait And Click Element  ${locator.exchangeAdmin.nav.Publish}  20
   Wait And Click Element  ${locator.exchangeAdmin.publish.PublishButton}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.publish.confirmButton}  5
   Click Element  ${locator.exchangeAdmin.publish.confirmButton}
   Wait Until Page Contains Element  ${locator.exchangeAdmin.publish.publishedID}  30
+  ${auction_id}=  Get Text  ${locator.exchangeAdmin.publish.publishedID}
+  Set Test Variable  ${auction_id}
 
-  ${TENDER}=  Get Text  ${locator.exchangeAdmin.publish.publishedID}
-  
-  # team and user setup
-  Click Element  ${locator.toolbar.ExchangesButton}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${TENDER}
-  #Setup Team  Buyer Team 1  ${providerLogin}
-  #Setup Team  Buyer Team 2  ${provider1Login}
-  Setup Team  Buyer Team 1  pzprovider@kpmg.co.uk
-  Setup Team  Buyer Team 2  pzprovider1@kpmg.co.uk
-  Setup User Bids
-  
-  [Return]  ${TENDER}
+Check Auction Status
+  [Arguments]  ${username}  ${expected_status}
+  Go to  ${USERS.users['${username}'].default_page}
+  Wait Until Element Is Visible  ${locator.exchangeList.FilterByIdButton}
+  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
+  Click Element  ${locator.exchangeList.FilterByIdButton}
+  Wait Until Element Is Enabled  ${locator.exchangeList.FilterTextField}  10
+  Input Text  ${locator.exchangeList.FilterTextField}  ${auction_id}
+  Click Element  ${locator.exchangeList.FilterSubmitButton}
+  Sleep  1
+  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
+  ${status}=  Get Text  xpath=//*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td[3]
+  Should Be Equal  ${expected_status}  ${status}
 
 # Search for a bid identifier (KDR-1077)
 kpmgdealroom.Пошук тендера по ідентифікатору
