@@ -232,7 +232,7 @@ kpmgdealroom.Отримати інформацію із тендера
 
 # Make changes to the tender
 Внести зміни в тендер
-  [Arguments]  @{ARGUMENTS}
+  [Arguments]  ${username}  ${tender_uaid}  ${fieldname} ${fieldvalue}
   Search KDR Auction  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
 
