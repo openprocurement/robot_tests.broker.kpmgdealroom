@@ -157,13 +157,13 @@ Add Item
   Click Element  ${locator.exchangeToolbar.Admin}
 
 
-  ################ DIRTY HACK !!!! DELETE THIS AFTER SHITCODERS WILL DO THEIR JOB !!!! ##################
+  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
   #  Trick for "Object reference not set to an instance of an object." exeption after auction publishing
   Wait Until Keyword Succeeds  10 x  1 s  Publish Auction
   #######################################################################################################
 
 
-  ################ DIRTY HACK !!!! DELETE THIS AFTER SHITCODERS WILL DO THEIR JOB !!!! ##################
+  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
   #  Triggering this url change auction status from Draft to Tendering
   ${last_url}=  Get Location
   Go To  https://test.kpmgdealroom.com/public/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
@@ -171,7 +171,7 @@ Add Item
   #######################################################################################################
 
 
-  ################ DIRTY HACK !!!! DELETE THIS AFTER SHITCODERS WILL DO THEIR JOB !!!! ##################
+  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
   #  Needed to wait for auction change status for Tendering
   #  Delete this code and Check Auction Status kwd after bug fixing
   Wait Until Keyword Succeeds  10 x  60 s  Check Auction Status  ${username}  Tendering
