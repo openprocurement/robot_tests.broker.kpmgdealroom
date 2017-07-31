@@ -18,6 +18,10 @@ def get_tender_dates(initial_tender_data, key):
     return data.get(key, '')
 
 
+def convert_date_to_dp_format(date):
+    date_obj = dateutil.parser.parse(date)
+    return date_obj.strftime("%d/%m/%Y %H:%M:%S")
+
 def adapt_tender_data(tender_data):
     tender_data['data']['procuringEntity']['name'] = u"Prozorro Entity"
     #tender_data['data']['title'] = tender_data['data']['title'].replace("[", "").replace("]", "")

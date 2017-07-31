@@ -63,7 +63,7 @@ ${locator.createExchange.SellerName}                        id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}                      id=SponsorEmail
 ${locator.createExchange.AdminEmails}                       id=PrincipalAdministratorEmails
 ${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[2]
-${locator.createExchange.TypeSelector.Prozorro}             link=Prozorro
+${locator.createExchange.TypeSelector.Prozorro}             //*[@id="_TypeId_dropdown"]/descendant::*[@data-value="3"]/..
 ${locator.createExchange.StartDate}                         id=AuctionStartDateInput
 ${locator.createExchange.StartDateField}                    AuctionStartDate
 ${locator.createExchange.DgfCategorySelector}               //div[@id='_ExchangeDetails.ProzorroCategory_dropdown']/div[2]/i
