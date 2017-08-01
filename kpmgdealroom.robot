@@ -51,7 +51,7 @@ Search Auction
   Sleep  1
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
 
-  Run Keyword If  '${username}' == 'kpmgdealroom_Viewer'  Click Element  ${locator.exchangeList.FilteredFirstRow}
+  Run Keyword If  '${username}' == 'kpmgdealroom_Viewer'  Click Element  ${locator.exchangeList.ProzorroFilteredFirstRow}
   ...  ELSE  Run Keyword If  '${type}' == 'internal'  Click Element  ${locator.exchangeList.FilteredFirstRow}
   ...  ELSE  Click Element  ${locator.exchangeList.FilteredSecondRow}
 
@@ -83,6 +83,7 @@ Add Item
   Run Keyword If  ${index} != 0  Click Element  ${locator.addAsset.AddButton} 
   Wait Until Element Is Visible  ${locator.assetDetails.items[${index}].description}  20
   Input Text  ${locator.assetDetails.items[${index}].description}  ${item.description}
+  Input Text  ${locator.assetDetails.items[${index}].title}  Item ${index}: ${item.description}
   Input Text  ${locator.assetDetails.items[${index}].quantity}  ${item.quantity}
   Input Text  ${locator.assetDetails.items[${index}].classification.description}  ${item.classification.description}
   Input Text  ${locator.assetDetails.items[${index}].classification.code}  ${item.classification.id}
@@ -121,6 +122,7 @@ Add Item
   ${budget}=  convert_number_to_currency_str  ${tender_data.data.value.amount}
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
   ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
+  ${chromedriver_version}=  get_chromedriver_version
   Switch Browser  ${username}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
@@ -130,6 +132,7 @@ Add Item
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
   Execute Javascript  window.scroll(2500,2500);
+  Sleep  1
   Click Element  ${locator.createExchange.TypeSelector}
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Wait And Click Element  ${locator.createExchange.TypeSelector.Prozorro}  5
@@ -631,38 +634,48 @@ kpmgdealroom.Отримати інформацію із тендера
 #------------------------------------------------------------------------------
 # Get information from title
 Отримати інформацію про title
-  ${return_value}=    Get Value  ${locator.viewExchange.title}
-  [Return]    ${return_value}
+  ${return_value}=  Get Value  ${locator.viewExchange.title}
+  [Return]  ${return_value}
 
 # Get information from description
 Отримати інформацію про description
-  ${return_value}=    Get Value  ${locator.viewExchange.description}
-  [Return]    ${return_value}
+  ${return_value}=  Get Value  ${locator.viewExchange.description}
+  [Return]  ${return_value}
+
+Отримати інформацію про auctionID
+  ${return_value}=  Get Value  ${locator.viewExchange.auctionID} 
+  [Return]  ${return_value}
 
   # Get information from procurementMethodType
 Отримати інформацію про procurementMethodType
-  ${return_value}=    Get Value  ${locator.viewExchange.procurementMethodType}
-  [Return]    ${return_value}
+  ${return_value}=  Get Value  ${locator.viewExchange.procurementMethodType}
+  [Return]  ${return_value}
 
 # Get information from  dgfID
 Отримати інформацію про dgfID
-  ${return_value}=    Get Text  ${locator.viewExchange.dgfID}
-  [Return]    ${return_value}
+  ${return_value}=  Get Value  ${locator.viewExchange.dgfID}
+  [Return]  ${return_value}
 
 # Get information from  dgfDecisionID
 Отримати інформацію про dgfDecisionID
-  ${return_value}=    Get Text  ${locator.viewExchange.dgfDecisionID}
-  [Return]    ${return_value}
+  ${return_value}=  Get Value  ${locator.viewExchange.dgfDecisionID}
+  [Return]  ${return_value}
 
 # Get information from  dgfDecisionDate
 Отримати інформацію про dgfDecisionDate
-  ${return_value}=    Get Text  ${locator.viewExchange.dgfDecisionDate}
-  [Return]    ${return_value}
+  ${return_value}=  Get Value  ${locator.viewExchange.dgfDecisionDate}
+  ${return_value}=  convert_date_to_dash_format  ${return_value}
+  [Return]  ${return_value}
 
 # Get information from eligibilityCriteria
 Отримати інформацію про eligibilityCriteria
-  ${return_value}=    Get Text  ${locator.viewExchange.eligibilityCriteria}
-  [Return]    ${return_value}
+  ${return_value}=  Get Value  ${locator.viewExchange.eligibilityCriteria}
+  [Return]  ${return_value}
+
+# Get information from tenderAttempts
+Отримати інформацію про tenderAttempts
+  ${return_value}=  Get Value  ${locator.viewExchange.tenderAttempts}
+  [Return]  ${return_value}
 
 # Get information from value.amount
 Отримати інформацію про value.amount

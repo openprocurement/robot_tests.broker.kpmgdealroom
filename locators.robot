@@ -91,6 +91,7 @@ ${locator.editExchange.tenderAttempts}  name=ExchangeDetails.TenderAttempts
 ${locator.editExchange.SubmitButton}  //form/div/input
 
 # add item / asset
+${locator.assetDetails.items[0].title}                          xpath=(//input[@name='Assets[0].Title'])[2]
 ${locator.assetDetails.items[0].description}                    xpath=(//input[@name='Assets[0].Description'])[2]
 ${locator.assetDetails.items[0].quantity}                       xpath=(//input[@name='Assets[0].Quantity'])[2]
 ${locator.assetDetails.items[0].classification.scheme}          xpath=(//input[@name='Assets[0].Classification.Scheme'])[2]
@@ -103,6 +104,7 @@ ${locator.assetDetails.items[0].country}                        xpath=(//input[@
 ${locator.assetDetails.items[0].region}                         xpath=(//input[@name='Assets[0].Address.Region'])[2]
 ${locator.assetDetails.items[0].postcode}                       xpath=(//input[@name='Assets[0].Address.PostCode'])[2]
 
+${locator.assetDetails.items[1].title}                          name=Assets[1].Title
 ${locator.assetDetails.items[1].description}                    name=Assets[1].Description
 ${locator.assetDetails.items[1].quantity}                       name=Assets[1].Quantity
 ${locator.assetDetails.items[1].classification.scheme}          name=Assets[1].Classification.Scheme
@@ -115,6 +117,7 @@ ${locator.assetDetails.items[1].country}                        name=Assets[1].A
 ${locator.assetDetails.items[1].region}                         name=Assets[1].Address.Region
 ${locator.assetDetails.items[1].postcode}                       name=Assets[1].Address.PostCode
 
+${locator.assetDetails.items[2].title}                          name=Assets[2].Title
 ${locator.assetDetails.items[2].description}                    name=Assets[2].Description
 ${locator.assetDetails.items[2].quantity}                       name=Assets[2].Quantity
 ${locator.assetDetails.items[2].classification.scheme}          name=Assets[2].Classification.Scheme
@@ -138,19 +141,28 @@ ${locator.addAsset.AddButton}                               id=add-asset
 
 
 # view exchange information
-${locator.viewExchange.title}                               id=exchangeName
-${locator.viewExchange.description}                             id=description
+${locator.viewExchange.description}  id=description
+${locator.viewExchange.title}  id=ExternalExchange_Title
+${locator.viewExchange.status}  id=ExchangeDetails_Status
+${locator.viewExchange.auctionID}  id=ExchangeDetails_AuctionCode
+
+${locator.viewExchange.dgfID}  id=dgfId
+${locator.viewExchange.dgfDecisionID}  id=dgfDecisionId
+${locator.viewExchange.dgfDecisionDate}  id=ExchangeDetails_DgfDecisionDate
+${locator.viewExchange.tenderAttempts}  id=tenderAttempts
+
+${locator.viewExchange.value.amount}  id=startingPrice
+${locator.viewExchange.legalName}
 ${locator.viewExchange.procurementMethodType}               xpath= //div[2]/div/div/div/div/div[2]/div/div[2]/input
-${locator.viewExchange.dgfID}                               id=dgfId
-${locator.viewExchange.dgfDecisionID}                       id=dgfDecisionId
-${locator.viewExchange.dgfDecisionDate}                     id=ExchangeDetails_DgfDecisionDate
-#${locator.viewExchange.tenderAttempts}                      
-${locator.viewExchange.eligibilityCriteria}                 xpath= //div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
-${locator.viewExchange.value.amount}                        id=ExchangeDetails_StartingPrice
 ${locator.viewExchange.minimalStep.amount}                  id=ExchangeDetails_MinimumStepValue
+
+
+${locator.viewExchange.eligibilityCriteria}                 xpath= //div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
+
+
 #${locator.viewExchange.value.currency}                      
 #${locator.viewExchange.value.valueAddedTaxIncluded}
-${locator.viewExchange.tenderId}  id=ExchangeDetails_AuctionCode
+
 ${locator.viewExchange.procuringEntity.name}  
 ${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
 
@@ -159,7 +171,6 @@ ${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStart
 #${locator.viewExchange.tenderPeriod.endDate}                xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[2]
 #${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[1]
 #${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
-#${locator.viewExchange.status}
 
 ${locator.viewExchange.items[0].description}
 
@@ -173,6 +184,7 @@ ${locator.exchangeList.FilteredFirstRow}  //*[@id='exchangeDashboardTable']/tabl
 ${locator.exchangeList.FilteredSecondRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td/a
 ${locator.exchangeList.MyExchangesTab}  //li/span[2]
 ${locator.exchangeList.ProzorroExchangesTab}  //li[2]/span[2]
+${locator.exchangeList.ProzorroFilteredFirstRow}  //div[@id='prozorroExchangesTable']/table/tbody/tr/td[2]/a
 
 
 # questions and answers
