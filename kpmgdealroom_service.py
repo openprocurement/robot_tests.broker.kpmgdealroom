@@ -3,10 +3,14 @@ import pytz
 import dateutil.parser
 import urllib
 import time
+import os
 
 from datetime import datetime
 from iso8601 import parse_date
 from robot.libraries.BuiltIn import BuiltIn
+
+def get_chromedriver_version():
+    return os.popen("chromedriver --version").read()
 
 def get_tender_dates(initial_tender_data, key):
     data_period = initial_tender_data.data.auctionPeriod
@@ -40,6 +44,9 @@ def convert_ISO_DMY(isodate):
 
 def convert_date(isodate):
     return datetime.strptime(isodate, '%d-%m-%Y').date().isoformat()
+
+def convert_date_to_dash_format(date):
+    return datetime.strptime(date, "%d/%m/%Y").strftime("%Y-%m-%d")
 
 def convert_date_to_slash_format(isodate):
     iso_dt = parse_date(isodate)
