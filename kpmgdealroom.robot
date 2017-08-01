@@ -43,13 +43,13 @@ Search Auction
 
   #Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Click Element  ${exchangeListTab}
   Wait Until Element Is Visible  ${filterByIdButton}
-  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
+  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
   Click Element  ${filterByIdButton}
-  Wait Until Element Is Enabled  ${locator.exchangeList.FilterTextField}  10
+  Wait Until Element Is Visible  ${locator.exchangeList.FilterTextField}  10
   Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Sleep  1
-  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
+  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
 
   Run Keyword If  '${username}' == 'kpmgdealroom_Viewer'  Click Element  ${locator.exchangeList.FilteredFirstRow}
   ...  ELSE  Run Keyword If  '${type}' == 'internal'  Click Element  ${locator.exchangeList.FilteredFirstRow}
@@ -113,13 +113,14 @@ Add Item
 # Create a tender (KDR-1072)
 Створити тендер
   [Arguments]  ${username}  ${tender_data}
-  ${dgfDecisionDate}=  convert_ISO_DMY  ${tender_data.data.dgfDecisionDate}
+  ${dgfDecisionDate}=  convert_date_to_dp_format  ${tender_data.data.dgfDecisionDate}
   ${procurementMethodType}=  Get From Dictionary  ${tender_data.data}  procurementMethodType
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${number_of_items}=  Get Length  ${items}
   ${guarantee}=  convert_number_to_currency_str  ${tender_data.data.guarantee.amount}
   ${budget}=  convert_number_to_currency_str  ${tender_data.data.value.amount}
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
+  ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
   Switch Browser  ${username}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
@@ -128,17 +129,15 @@ Add Item
   Input Text  ${locator.createExchange.Name}  ${tender_data.data.title}
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
-  Wait And Click Element  ${locator.createExchange.TypeSelector}  10
-  Wait Until Element Is Visible  ${locator.createExchange.TypeSelector.Prozorro}  2
-  Click Element  ${locator.createExchange.TypeSelector.Prozorro}
-  Sleep  1
+  Execute Javascript  window.scroll(2500,2500);
+  Click Element  ${locator.createExchange.TypeSelector}
+  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Wait And Click Element  ${locator.createExchange.TypeSelector.Prozorro}  5
   Wait Until Element Is Visible  ${locator.createExchange.StartDate}  2
-  Input Date  ${locator.createExchange.StartDateField}  ${tender_data.data.auctionPeriod.startDate}
-  Wait Until Element Is Visible  ${locator.createExchange.DgfCategorySelector}  5
-  Click Element  ${locator.createExchange.DgfCategorySelector}
-  Wait Until Element Is Visible  ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}  2
-  Click Element  ${locator.createExchange.DgfCategorySelector.${procurementMethodType}}
-  Wait Until Element is Visible  ${locator.createExchange.GuaranteeAmount}  20
+  Execute Javascript  $("#AuctionStartDateInput").val('${dp_auction_start_date}'); $("#AuctionStartDate").val('${tender_data.data.auctionPeriod.startDate}');
+  Click Element  xpath=//*[@id="ExchangeDetails.ProzorroCategory"]/descendant::*[@data-toggle="dropdown"][2]
+  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Wait And Click Element  xpath=//a[contains(text(),'dgfFinancialAssets')]  5
   Input Text  ${locator.createExchange.GuaranteeAmount}  ${guarantee}
   Input Text  ${locator.createExchange.StartPrice}  ${budget}
   Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
@@ -152,7 +151,7 @@ Add Item
   # Add items to auction
   :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
-  Execute Javascript  $("#DgfDecisionDateInput").val('${tender_data.data.dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
+  Execute Javascript  $("#DgfDecisionDateInput").val('${dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
   Click Element  ${locator.addAsset.SaveButton}
   Click Element  ${locator.exchangeToolbar.Admin}
 
@@ -178,15 +177,9 @@ Add Item
   #######################################################################################################
 
 
-  # team and user setup
   Click Element  ${locator.toolbar.ExchangesButton}
-#  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${TENDER}
-  #Setup Team  Buyer Team 1  ${providerLogin}
-  #Setup Team  Buyer Team 2  ${provider1Login}
-#  Setup Team  Buyer Team 1  pzprovider@kpmg.co.uk
-#  Setup Team  Buyer Team 2  pzprovider1@kpmg.co.uk
-#  Setup User Bids
   [Return]  ${auction_id}
+
 
 Publish Auction
   Wait And Click Element  ${locator.exchangeAdmin.nav.Publish}  20
@@ -232,7 +225,7 @@ kpmgdealroom.Отримати інформацію із тендера
 
 # Make changes to the tender
 Внести зміни в тендер
-  [Arguments]  ${username}  ${tender_uaid}  ${fieldname} ${fieldvalue}
+  [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
   Search KDR Auction  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
 
