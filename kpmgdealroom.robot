@@ -238,12 +238,12 @@ kpmgdealroom.Отримати інформацію із тендера
   ...  ELSE  Input Date  DgfDecisionDate  ${fieldvalue}
   Click Element  ${locator.editExchange.SubmitButton}
 
-# Get the number of documents in the tender
-Отримати кількість документів в тендері
-  [Arguments]  ${username}  ${tender_uaid}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  ${tender_doc_number}=  Get Matching Xpath Count  xpath=(//*[@id=' doc_id']/)
-  [Return]  ${tender_doc_number}
+### Get the number of documents in the tender
+##Отримати кількість документів в тендері
+##  [Arguments]  ${username}  ${tender_uaid}
+## kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+##  ${tender_doc_number}=  Get Matching Xpath Count  xpath=(//*[@id=' doc_id']/)
+##  [Return]  ${tender_doc_number}
 
 #--------------------------------------------------------------------------
 #  CANCELLATION - СКАСУВАННЯ 
@@ -678,6 +678,7 @@ kpmgdealroom.Отримати інформацію із тендера
 # Get information from tenderAttempts
 Отримати інформацію про tenderAttempts
   ${return_value}=  Get Value  ${locator.viewExchange.tenderAttempts}
+  ${return_value}=  convert_to_int  ${return_value}
   [Return]  ${return_value}
 
 # Get information from value.amount
@@ -689,4 +690,74 @@ kpmgdealroom.Отримати інформацію із тендера
 # Get information from auctionPeriod.startDate
 Отримати інформацію про auctionPeriod.startDate
   ${return_value}=  Get Value  ${locator.auctionPeriod.startDate}
+  [Return]  ${return_value}
+
+#-------
+# tests implemented on laptop
+Отримати інформацію про value.valueAddedTaxIncluded
+  ${return_value}=  Run Keyword And Return Status   Checkbox Should Be Selected  ${locator.viewExchange.value.valueAddedTaxIncluded}
+  [Return]  ${return_value}
+
+Отримати інформацію про value.currency
+  ${return_value}=  Get Text  ${locator.viewExchange.value.currency}
+  [Return]  ${return_value}
+
+Отримати інформацію про minimalStep.amount
+  ${return_value}=  Get Value  ${locator.viewExchange.minimalStep.amount}
+  ${return_value}=  Convert To Number  ${return_value.replace(' ', '').replace(',', '.')}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[0].description
+  ${return_value}=  Get Value  ${locator.viewExchange.items[0].description}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[0].classification.scheme
+  ${return_value}=  Get Value  ${locator.viewExchange.items[0].classification.scheme}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[0].classification.id
+  ${return_value}=  Get Value  ${locator.viewExchange.items[0].classification.id}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[0].classification.description
+  ${return_value}=  Get Value  ${locator.viewExchange.items[0].classification.description}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[0].unit.name
+  ${return_value}=  Get Value  ${locator.viewExchange.items[0].unit.name}
+  [Return]  ${return_value}
+
+#Отримати інформацію про items[0].unit.code
+
+
+Отримати інформацію про items[0].quantity
+  ${return_value}=  Get Value  ${locator.viewExchange.items[0].quantity}
+  ${return_value}=  convert_to_int  ${return_value}
+  [Return]  ${return_value}
+
+#----
+Отримати інформацію про items[1].description
+  ${return_value}=  Get Value  ${locator.viewExchange.items[1].description}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[1].classification.scheme
+  ${return_value}=  Get Value  ${locator.viewExchange.items[1].classification.scheme}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[1].classification.id
+  ${return_value}=  Get Value  ${locator.viewExchange.items[1].classification.id}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[1].classification.description
+  ${return_value}=  Get Value  ${locator.viewExchange.items[1].classification.description}
+  [Return]  ${return_value}
+
+Отримати інформацію про items[1].unit.name
+  ${return_value}=  Get Value  ${locator.viewExchange.items[1].unit.name}
+  [Return]  ${return_value}
+
+#Отримати інформацію про items[1].unit.code
+Отримати інформацію про items[1].quantity
+  ${return_value}=  Get Value  ${locator.viewExchange.items[1].quantity}
+  ${return_value}=  convert_to_int  ${return_value}
   [Return]  ${return_value}

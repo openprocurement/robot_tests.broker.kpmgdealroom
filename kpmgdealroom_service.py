@@ -63,6 +63,8 @@ def convert_date_to_iso(v_date, v_time):
 def convert_number_to_currency_str(number):
     return "%.2f" % number
 
+def convert_to_int(value):
+    return int(value)
 
 def get_upload_file_path(filename):
     workingFolder = os.path.join(os.getcwd(), 'src/robot_tests.broker.kpmgdealroom/')

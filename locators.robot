@@ -92,7 +92,6 @@ ${locator.editExchange.SubmitButton}  //*[@value="Save"]
 
 
 # add item / asset
-${locator.assetDetails.items[0].title}                          xpath=(//input[@name='Assets[0].Title'])[2]
 ${locator.assetDetails.items[0].description}                    xpath=(//input[@name='Assets[0].Description'])[2]
 ${locator.assetDetails.items[0].quantity}                       xpath=(//input[@name='Assets[0].Quantity'])[2]
 ${locator.assetDetails.items[0].classification.scheme}          xpath=(//input[@name='Assets[0].Classification.Scheme'])[2]
@@ -105,7 +104,6 @@ ${locator.assetDetails.items[0].country}                        xpath=(//input[@
 ${locator.assetDetails.items[0].region}                         xpath=(//input[@name='Assets[0].Address.Region'])[2]
 ${locator.assetDetails.items[0].postcode}                       xpath=(//input[@name='Assets[0].Address.PostCode'])[2]
 
-${locator.assetDetails.items[1].title}                          name=Assets[1].Title
 ${locator.assetDetails.items[1].description}                    name=Assets[1].Description
 ${locator.assetDetails.items[1].quantity}                       name=Assets[1].Quantity
 ${locator.assetDetails.items[1].classification.scheme}          name=Assets[1].Classification.Scheme
@@ -118,7 +116,6 @@ ${locator.assetDetails.items[1].country}                        name=Assets[1].A
 ${locator.assetDetails.items[1].region}                         name=Assets[1].Address.Region
 ${locator.assetDetails.items[1].postcode}                       name=Assets[1].Address.PostCode
 
-${locator.assetDetails.items[2].title}                          name=Assets[2].Title
 ${locator.assetDetails.items[2].description}                    name=Assets[2].Description
 ${locator.assetDetails.items[2].quantity}                       name=Assets[2].Quantity
 ${locator.assetDetails.items[2].classification.scheme}          name=Assets[2].Classification.Scheme
@@ -154,15 +151,15 @@ ${locator.viewExchange.tenderAttempts}  id=tenderAttempts
 
 ${locator.viewExchange.value.amount}  id=startingPrice
 ${locator.viewExchange.legalName}
-${locator.viewExchange.procurementMethodType}               xpath=//*[@for="ExchangeDetails_ProzorroCategory"]/following-sibling::input
-${locator.viewExchange.minimalStep.amount}                  id=ExchangeDetails_MinimumStepValue
+${locator.viewExchange.procurementMethodType}  xpath=//*[@for="ExchangeDetails_ProzorroCategory"]/following-sibling::input
+${locator.viewExchange.minimalStep.amount}  id=ExchangeDetails_MinimumStepValue
 
 
-${locator.viewExchange.eligibilityCriteria}                 xpath= //div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
+${locator.viewExchange.eligibilityCriteria}  xpath= //div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
 
 
-#${locator.viewExchange.value.currency}                      
-#${locator.viewExchange.value.valueAddedTaxIncluded}
+${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div/div[10]/label[2]                      
+${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
 ${locator.viewExchange.procuringEntity.name}  
 ${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
@@ -173,7 +170,23 @@ ${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStart
 #${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[1]
 #${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
 
-${locator.viewExchange.items[0].description}
+${locator.viewExchange.items[0].description}  id=Assets_0__Description
+${locator.viewExchange.items[0].quantity}  id=Assets_0__Quantity
+${locator.viewExchange.items[0].classification.scheme}  id=Assets_0__Classification_Scheme
+${locator.viewExchange.items[0].classification.id}  id=Assets_0__ClassificationCode
+${locator.viewExchange.items[0].classification.description}  id=Assets_0__Classification_Description
+${locator.viewExchange.items[0].unit.name}  id=Assets_0__Unit
+${locator.viewExchange.items[0].unit.code}
+
+${locator.viewExchange.items[1].description}  id=Assets_1__Description
+${locator.viewExchange.items[1].quantity}  id=Assets_1__Quantity
+${locator.viewExchange.items[1].classification.scheme}  id=Assets_1__Classification_Scheme
+${locator.viewExchange.items[1].classification.id}  id=Assets_1__ClassificationCode
+${locator.viewExchange.items[1].classification.description}  id=Assets_1__Classification_Description
+${locator.viewExchange.items[1].unit.name}  id=Assets_1__Unit
+${locator.viewExchange.items[1].unit.code}
+
+
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
