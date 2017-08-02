@@ -18,14 +18,18 @@ Login
   Click Element  ${locator.login.LoginButton}
 
 Input Date
-  [Arguments]  ${elem_name_locator}  ${date}
-  ${date}=  kpmgdealroom_service.convert_date_to_slash_format  ${date}
-  Execute Javascript  $("#${elem_name_locator}").val('${date}');
+  [Arguments]  ${input_id}  ${date}
+  ${dp_date}=  convert_date_to_dp_format  ${date}
+  Execute Javascript  $("#${input_id}Input").val('${dp_date}'); $("#${input_id}").val('${date}');
 
 Wait And Click Element
   [Arguments]  ${locator}  ${delay}
   Wait Until Element Is Visible  ${locator}  ${delay}
   Click Element  ${locator}
+
+JQuery Ajax Should Complete
+  ${active}=  Execute Javascript  return jQuery.active
+  Should Be Equal  "${active}"  "0"
 
 Search KDR Auction
   [Arguments]  ${username}  ${tender_uaid}
@@ -114,7 +118,6 @@ Add Item
 # Create a tender (KDR-1072)
 Створити тендер
   [Arguments]  ${username}  ${tender_data}
-  ${dgfDecisionDate}=  convert_date_to_dp_format  ${tender_data.data.dgfDecisionDate}
   ${procurementMethodType}=  Get From Dictionary  ${tender_data.data}  procurementMethodType
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${number_of_items}=  Get Length  ${items}
@@ -122,12 +125,12 @@ Add Item
   ${budget}=  convert_number_to_currency_str  ${tender_data.data.value.amount}
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
   ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
-  ${chromedriver_version}=  get_chromedriver_version
   Switch Browser  ${username}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
   Wait Until Element Is Visible  ${locator.createExchange.ClientSelector.Prozorro}  2
   Click Element  ${locator.createExchange.ClientSelector.Prozorro}
+  Wait Until Keyword Succeeds  10 x  1 s  JQuery Ajax Should Complete
   Input Text  ${locator.createExchange.Name}  ${tender_data.data.title}
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
@@ -135,9 +138,9 @@ Add Item
   Sleep  1
   Click Element  ${locator.createExchange.TypeSelector}
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
-  Wait And Click Element  ${locator.createExchange.TypeSelector.Prozorro}  5
+  Click Element  ${locator.createExchange.TypeSelector.Prozorro}
   Wait Until Element Is Visible  ${locator.createExchange.StartDate}  2
-  Execute Javascript  $("#AuctionStartDateInput").val('${dp_auction_start_date}'); $("#AuctionStartDate").val('${tender_data.data.auctionPeriod.startDate}');
+  Input Date  AuctionStartDate  ${tender_data.data.auctionPeriod.startDate}
   Click Element  xpath=//*[@id="ExchangeDetails.ProzorroCategory"]/descendant::*[@data-toggle="dropdown"][2]
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Wait And Click Element  xpath=//a[contains(text(),'dgfFinancialAssets')]  5
@@ -146,7 +149,7 @@ Add Item
   Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
   Input Text  ${locator.createExchange.dgfID}  ${tender_data.data.dgfID}
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
-  Execute Javascript  $("#DgfDecisionDateInput").val('${tender_data.data.dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
+  Input Date  DgfDecisionDate  ${tender_data.data.dgfDecisionDate}
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
   Input Text  ${locator.createExchange.tenderAttempts}  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
@@ -154,7 +157,7 @@ Add Item
   # Add items to auction
   :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
-  Execute Javascript  $("#DgfDecisionDateInput").val('${dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
+  #Execute Javascript  $("#DgfDecisionDateInput").val('${dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
   Click Element  ${locator.addAsset.SaveButton}
   Click Element  ${locator.exchangeToolbar.Admin}
 
@@ -230,9 +233,9 @@ kpmgdealroom.Отримати інформацію із тендера
 Внести зміни в тендер
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
   Search KDR Auction  ${username}  ${tender_uaid}
-  Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
-
-  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
+  Run Keyword If  "dgfDecisionDate" not in "${fieldname}"
+  ...  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
+  ...  ELSE  Input Date  DgfDecisionDate  ${fieldvalue}
   Click Element  ${locator.editExchange.SubmitButton}
 
 # Get the number of documents in the tender

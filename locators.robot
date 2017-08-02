@@ -86,9 +86,10 @@ ${locator.createExchange.SubmitButton}                      id=create-exchange-s
 ${locator.editExchange.title}  name=Exchange.Title
 ${locator.editExchange.dgfId}  name=ExchangeDetails.DgfId
 ${locator.editExchange.dgfDecisionID}  name=ExchangeDetails.DgfDecisionId
-${locator.editExchange.description}  name=DgfDecisionDateInput
+${locator.editExchange.description}  id=description
 ${locator.editExchange.tenderAttempts}  name=ExchangeDetails.TenderAttempts
-${locator.editExchange.SubmitButton}  //form/div/input
+${locator.editExchange.SubmitButton}  //*[@value="Save"]
+
 
 # add item / asset
 ${locator.assetDetails.items[0].title}                          xpath=(//input[@name='Assets[0].Title'])[2]
@@ -153,7 +154,7 @@ ${locator.viewExchange.tenderAttempts}  id=tenderAttempts
 
 ${locator.viewExchange.value.amount}  id=startingPrice
 ${locator.viewExchange.legalName}
-${locator.viewExchange.procurementMethodType}               xpath= //div[2]/div/div/div/div/div[2]/div/div[2]/input
+${locator.viewExchange.procurementMethodType}               xpath=//*[@for="ExchangeDetails_ProzorroCategory"]/following-sibling::input
 ${locator.viewExchange.minimalStep.amount}                  id=ExchangeDetails_MinimumStepValue
 
 
