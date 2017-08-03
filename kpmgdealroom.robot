@@ -402,8 +402,8 @@ kpmgdealroom.Отримати інформацію із тендера
 Додати предмет закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${item}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  # TODO: ${index}=  need to get index where to add item 
-  Run Keyword And Ignore Error  Додати предмет  ${item}  ${index}
+  ${index}=  Get Matching Xpath Count  //*[@id="AssetList"]/descendant::*[contains(@id,"at-asset-container")]
+  Run Keyword And Ignore Error  Add Item  ${item}  ${index}
   Run Keyword And Ignore Error  Click Element  ${locator.addAsset.SaveButton}
 
 # Obtain information from field
@@ -420,7 +420,7 @@ kpmgdealroom.Отримати інформацію із тендера
 Видалити предмет закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${item_id}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait And Click Element  ${locator.addAsset.item[${item_id}].delete}  10
+  Run Keyword And Ignore Error  Click Element  //*[contains(text(),"${item_id}")]/ancestor::*[contains(@id,"at-asset-container")]/descendant::*[contains(@class,"asset_delete")]
   Run Keyword And Ignore Error  Click Element  ${locator.addAsset.SaveButton}]
 
 Отримати кількість предметів в тендері
@@ -448,7 +448,7 @@ kpmgdealroom.Отримати інформацію із тендера
 Отримати інформацію із запитання
   [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Перейти до сторінки запитань
+  Click Element  xpath=//a[contains(@href,"Question")]
   ${return_value}=  Run Keyword If  '${field_name}' == 'title'  Get Text  xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')])
   ...  ELSE IF  '${field_name}' == 'answer'  Get Text  xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')])
   ...  ELSE  Get Text  xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')])
