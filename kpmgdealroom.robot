@@ -85,17 +85,18 @@ Setup User Bids
 Add Item
   [Arguments]  ${item}  ${index}
   Run Keyword If  ${index} != 0  Click Element  ${locator.addAsset.AddButton} 
-  Wait Until Element Is Visible  ${locator.assetDetails.items[${index}].description}  20
-  Input Text  ${locator.assetDetails.items[${index}].description}  ${item.description}
-  Input Text  ${locator.assetDetails.items[${index}].title}  Item ${index}: ${item.description}
-  Input Text  ${locator.assetDetails.items[${index}].quantity}  ${item.quantity}
-  Input Text  ${locator.assetDetails.items[${index}].classification.description}  ${item.classification.description}
-  Input Text  ${locator.assetDetails.items[${index}].classification.code}  ${item.classification.id}
-  Input Text  ${locator.assetDetails.items[${index}].address1}  ${item.deliveryAddress.streetAddress}
-  Input Text  ${locator.assetDetails.items[${index}].region}  ${item.deliveryAddress.region}
-  Input Text  ${locator.assetDetails.items[${index}].city}  ${item.deliveryAddress.locality}
-  Input Text  ${locator.assetDetails.items[${index}].country}  ${item.deliveryAddress.countryName_en}
-  Input Text  ${locator.assetDetails.items[${index}].postcode}  ${item.deliveryAddress.postalCode}
+  Wait Until Element Is Visible  ${locator.assetDetails.items.description}  20
+  Input Text  ${locator.assetDetails.items.description}  ${item.description}
+  Input Text  ${locator.assetDetails.items.quantity}  ${item.quantity}
+  Input Text  ${locator.assetDetails.items.unit.code}  kg
+#  Input Text  ${locator.assetDetails.items.unit.code}  ${item.unit.code}
+  Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
+  Input Text  ${locator.assetDetails.items.classification.code}  ${item.classification.id}
+  Input Text  ${locator.assetDetails.items.address1}  ${item.deliveryAddress.streetAddress}
+  Input Text  ${locator.assetDetails.items.region}  ${item.deliveryAddress.region}
+  Input Text  ${locator.assetDetails.items.city}  ${item.deliveryAddress.locality}
+  Input Text  ${locator.assetDetails.items.country}  ${item.deliveryAddress.countryName_en}
+  Input Text  ${locator.assetDetails.items.postcode}  ${item.deliveryAddress.postalCode}
 
 #------------------------------------------------------------------------------
 #  LOT OPERATIONS - СТВОРЕННЯ ТЕНДЕРУ
@@ -135,7 +136,6 @@ Add Item
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
   Execute Javascript  window.scroll(2500,2500);
-  Sleep  1
   Click Element  ${locator.createExchange.TypeSelector}
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Click Element  ${locator.createExchange.TypeSelector.Prozorro}
@@ -146,6 +146,7 @@ Add Item
   Wait And Click Element  xpath=//a[contains(text(),'dgfFinancialAssets')]  5
   Input Text  ${locator.createExchange.GuaranteeAmount}  ${guarantee}
   Input Text  ${locator.createExchange.StartPrice}  ${budget}
+  Run Keyword If  ${tender_data.data.value.valueAddedTaxIncluded}  Select Checkbox  name=ExchangeDetails.VatIncluded
   Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
   Input Text  ${locator.createExchange.dgfID}  ${tender_data.data.dgfID}
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
@@ -157,16 +158,18 @@ Add Item
   # Add items to auction
   :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
-  #Execute Javascript  $("#DgfDecisionDateInput").val('${dgfDecisionDate}'); $("#DgfDecisionDate").val('${tender_data.data.dgfDecisionDate}');
+  Execute Javascript  $("#ExchangeDetails_AuctionStartDateDisplay").val('${dp_auction_start_date}'); $("#ExchangeDetails_AuctionStartDate").val('${tender_data.data.auctionPeriod.startDate}');
   Click Element  ${locator.addAsset.SaveButton}
   Click Element  ${locator.exchangeToolbar.Admin}
 
+#
+#  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
+#  #  Trick for "Object reference not set to an instance of an object." exeption after auction publishing
+#  Wait Until Keyword Succeeds  10 x  1 s  Publish Auction
+#  #######################################################################################################
+#
 
-  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
-  #  Trick for "Object reference not set to an instance of an object." exeption after auction publishing
-  Wait Until Keyword Succeeds  10 x  1 s  Publish Auction
-  #######################################################################################################
-
+  Publish Auction
 
   ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
   #  Triggering this url change auction status from Draft to Tendering
@@ -175,13 +178,13 @@ Add Item
   Go To  ${last_url}
   #######################################################################################################
 
-
-  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
-  #  Needed to wait for auction change status for Tendering
-  #  Delete this code and Check Auction Status kwd after bug fixing
-  Wait Until Keyword Succeeds  10 x  60 s  Check Auction Status  ${username}  Tendering
-  #######################################################################################################
-
+#
+#  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
+#  #  Needed to wait for auction change status for Tendering
+#  #  Delete this code and Check Auction Status kwd after bug fixing
+#  Wait Until Keyword Succeeds  10 x  60 s  Check Auction Status  ${username}  Tendering
+#  #######################################################################################################
+#
 
   Click Element  ${locator.toolbar.ExchangesButton}
   [Return]  ${auction_id}
@@ -399,8 +402,8 @@ kpmgdealroom.Отримати інформацію із тендера
 Додати предмет закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${item}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  # TODO: ${index}=  need to get index where to add item 
-  Run Keyword And Ignore Error  Додати предмет  ${item}  ${index}
+  ${index}=  Get Matching Xpath Count  //*[@id="AssetList"]/descendant::*[contains(@id,"at-asset-container")]
+  Run Keyword And Ignore Error  Add Item  ${item}  ${index}
   Run Keyword And Ignore Error  Click Element  ${locator.addAsset.SaveButton}
 
 # Obtain information from field
@@ -417,7 +420,7 @@ kpmgdealroom.Отримати інформацію із тендера
 Видалити предмет закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${item_id}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait And Click Element  ${locator.addAsset.item[${item_id}].delete}  10
+  Run Keyword And Ignore Error  Click Element  //*[contains(text(),"${item_id}")]/ancestor::*[contains(@id,"at-asset-container")]/descendant::*[contains(@class,"asset_delete")]
   Run Keyword And Ignore Error  Click Element  ${locator.addAsset.SaveButton}]
 
 Отримати кількість предметів в тендері
@@ -445,7 +448,7 @@ kpmgdealroom.Отримати інформацію із тендера
 Отримати інформацію із запитання
   [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Перейти до сторінки запитань
+  Click Element  xpath=//a[contains(@href,"Question")]
   ${return_value}=  Run Keyword If  '${field_name}' == 'title'  Get Text  xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')])
   ...  ELSE IF  '${field_name}' == 'answer'  Get Text  xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')])
   ...  ELSE  Get Text  xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')])
