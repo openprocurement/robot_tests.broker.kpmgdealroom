@@ -38,7 +38,7 @@ def adapt_tender_data(tender_data):
 
     # todo - remove on completion of KDR-1237
     #tender_data['data']['title'] = tender_data['data']['title_en'][:21] + " _kdrtest"
-    tender_data['data']['title'] = tender_data['data']['title'][:21] + " _kdrtest"
+    #tender_data['data']['title'] = tender_data['data']['title'][:30]
     return tender_data
 
 
@@ -78,19 +78,16 @@ def convert_to_int(value):
 
 def post_process_field(field_name, value):
     return_value = ''
-
-    if ('tenderAttempts' == field_name) or ('quantity' in field_name):
+    if (field_name == 'tenderAttempts') or ('quantity' in field_name):
         return_value = convert_to_int(value)
-
-    elif ('value.amount' == field_name) or ('minimalStep.amount' == field_name):
+    elif (field_name == 'value.amount') or (field_name == 'minimalStep.amount'):
         return_value = float(value.replace(' ', '').replace(',','.' ))
-
-    elif ('dgfDecisionDate' == field_name):
+    elif (field_name == 'dgfDecisionDate'):
         return_value = convert_date_to_dash_format(value)
-    
+    elif ('unit.name' in field_name):
+        return_value = extract_unit_name(value)
     else:
         return_value = value
-
     return return_value
 
 

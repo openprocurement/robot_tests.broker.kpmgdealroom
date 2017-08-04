@@ -155,24 +155,24 @@ ${locator.viewExchange.items[0].quantity}  id=Assets_0__Quantity
 ${locator.viewExchange.items[0].classification.scheme}  id=Assets_0__Classification_Scheme
 ${locator.viewExchange.items[0].classification.id}  id=Assets_0__ClassificationCode
 ${locator.viewExchange.items[0].classification.description}  id=Assets_0__Classification_Description
-${locator.viewExchange.items[0].unit.name}  id=Assets_0__Unit
-${locator.viewExchange.items[0].unit.code}
+${locator.viewExchange.items[0].unit.name}  //*[@id='at-asset-container-0']/div[3]
+${locator.viewExchange.items[0].unit.code}  id=Assets_0__UnitCode
 
 ${locator.viewExchange.items[1].description}  id=Assets_1__Description
 ${locator.viewExchange.items[1].quantity}  id=Assets_1__Quantity
 ${locator.viewExchange.items[1].classification.scheme}  id=Assets_1__Classification_Scheme
 ${locator.viewExchange.items[1].classification.id}  id=Assets_1__ClassificationCode
 ${locator.viewExchange.items[1].classification.description}  id=Assets_1__Classification_Description
-${locator.viewExchange.items[1].unit.name}  id=Assets_1__Unit
-${locator.viewExchange.items[1].unit.code}
+${locator.viewExchange.items[1].unit.name}  xpath=//*[@id='at-asset-container-1']/div[3]
+${locator.viewExchange.items[1].unit.code}  id=Assets_0__UnitCode
 
 ${locator.viewExchange.items[2].description}  id=Assets_2__Description
 ${locator.viewExchange.items[2].quantity}  id=Assets_2__Quantity
 ${locator.viewExchange.items[2].classification.scheme}  id=Assets_2__Classification_Scheme
 ${locator.viewExchange.items[2].classification.id}  id=Assets_2__ClassificationCode
 ${locator.viewExchange.items[2].classification.description}  id=Assets_2__Classification_Description
-${locator.viewExchange.items[2].unit.name}  id=Assets_2__Unit
-${locator.viewExchange.items[2].unit.code}
+${locator.viewExchange.items[2].unit.name}  xpath=//*[@id='at-asset-container-2']/div[3]
+${locator.viewExchange.items[2].unit.code}  id=Assets_0__UnitCode
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
