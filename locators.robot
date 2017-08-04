@@ -135,7 +135,7 @@ ${locator.viewExchange.procurementMethodType}  xpath=//*[@for="ExchangeDetails_P
 ${locator.viewExchange.minimalStep.amount}  id=ExchangeDetails_MinimumStepValue
 
 
-${locator.viewExchange.eligibilityCriteria}  xpath= //div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
+${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
 
 
 ${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div/div[10]/label[2]                      
@@ -166,7 +166,13 @@ ${locator.viewExchange.items[1].classification.description}  id=Assets_1__Classi
 ${locator.viewExchange.items[1].unit.name}  id=Assets_1__Unit
 ${locator.viewExchange.items[1].unit.code}
 
-
+${locator.viewExchange.items[2].description}  id=Assets_2__Description
+${locator.viewExchange.items[2].quantity}  id=Assets_2__Quantity
+${locator.viewExchange.items[2].classification.scheme}  id=Assets_2__Classification_Scheme
+${locator.viewExchange.items[2].classification.id}  id=Assets_2__ClassificationCode
+${locator.viewExchange.items[2].classification.description}  id=Assets_2__Classification_Description
+${locator.viewExchange.items[2].unit.name}  id=Assets_2__Unit
+${locator.viewExchange.items[2].unit.code}
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span

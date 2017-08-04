@@ -229,7 +229,14 @@ kpmgdealroom.Пошук тендера по ідентифікатору
 # Get information about the tender
 kpmgdealroom.Отримати інформацію із тендера
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}  
-  ${return_value}=  Run Keyword  Отримати інформацію про ${field_name}
+  # get value
+  ${field_locator}=  Set Variable  locator.viewExchange.${field_name}
+  ${value}=  Run Keyword If
+  ...  '${field_name}' == 'value.currency'  Get Text  ${${field_locator}}
+  ...  ELSE  Get Value  ${${field_locator}}
+
+  # post process
+  ${return_value} =  post_process_field  ${field_name}  ${value}
   [Return]  ${return_value}
 
 # Make changes to the tender
@@ -634,133 +641,3 @@ kpmgdealroom.Отримати інформацію із тендера
   Sleep  2
   Click Element  id=upload_button
   Reload Page
-
-#------------------------------------------------------------------------------
-#  GET FIELD DATA - PRIORITY 1
-#------------------------------------------------------------------------------
-# Get information from title
-Отримати інформацію про title
-  ${return_value}=  Get Value  ${locator.viewExchange.title}
-  [Return]  ${return_value}
-
-# Get information from description
-Отримати інформацію про description
-  ${return_value}=  Get Value  ${locator.viewExchange.description}
-  [Return]  ${return_value}
-
-Отримати інформацію про auctionID
-  ${return_value}=  Get Value  ${locator.viewExchange.auctionID} 
-  [Return]  ${return_value}
-
-  # Get information from procurementMethodType
-Отримати інформацію про procurementMethodType
-  ${return_value}=  Get Value  ${locator.viewExchange.procurementMethodType}
-  [Return]  ${return_value}
-
-# Get information from  dgfID
-Отримати інформацію про dgfID
-  ${return_value}=  Get Value  ${locator.viewExchange.dgfID}
-  [Return]  ${return_value}
-
-# Get information from  dgfDecisionID
-Отримати інформацію про dgfDecisionID
-  ${return_value}=  Get Value  ${locator.viewExchange.dgfDecisionID}
-  [Return]  ${return_value}
-
-# Get information from  dgfDecisionDate
-Отримати інформацію про dgfDecisionDate
-  ${return_value}=  Get Value  ${locator.viewExchange.dgfDecisionDate}
-  ${return_value}=  convert_date_to_dash_format  ${return_value}
-  [Return]  ${return_value}
-
-# Get information from eligibilityCriteria
-Отримати інформацію про eligibilityCriteria
-  ${return_value}=  Get Value  ${locator.viewExchange.eligibilityCriteria}
-  [Return]  ${return_value}
-
-# Get information from tenderAttempts
-Отримати інформацію про tenderAttempts
-  ${return_value}=  Get Value  ${locator.viewExchange.tenderAttempts}
-  ${return_value}=  convert_to_int  ${return_value}
-  [Return]  ${return_value}
-
-# Get information from value.amount
-Отримати інформацію про value.amount
-  ${return_value}=  Get Value  ${locator.viewExchange.value.amount}
-  ${return_value}=  Convert To Number  ${return_value.replace(' ', '').replace(',', '.')}
-  [Return]  ${return_value}
-
-# Get information from auctionPeriod.startDate
-Отримати інформацію про auctionPeriod.startDate
-  ${return_value}=  Get Value  ${locator.auctionPeriod.startDate}
-  [Return]  ${return_value}
-
-#-------
-# tests implemented on laptop
-Отримати інформацію про value.valueAddedTaxIncluded
-  ${return_value}=  Run Keyword And Return Status   Checkbox Should Be Selected  ${locator.viewExchange.value.valueAddedTaxIncluded}
-  [Return]  ${return_value}
-
-Отримати інформацію про value.currency
-  ${return_value}=  Get Text  ${locator.viewExchange.value.currency}
-  [Return]  ${return_value}
-
-Отримати інформацію про minimalStep.amount
-  ${return_value}=  Get Value  ${locator.viewExchange.minimalStep.amount}
-  ${return_value}=  Convert To Number  ${return_value.replace(' ', '').replace(',', '.')}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[0].description
-  ${return_value}=  Get Value  ${locator.viewExchange.items[0].description}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[0].classification.scheme
-  ${return_value}=  Get Value  ${locator.viewExchange.items[0].classification.scheme}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[0].classification.id
-  ${return_value}=  Get Value  ${locator.viewExchange.items[0].classification.id}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[0].classification.description
-  ${return_value}=  Get Value  ${locator.viewExchange.items[0].classification.description}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[0].unit.name
-  ${return_value}=  Get Value  ${locator.viewExchange.items[0].unit.name}
-  [Return]  ${return_value}
-
-#Отримати інформацію про items[0].unit.code
-
-
-Отримати інформацію про items[0].quantity
-  ${return_value}=  Get Value  ${locator.viewExchange.items[0].quantity}
-  ${return_value}=  convert_to_int  ${return_value}
-  [Return]  ${return_value}
-
-#----
-Отримати інформацію про items[1].description
-  ${return_value}=  Get Value  ${locator.viewExchange.items[1].description}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[1].classification.scheme
-  ${return_value}=  Get Value  ${locator.viewExchange.items[1].classification.scheme}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[1].classification.id
-  ${return_value}=  Get Value  ${locator.viewExchange.items[1].classification.id}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[1].classification.description
-  ${return_value}=  Get Value  ${locator.viewExchange.items[1].classification.description}
-  [Return]  ${return_value}
-
-Отримати інформацію про items[1].unit.name
-  ${return_value}=  Get Value  ${locator.viewExchange.items[1].unit.name}
-  [Return]  ${return_value}
-
-#Отримати інформацію про items[1].unit.code
-Отримати інформацію про items[1].quantity
-  ${return_value}=  Get Value  ${locator.viewExchange.items[1].quantity}
-  ${return_value}=  convert_to_int  ${return_value}
-  [Return]  ${return_value}
