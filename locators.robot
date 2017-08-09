@@ -141,7 +141,7 @@ ${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[
 ${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div/div[10]/label[2]                      
 ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
-${locator.viewExchange.procuringEntity.name}  
+${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]/div[7]
 ${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
 
 #${locator.viewExchange.auctionPeriod.endDate}               xpath=//div[@class='form-group']/div[3]/div[1]/div[1]/input[2]
@@ -155,7 +155,7 @@ ${locator.viewExchange.items[0].quantity}  id=Assets_0__Quantity
 ${locator.viewExchange.items[0].classification.scheme}  id=Assets_0__Classification_Scheme
 ${locator.viewExchange.items[0].classification.id}  id=Assets_0__ClassificationCode
 ${locator.viewExchange.items[0].classification.description}  id=Assets_0__Classification_Description
-${locator.viewExchange.items[0].unit.name}  //*[@id='at-asset-container-0']/div[3]
+${locator.viewExchange.items[0].unit.name}  xpath=//*[@id='at-asset-container-0']/div[3]
 ${locator.viewExchange.items[0].unit.code}  id=Assets_0__UnitCode
 
 ${locator.viewExchange.items[1].description}  id=Assets_1__Description
@@ -164,7 +164,7 @@ ${locator.viewExchange.items[1].classification.scheme}  id=Assets_1__Classificat
 ${locator.viewExchange.items[1].classification.id}  id=Assets_1__ClassificationCode
 ${locator.viewExchange.items[1].classification.description}  id=Assets_1__Classification_Description
 ${locator.viewExchange.items[1].unit.name}  xpath=//*[@id='at-asset-container-1']/div[3]
-${locator.viewExchange.items[1].unit.code}  id=Assets_0__UnitCode
+${locator.viewExchange.items[1].unit.code}  id=Assets_1__UnitCode
 
 ${locator.viewExchange.items[2].description}  id=Assets_2__Description
 ${locator.viewExchange.items[2].quantity}  id=Assets_2__Quantity
@@ -172,7 +172,7 @@ ${locator.viewExchange.items[2].classification.scheme}  id=Assets_2__Classificat
 ${locator.viewExchange.items[2].classification.id}  id=Assets_2__ClassificationCode
 ${locator.viewExchange.items[2].classification.description}  id=Assets_2__Classification_Description
 ${locator.viewExchange.items[2].unit.name}  xpath=//*[@id='at-asset-container-2']/div[3]
-${locator.viewExchange.items[2].unit.code}  id=Assets_0__UnitCode
+${locator.viewExchange.items[2].unit.code}  id=Assets_2__UnitCode
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span

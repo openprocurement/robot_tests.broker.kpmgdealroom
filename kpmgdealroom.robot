@@ -233,6 +233,9 @@ kpmgdealroom.Отримати інформацію із тендера
   ${field_locator}=  Set Variable  locator.viewExchange.${field_name}
   ${value}=  Run Keyword If
   ...  '${field_name}' == 'value.currency'  Get Text  ${${field_locator}}
+  ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${${field_locator}}
+  ...  ELSE IF  'unit.name' in '${field_name}'  Get Text  ${${field_locator}}
+  
   ...  ELSE  Get Value  ${${field_locator}}
 
   # post process
