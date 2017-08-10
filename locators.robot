@@ -176,10 +176,9 @@ ${locator.viewExchange.items[2].unit.code}  id=Assets_2__UnitCode
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
-${locator.exchangeList.Prozorro.FilterByIdButton}  //th[@id='prozorroDashboardIdCol']/a/span
-${locator.exchangeList.FilterByIdButton}  //th[@id='exchangeDashboardAuctionIdCol']/a/span
-${locator.exchangeList.FilterTextField}  //input[@type='text']
-${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
+${locator.exchangeList.FilterByIdButton}  //*[contains(@class,"k-state-active")]/descendant::*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]
+${locator.exchangeList.FilterTextField}  //form[contains(@style,"display: block")]/descendant::input[@type='text']
+${locator.exchangeList.FilterSubmitButton}  //form[contains(@style,"display: block")]/descendant::button[@type='submit']
 ${locator.exchangeList.FilteredFirstRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
 ${locator.exchangeList.FilteredSecondRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td/a
 ${locator.exchangeList.MyExchangesTab}  //li/span[2]
