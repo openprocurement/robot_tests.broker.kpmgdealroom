@@ -430,20 +430,20 @@ Filter Auction
 Отримати інформацію із запитання
   [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//a[contains(@href,"Question")]
-  ${return_value}=  Run Keyword If  '${field_name}' == 'title'  Get Text  xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')])
-  ...  ELSE IF  '${field_name}' == 'answer'  Get Text  xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')])
-  ...  ELSE  Get Text  xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')])
+  Click Element  xpath=//a[contains(@href,"Question") or contains(@href,"/Faq/")]
+  Click Element  xpath=//a[contains(text(),"${question_id}")]
+  ${return_value}=  Get Text  ${locator.Questions.${field_name}}
   [Return]  ${return_value}
 
 # Answer a question
 Відповісти на запитання
   [Arguments]  ${username}  ${tender_uaid}  ${answer_data}  ${question_id}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Клікнути по елементу  xpath=//section[@class="content"]/descendant::a[contains(@href, 'questions')]
-  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
-  Ввести текст  xpath=//div[contains(text(), '${question_id}')]/../following-sibling::div/descendant::textarea[@name="answer"]  ${answer_data.data.answer}
-  Клікнути по елементу  xpath=//button[contains(text(), 'Опублікувати відповідь')]
+  Click Element  xpath=//a[contains(@href,"Question")]
+  Click Element  xpath=//a[contains(text(),"${question_id}")]
+  Input Text  xpath=//*[contains(text(),"${question_id}")]/../descendant::*[@id="Question_Answer"]  ${answer_data.data.answer}
+  Click Element  xpath=//button[@type="submit"]
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
 #--------------------------------------------------------------------------
 #  BIDDING - 

@@ -197,9 +197,11 @@ ${locator.exchangeList.ProzorroFilteredFirstRow}  //div[@id='prozorroExchangesTa
 
 
 # questions and answers
+${question_id}
 ${locator.Questions.DraftQuestionButton}    css=a.btn.btn-primary
-${locator.Questions.Subject}                id=Subject
-${locator.Questions.Question}               id=Question
+${locator.Questions.title}                  xpath=//*[contains(text(),"${question_id}")]
+${locator.Questions.description}            xpath=//*[contains(text(),"${question_id}")]/../descendant::p
+${locator.Questions.answer}                 xpath=//*[contains(text(),"${question_id}")]/../descendant::*[@id="Question_Answer"]
 ${locator.Questions.SubmitQuestionButton}   //button[@type='submit']
 ${locator.Questions.ApproveQuestion}        id=question-Approved
 ${locator.Questions.Confirm}                id=confirm-edit-yes
