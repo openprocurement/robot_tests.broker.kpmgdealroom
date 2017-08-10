@@ -159,14 +159,14 @@ Check Auction Status
 Search Auction As Viewer
   [Arguments]  ${tender_uaid}
   Filter Auction  ${tender_uaid}  xpath=//*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]
-  Click Element  xpath=//*[text()="${tender_uaid}"]/following-sibling::td/a[contains(@href,"/ExternalExchangeDetails/")]
+  Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/following-sibling::td/a[contains(@href,"/ExternalExchangeDetails/")]  10
 
 Search Auction As Provider1
   [Arguments]  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
   Run Keyword If  not ${status}  Set Interested And Filter Auction In My Auctions   ${tender_uaid}
   Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
-  Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td/a[contains(@href,"ExternalExchange")]
+  Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td/a[contains(@href,"ExternalExchange")]  10
 
 Search Auction As Tender_owner
   [Arguments]  ${tender_uaid}
@@ -178,6 +178,7 @@ Set Interested And Filter Auction In My Auctions
   Click Element  ${locator.exchangeList.ProzorroExchangesTab}
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
   Click Element  xpath=//*[text()="${tender_uaid}"]/../../descendant::label[@class="prozorro-synch"]
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
   Click Element  xpath=//*[@aria-controls="exchangesTabStrip-1"]
   Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
@@ -203,17 +204,13 @@ Filter Auction
   Reload Page
 
 # Get information about the tender
-kpmgdealroom.Отримати інформацію із тендера
-  [Arguments]  ${username}  ${tender_uaid}  ${field_name}  
+Отримати інформацію із тендера
+  [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   # get value
-  ${field_locator}=  Set Variable  locator.viewExchange.${field_name}
-  ${value}=  Run Keyword If
-  ...  '${field_name}' == 'value.currency'  Get Text  ${${field_locator}}
-  ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${${field_locator}}
-  ...  ELSE IF  'unit.name' in '${field_name}'  Get Text  ${${field_locator}}
-  
-  ...  ELSE  Get Value  ${${field_locator}}
-
+  Run Keyword If  '${field_name}' == 'tenderPeriod.endDate'  Click Element  xpath=//*[contains(@href,"Bids/")]
+  ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
+  ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
   [Return]  ${return_value}
@@ -394,12 +391,11 @@ kpmgdealroom.Отримати інформацію із тендера
 
 # Obtain information from field
 Отримати інформацію із предмету
-  [Arguments]  @{ARGUMENTS}
-  [Documentation]  ${ARGUMENTS[0]} == username
-  ...  ${ARGUMENTS[1]} == tender_uaid
-  ...  ${ARGUMENTS[2]} == item_id
-  ...  ${ARGUMENTS[3]} == field_name
-  ${return_value}=  Run Keyword And Return  kpmgdealroom.Отримати інформацію із тендера  ${username}  ${tender_uaid}  ${field_name}
+  [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${field_name}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  ${value}=  Run Keyword If  '${field_name}' == 'unit.name'  Get Text  ${locator.viewExchange.item.${field_name}}
+  ...  ELSE  Get Value  ${locator.viewExchange.item.${field_name}}
+  ${return_value} =  post_process_field  ${field_name}  ${value}
   [Return]  ${return_value}
 
 # remove item from auction
