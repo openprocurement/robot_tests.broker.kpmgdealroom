@@ -17,11 +17,6 @@ Login
   Input text  ${locator.login.PasswordField}  ${USERS.users['${username}'].password}
   Click Element  ${locator.login.LoginButton}
 
-Input Date
-  [Arguments]  ${input_id}  ${date}
-  ${dp_date}=  convert_date_to_dp_format  ${date}
-  Execute Javascript  $("#${input_id}Input").val('${dp_date}'); $("#${input_id}").val('${date}');
-
 Wait And Click Element
   [Arguments]  ${locator}  ${delay}
   Wait Until Element Is Visible  ${locator}  ${delay}
@@ -30,35 +25,6 @@ Wait And Click Element
 JQuery Ajax Should Complete
   ${active}=  Execute Javascript  return jQuery.active
   Should Be Equal  "${active}"  "0"
-
-Search KDR Auction
-  [Arguments]  ${username}  ${tender_uaid}
-  Search Auction  ${username}  ${tender_uaid}  internal
-  Wait And Click Element  ${locator.exchangeToolbar.Details}  5
-
-Search Auction
-  [Arguments]  ${username}  ${tender_uaid}  ${type}
- 
-  Switch Browser  ${username}
-  Go to  ${USERS.users['${username}'].default_page}
-  
-  #${exchangeListTab}=  Set Variable If  '${type}' == 'internal'  ${locator.exchangeList.MyExchangesTab}  ${locator.exchangeList.ProzorroExchangesTab}
-  ${filterByIdButton}=  Set Variable If  '${username}' == 'kpmgdealroom_Viewer'  ${locator.exchangeList.Prozorro.FilterByIdButton}  ${locator.exchangeList.FilterByIdButton}
-
-  #Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Click Element  ${exchangeListTab}
-  Wait Until Element Is Visible  ${filterByIdButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
-  Click Element  ${filterByIdButton}
-  Wait Until Element Is Visible  ${locator.exchangeList.FilterTextField}  10
-  Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
-  Click Element  ${locator.exchangeList.FilterSubmitButton}
-  Sleep  1
-  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
-
-  Run Keyword If  '${username}' == 'kpmgdealroom_Viewer'  Click Element  ${locator.exchangeList.ProzorroFilteredFirstRow}
-  ...  ELSE  Run Keyword If  '${type}' == 'internal'  Click Element  ${locator.exchangeList.FilteredFirstRow}
-  ...  ELSE  Click Element  ${locator.exchangeList.FilteredSecondRow}
-
 
 Setup Team
   [Arguments]  ${team_name}  ${team_user}
@@ -88,8 +54,8 @@ Add Item
   Wait Until Element Is Visible  ${locator.assetDetails.items.description}  20
   Input Text  ${locator.assetDetails.items.description}  ${item.description}
   Input Text  ${locator.assetDetails.items.quantity}  ${item.quantity}
-  Input Text  ${locator.assetDetails.items.unit.code}  kg
-#  Input Text  ${locator.assetDetails.items.unit.code}  ${item.unit.code}
+  Click Element  xpath=//*[@id="_AssetUnit${index}_dropdown"]/div[2]
+  Click Element  xpath=//*[@id="_AssetUnit${index}_dropdown"]/descendant::a[@data-value="${item.unit.code}"]
   Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
   Input Text  ${locator.assetDetails.items.classification.code}  ${item.classification.id}
   Input Text  ${locator.assetDetails.items.address1}  ${item.deliveryAddress.streetAddress}
@@ -126,6 +92,7 @@ Add Item
   ${budget}=  convert_number_to_currency_str  ${tender_data.data.value.amount}
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
   ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
+  ${dp_dgf_decision_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
   Switch Browser  ${username}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
@@ -140,7 +107,7 @@ Add Item
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Click Element  ${locator.createExchange.TypeSelector.Prozorro}
   Wait Until Element Is Visible  ${locator.createExchange.StartDate}  2
-  Input Date  AuctionStartDate  ${tender_data.data.auctionPeriod.startDate}
+  Input Text  id=AuctionStartDateInput  ${dp_auction_start_date}
   Click Element  xpath=//*[@id="ExchangeDetails.ProzorroCategory"]/descendant::*[@data-toggle="dropdown"][2]
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Wait And Click Element  xpath=//a[contains(text(),'dgfFinancialAssets')]  5
@@ -150,42 +117,17 @@ Add Item
   Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
   Input Text  ${locator.createExchange.dgfID}  ${tender_data.data.dgfID}
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
-  Input Date  DgfDecisionDate  ${tender_data.data.dgfDecisionDate}
+  Input Text  id=DgfDecisionDateInput  ${dp_dgf_decision_date}
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
   Input Text  ${locator.createExchange.tenderAttempts}  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
   Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
-  # Add items to auction
   :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
-  Execute Javascript  $("#ExchangeDetails_AuctionStartDateDisplay").val('${dp_auction_start_date}'); $("#ExchangeDetails_AuctionStartDate").val('${tender_data.data.auctionPeriod.startDate}');
   Click Element  ${locator.addAsset.SaveButton}
   Click Element  ${locator.exchangeToolbar.Admin}
-
-#
-#  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
-#  #  Trick for "Object reference not set to an instance of an object." exeption after auction publishing
-#  Wait Until Keyword Succeeds  10 x  1 s  Publish Auction
-#  #######################################################################################################
-#
-
   Publish Auction
-
-  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
-  #  Triggering this url change auction status from Draft to Tendering
-  ${last_url}=  Get Location
-  Go To  https://test.kpmgdealroom.com/public/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
-  Go To  ${last_url}
-  #######################################################################################################
-
-#
-#  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
-#  #  Needed to wait for auction change status for Tendering
-#  #  Delete this code and Check Auction Status kwd after bug fixing
-#  Wait Until Keyword Succeeds  10 x  60 s  Check Auction Status  ${username}  Tendering
-#  #######################################################################################################
-#
-
+  Wait Until Keyword Succeeds  10 x  30 s  Check Auction Status  ${username}  Tendering
   Click Element  ${locator.toolbar.ExchangesButton}
   [Return]  ${auction_id}
 
@@ -202,22 +144,56 @@ Publish Auction
 Check Auction Status
   [Arguments]  ${username}  ${expected_status}
   Go to  ${USERS.users['${username}'].default_page}
-  Wait Until Element Is Visible  ${locator.exchangeList.FilterByIdButton}
-  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
-  Click Element  ${locator.exchangeList.FilterByIdButton}
-  Wait Until Element Is Enabled  ${locator.exchangeList.FilterTextField}  10
-  Input Text  ${locator.exchangeList.FilterTextField}  ${auction_id}
-  Click Element  ${locator.exchangeList.FilterSubmitButton}
-  Sleep  1
-  Wait Until Keyword Succeeds  20 x  400 ms  Element Should Not Be Visible  css=div.k-loading-image
+  Filter Auction  ${auction_id}  ${locator.exchangeList.FilterByIdButton}
   ${status}=  Get Text  xpath=//*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td[3]
   Should Be Equal  ${expected_status}  ${status}
 
 # Search for a bid identifier (KDR-1077)
-kpmgdealroom.Пошук тендера по ідентифікатору
+Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}
-  Search Auction  ${username}  ${tender_uaid}  external
+  Switch Browser  ${username}
+  Go to  ${USERS.users['${username}'].default_page}
+  Run Keyword  Search Auction As ${ROLE}  ${tender_uaid}
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
+
+Search Auction As Viewer
+  [Arguments]  ${tender_uaid}
+  Filter Auction  ${tender_uaid}  xpath=//*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]
+  Click Element  xpath=//*[text()="${tender_uaid}"]/following-sibling::td/a[contains(@href,"/ExternalExchangeDetails/")]
+
+Search Auction As Provider1
+  [Arguments]  ${tender_uaid}
+  ${status}=  Run Keyword And Return Status  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
+  Run Keyword If  not ${status}  Set Interested And Filter Auction In My Auctions   ${tender_uaid}
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td/a[contains(@href,"ExternalExchange")]
+
+Search Auction As Tender_owner
+  [Arguments]  ${tender_uaid}
+  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
+  Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td[text()="Prozorro"]/preceding-sibling::td/a[contains(@href,"/Exchange/")]  10
+
+Set Interested And Filter Auction In My Auctions
+  [Arguments]  ${tender_uaid}
+  Click Element  ${locator.exchangeList.ProzorroExchangesTab}
+  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
+  Click Element  xpath=//*[text()="${tender_uaid}"]/../../descendant::label[@class="prozorro-synch"]
+  Click Element  xpath=//*[@aria-controls="exchangesTabStrip-1"]
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
+
+Filter Auction
+  [Arguments]  ${tender_uaid}    ${search_btn_locator}
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
+  Wait Until Element Is Visible  ${search_btn_locator}
+  Click Element  ${search_btn_locator}
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.exchangeList.FilterTextField}
+  Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
+  Click Element  ${locator.exchangeList.FilterSubmitButton}
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
+  Page Should Contain  ${tender_uaid}
 
 # Refresh the page with the tender
 Оновити сторінку з тендером

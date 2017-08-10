@@ -57,7 +57,7 @@ ${locator.Bids.Save}                    css=.btn.btn-default.btn-primary
 
 # create exchange
 ${locator.createExchange.ClientSelector}                    //div[@id='_ClientId_dropdown']/div[2]
-${locator.createExchange.ClientSelector.Prozorro}           //a[contains(text(),'Prozorro Entity')]
+${locator.createExchange.ClientSelector.Prozorro}           //a[text()='Prozorro Seller Entity']
 ${locator.createExchange.Name}                              id=Name
 ${locator.createExchange.SellerName}                        id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}                      id=SponsorEmail
@@ -71,7 +71,7 @@ ${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contain
 ${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'dgfOtherAssets')]
 ${locator.createExchange.GuaranteeAmount}                   id=guaranteeAmount
 ${locator.createExchange.StartPrice}                        id=startingPrice
-${locator.createExchange.MinimumStepValue}                  id=minimumStepValue
+${locator.createExchange.MinimumStepValue}                  xpath=//input[contains(@id,"inimumStepValue")]
 
 ${locator.createExchange.dgfID}                             id=dgfId
 ${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails.DgfDecisionId
@@ -176,10 +176,9 @@ ${locator.viewExchange.items[2].unit.code}  id=Assets_2__UnitCode
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
-${locator.exchangeList.Prozorro.FilterByIdButton}  //th[@id='prozorroDashboardIdCol']/a/span
-${locator.exchangeList.FilterByIdButton}  //th[@id='exchangeDashboardAuctionIdCol']/a/span
-${locator.exchangeList.FilterTextField}  //input[@type='text']
-${locator.exchangeList.FilterSubmitButton}  //button[@type='submit']
+${locator.exchangeList.FilterByIdButton}  //*[contains(@class,"k-state-active")]/descendant::*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]
+${locator.exchangeList.FilterTextField}  //form[contains(@style,"display: block")]/descendant::input[@type='text']
+${locator.exchangeList.FilterSubmitButton}  //form[contains(@style,"display: block")]/descendant::button[@type='submit']
 ${locator.exchangeList.FilteredFirstRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
 ${locator.exchangeList.FilteredSecondRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td/a
 ${locator.exchangeList.MyExchangesTab}  //li/span[2]
