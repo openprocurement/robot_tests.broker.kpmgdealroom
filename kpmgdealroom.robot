@@ -88,8 +88,8 @@ Add Item
   Wait Until Element Is Visible  ${locator.assetDetails.items.description}  20
   Input Text  ${locator.assetDetails.items.description}  ${item.description}
   Input Text  ${locator.assetDetails.items.quantity}  ${item.quantity}
-  Input Text  ${locator.assetDetails.items.unit.code}  kg
-#  Input Text  ${locator.assetDetails.items.unit.code}  ${item.unit.code}
+  Click Element  xpath=//*[@id="_AssetUnit${index}_dropdown"]/div[2]
+  Click Element  xpath=//*[@id="_AssetUnit${index}_dropdown"]/descendant::a[@data-value="${item.unit.code}"]
   Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
   Input Text  ${locator.assetDetails.items.classification.code}  ${item.classification.id}
   Input Text  ${locator.assetDetails.items.address1}  ${item.deliveryAddress.streetAddress}
@@ -126,6 +126,7 @@ Add Item
   ${budget}=  convert_number_to_currency_str  ${tender_data.data.value.amount}
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
   ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
+  ${dp_dgf_decision_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
   Switch Browser  ${username}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
@@ -140,7 +141,7 @@ Add Item
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Click Element  ${locator.createExchange.TypeSelector.Prozorro}
   Wait Until Element Is Visible  ${locator.createExchange.StartDate}  2
-  Input Date  AuctionStartDate  ${tender_data.data.auctionPeriod.startDate}
+  Input Text  id=AuctionStartDateInput  ${dp_auction_start_date}
   Click Element  xpath=//*[@id="ExchangeDetails.ProzorroCategory"]/descendant::*[@data-toggle="dropdown"][2]
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Wait And Click Element  xpath=//a[contains(text(),'dgfFinancialAssets')]  5
@@ -150,42 +151,17 @@ Add Item
   Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
   Input Text  ${locator.createExchange.dgfID}  ${tender_data.data.dgfID}
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
-  Input Date  DgfDecisionDate  ${tender_data.data.dgfDecisionDate}
+  Input Text  id=DgfDecisionDateInput  ${dp_dgf_decision_date}
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
   Input Text  ${locator.createExchange.tenderAttempts}  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
   Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
-  # Add items to auction
   :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
-  Execute Javascript  $("#ExchangeDetails_AuctionStartDateDisplay").val('${dp_auction_start_date}'); $("#ExchangeDetails_AuctionStartDate").val('${tender_data.data.auctionPeriod.startDate}');
   Click Element  ${locator.addAsset.SaveButton}
   Click Element  ${locator.exchangeToolbar.Admin}
-
-#
-#  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
-#  #  Trick for "Object reference not set to an instance of an object." exeption after auction publishing
-#  Wait Until Keyword Succeeds  10 x  1 s  Publish Auction
-#  #######################################################################################################
-#
-
   Publish Auction
-
-  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
-  #  Triggering this url change auction status from Draft to Tendering
-  ${last_url}=  Get Location
-  Go To  https://test.kpmgdealroom.com/public/ExchangeProviderMonitor?token=1c05f242-c61c-42a2-86fb-f5931b5aec7f
-  Go To  ${last_url}
-  #######################################################################################################
-
-#
-#  ################## DIRTY HACK !!!! DELETE THIS AFTER CODERS WILL DO THEIR JOB !!!! ####################
-#  #  Needed to wait for auction change status for Tendering
-#  #  Delete this code and Check Auction Status kwd after bug fixing
-#  Wait Until Keyword Succeeds  10 x  60 s  Check Auction Status  ${username}  Tendering
-#  #######################################################################################################
-#
-
+  Wait Until Keyword Succeeds  10 x  30 s  Check Auction Status  ${username}  Tendering
   Click Element  ${locator.toolbar.ExchangesButton}
   [Return]  ${auction_id}
 

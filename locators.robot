@@ -57,7 +57,7 @@ ${locator.Bids.Save}                    css=.btn.btn-default.btn-primary
 
 # create exchange
 ${locator.createExchange.ClientSelector}                    //div[@id='_ClientId_dropdown']/div[2]
-${locator.createExchange.ClientSelector.Prozorro}           //a[contains(text(),'Prozorro Entity')]
+${locator.createExchange.ClientSelector.Prozorro}           //a[text()='Prozorro Seller Entity']
 ${locator.createExchange.Name}                              id=Name
 ${locator.createExchange.SellerName}                        id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}                      id=SponsorEmail
@@ -71,7 +71,7 @@ ${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contain
 ${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'dgfOtherAssets')]
 ${locator.createExchange.GuaranteeAmount}                   id=guaranteeAmount
 ${locator.createExchange.StartPrice}                        id=startingPrice
-${locator.createExchange.MinimumStepValue}                  id=minimumStepValue
+${locator.createExchange.MinimumStepValue}                  xpath=//input[contains(@id,"inimumStepValue")]
 
 ${locator.createExchange.dgfID}                             id=dgfId
 ${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails.DgfDecisionId
