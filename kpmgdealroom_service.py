@@ -55,7 +55,7 @@ def convert_date_to_dp_format(date):
 
 
 def adapt_tender_data(tender_data):
-    tender_data['data']['procuringEntity']['name'] = u'Prozorro Entity'
+    tender_data['data']['procuringEntity']['name'] = u'Prozorro Seller Entity'
     return tender_data
 
 
@@ -107,7 +107,6 @@ def extract_unit_name(value):
 
 
 def post_process_field(field_name, value):
-    return_value = ''
     if (field_name == 'tenderAttempts') or ('quantity' in field_name):
         return_value = convert_to_int(value)
     elif (field_name == 'value.amount') or (field_name == 'minimalStep.amount'):

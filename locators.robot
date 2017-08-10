@@ -146,33 +146,43 @@ ${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStart
 
 #${locator.viewExchange.auctionPeriod.endDate}               xpath=//div[@class='form-group']/div[3]/div[1]/div[1]/input[2]
 #${locator.viewExchange.tenderPeriod.startDate}              xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[1]
-#${locator.viewExchange.tenderPeriod.endDate}                xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[2]
+${locator.viewExchange.tenderPeriod.endDate}                 xpath=//label[text()="Tender Period"]/following-sibling::div/input[2]
 #${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[1]
 #${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
 
-${locator.viewExchange.items[0].description}  id=Assets_0__Description
-${locator.viewExchange.items[0].quantity}  id=Assets_0__Quantity
-${locator.viewExchange.items[0].classification.scheme}  id=Assets_0__Classification_Scheme
-${locator.viewExchange.items[0].classification.id}  id=Assets_0__ClassificationCode
-${locator.viewExchange.items[0].classification.description}  id=Assets_0__Classification_Description
-${locator.viewExchange.items[0].unit.name}  xpath=//*[@id='at-asset-container-0']/div[3]
-${locator.viewExchange.items[0].unit.code}  id=Assets_0__UnitCode
+${item_id}
+${locator.viewExchange.item.description}  xpath=//*[contains(@value,"${item_id}")]
+${locator.viewExchange.item.quantity}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Quantity")]
+${locator.viewExchange.item.classification.scheme}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Classification_Scheme")]
+${locator.viewExchange.item.classification.id}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"ClassificationCode")]
+${locator.viewExchange.item.classification.description}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Classification_Description")]
+${locator.viewExchange.item.unit.name}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Unit")]/..
+${locator.viewExchange.item.unit.code}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Unit")]
 
-${locator.viewExchange.items[1].description}  id=Assets_1__Description
-${locator.viewExchange.items[1].quantity}  id=Assets_1__Quantity
-${locator.viewExchange.items[1].classification.scheme}  id=Assets_1__Classification_Scheme
-${locator.viewExchange.items[1].classification.id}  id=Assets_1__ClassificationCode
-${locator.viewExchange.items[1].classification.description}  id=Assets_1__Classification_Description
-${locator.viewExchange.items[1].unit.name}  xpath=//*[@id='at-asset-container-1']/div[3]
-${locator.viewExchange.items[1].unit.code}  id=Assets_1__UnitCode
 
-${locator.viewExchange.items[2].description}  id=Assets_2__Description
-${locator.viewExchange.items[2].quantity}  id=Assets_2__Quantity
-${locator.viewExchange.items[2].classification.scheme}  id=Assets_2__Classification_Scheme
-${locator.viewExchange.items[2].classification.id}  id=Assets_2__ClassificationCode
-${locator.viewExchange.items[2].classification.description}  id=Assets_2__Classification_Description
-${locator.viewExchange.items[2].unit.name}  xpath=//*[@id='at-asset-container-2']/div[3]
-${locator.viewExchange.items[2].unit.code}  id=Assets_2__UnitCode
+#${locator.viewExchange.items[0].description}  id=Assets_0__Description
+#${locator.viewExchange.items[0].quantity}  id=Assets_0__Quantity
+#${locator.viewExchange.items[0].classification.scheme}  id=Assets_0__Classification_Scheme
+#${locator.viewExchange.items[0].classification.id}  id=Assets_0__ClassificationCode
+#${locator.viewExchange.items[0].classification.description}  id=Assets_0__Classification_Description
+#${locator.viewExchange.items[0].unit.name}  xpath=//*[@id='at-asset-container-0']/div[3]
+#${locator.viewExchange.items[0].unit.code}  id=Assets_0__UnitCode
+#
+#${locator.viewExchange.items[1].description}  id=Assets_1__Description
+#${locator.viewExchange.items[1].quantity}  id=Assets_1__Quantity
+#${locator.viewExchange.items[1].classification.scheme}  id=Assets_1__Classification_Scheme
+#${locator.viewExchange.items[1].classification.id}  id=Assets_1__ClassificationCode
+#${locator.viewExchange.items[1].classification.description}  id=Assets_1__Classification_Description
+#${locator.viewExchange.items[1].unit.name}  xpath=//*[@id='at-asset-container-1']/div[3]
+#${locator.viewExchange.items[1].unit.code}  id=Assets_1__UnitCode
+#
+#${locator.viewExchange.items[2].description}  id=Assets_2__Description
+#${locator.viewExchange.items[2].quantity}  id=Assets_2__Quantity
+#${locator.viewExchange.items[2].classification.scheme}  id=Assets_2__Classification_Scheme
+#${locator.viewExchange.items[2].classification.id}  id=Assets_2__ClassificationCode
+#${locator.viewExchange.items[2].classification.description}  id=Assets_2__Classification_Description
+#${locator.viewExchange.items[2].unit.name}  xpath=//*[@id='at-asset-container-2']/div[3]
+#${locator.viewExchange.items[2].unit.code}  id=Assets_2__UnitCode
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
@@ -187,9 +197,11 @@ ${locator.exchangeList.ProzorroFilteredFirstRow}  //div[@id='prozorroExchangesTa
 
 
 # questions and answers
+${question_id}
 ${locator.Questions.DraftQuestionButton}    css=a.btn.btn-primary
-${locator.Questions.Subject}                id=Subject
-${locator.Questions.Question}               id=Question
+${locator.Questions.title}                  xpath=//*[contains(text(),"${question_id}")]
+${locator.Questions.description}            xpath=//*[contains(text(),"${question_id}")]/../descendant::p
+${locator.Questions.answer}                 xpath=//*[contains(text(),"${question_id}")]/../descendant::*[@id="Question_Answer"]
 ${locator.Questions.SubmitQuestionButton}   //button[@type='submit']
 ${locator.Questions.ApproveQuestion}        id=question-Approved
 ${locator.Questions.Confirm}                id=confirm-edit-yes
