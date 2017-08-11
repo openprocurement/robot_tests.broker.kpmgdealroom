@@ -199,8 +199,6 @@ Filter Auction
 # Refresh the page with the tender
 Оновити сторінку з тендером
   [Arguments]  ${username}  ${tender_uaid}
-  Switch Browser  ${username}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Reload Page
 
 # Get information about the tender
@@ -208,8 +206,9 @@ Filter Auction
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   # get value
-  Run Keyword If  '${field_name}' == 'tenderPeriod.endDate'  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
+  ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
@@ -225,11 +224,12 @@ Filter Auction
   Click Element  ${locator.editExchange.SubmitButton}
 
 ### Get the number of documents in the tender
-##Отримати кількість документів в тендері
-##  [Arguments]  ${username}  ${tender_uaid}
-## kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-##  ${tender_doc_number}=  Get Matching Xpath Count  xpath=(//*[@id=' doc_id']/)
-##  [Return]  ${tender_doc_number}
+Отримати кількість документів в тендері
+  [Arguments]  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Wait and Click Element  xpath=//*[contains(@href, "/DataRoom/")]  5
+  ${tender_doc_number}=  Get Matching Xpath Count  xpath=(//*[@id='externalDataroomDocumentPaneGrid']/table/tbody)
+  [Return]  ${tender_doc_number}
 
 #--------------------------------------------------------------------------
 #  CANCELLATION - СКАСУВАННЯ 
@@ -254,7 +254,7 @@ Filter Auction
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
   Sleep  120
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  ${url}=  Get Element Attribute  xpath=//section/h3/a[@class="reverse"]@href
+  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]
   [return]  ${url}
 
 # Upload document

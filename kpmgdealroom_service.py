@@ -8,30 +8,30 @@ import os
 from datetime import datetime
 from iso8601 import parse_date
 from robot.libraries.BuiltIn import BuiltIn
-
+from pytz import timezone 
 
 # asset units name translation dictionary
 unitNameDictionary = {
-    u'pair' : u'пара',
-    u'litre': u'літр',
-    u'set': u'набір',
-    u'number of packs': u'пачок',
-    u'metre': u'метри',
-    u'lot': u'лот',
-    u'service': u'послуга',
-    u'metre cubed': u'метри кубічні',
-    u'box': u'ящик',
-    u'trip': u'рейс',
-    u'tonne': u'тони',
-    u'metre squared': u'метри квадратні',
-    u'kilometre': u'кілометри',
-    u'piece': u'штуки',
-    u'month': u'місяць',
-    u'ream': u'пачка',
-    u'pack': u'упаковка',
-    u'hectare': u'гектар',
-    u'kilogram': u'кілограми',
-    u'block': u'блок'
+    'pair' : u'пара',
+    'litre': u'літр',
+    'set': u'набір',
+    'number of packs': u'пачок',
+    'metre': u'метри',
+    'lot': u'лот',
+    'service': u'послуга',
+    'metre cubed': u'метри кубічні',
+    'box': u'ящик',
+    'trip': u'рейс',
+    'tonne': u'тони',
+    'metre squared': u'метри квадратні',
+    'kilometre': u'кілометри',
+    'piece': u'штуки',
+    'month': u'місяць',
+    'ream': u'пачка',
+    'pack': u'упаковка',
+    'hectare': u'гектар',
+    'kilogram': u'кілограми',
+    'block': u'блок'
 }
 
 
@@ -85,6 +85,11 @@ def convert_date_to_iso(v_date, v_time):
     return localized_date.strftime('%Y/%m/%dT%H:%M:%S.%f%z')
 
 
+def custom_convert_time(date):    
+    date = datetime.strptime(date, "%d/%m/%Y %H:%M")
+    return timezone('Europe/Kiev').localize(date).strftime('%Y-%m-%dT%H:%M:30.%f%z')
+
+
 def convert_number_to_currency_str(number):
     return '%.2f' % number
 
@@ -94,35 +99,40 @@ def convert_to_int(value):
 
 
 def convert_unit_name(name):
-    return_value = name
-    if unitNameDictionary.has_key(name):
-        return_value = unitNameDictionary[name]
-    return return_value
+    return unitNameDictionary.get(name, name)
 
 
 def extract_unit_name(value):
-    temp = value.split('\n')    # this is 100% temporary and needs refactoring following HTML page optimization
-    return_value = temp[1].replace(' ', '').replace(')', '').split('(')[0]
-    return return_value
+    temp = value.split('\n')    # this is temporary.  Refactor after HTML page optimization
+    return temp[1].replace(' ', '').replace(')', '').split('(')[0]
+
+
+def extract_procuring_entity_name(value):
+    temp = value.split('\n')
+    return temp[1].strip()
 
 
 def post_process_field(field_name, value):
-    if (field_name == 'tenderAttempts') or ('quantity' in field_name):
+    if field_name == 'tenderAttempts' or 'quantity' in field_name:
         return_value = convert_to_int(value)
-    elif (field_name == 'value.amount') or (field_name == 'minimalStep.amount'):
-        return_value = float(value.replace(' ', '').replace(',','.' ))
-    elif (field_name == 'dgfDecisionDate'):
+    elif field_name == 'value.amount' or field_name == 'minimalStep.amount':
+        return_value = float(value.replace(' ', '').replace(',', '.'))
+    elif field_name == 'dgfDecisionDate':
         return_value = convert_date_to_dash_format(value)
-    elif ('unit.name' in field_name):
+    elif 'unit.name' in field_name:
         return_value = convert_unit_name(extract_unit_name(value))
-    elif(field_name =='value.valueAddedTaxIncluded'):
+    elif field_name == 'value.valueAddedTaxIncluded':
         return_value = (str(value).lower() == 'true')
+    elif field_name == 'procuringEntity.name':
+        return_value = extract_procuring_entity_name(value)
+    elif 'date' in field_name:
+        return_value = custom_convert_time(value)
     else:
         return_value = value
     return return_value
 
 
 def get_upload_file_path(filename):
-    workingFolder = os.path.join(os.getcwd(), 'src/robot_tests.broker.kpmgdealroom/')
-    filename.replace('/','')
-    return os.path.join(workingFolder, filename)
+    working_folder = os.path.join(os.getcwd(), 'src/robot_tests.broker.kpmgdealroom/')
+    filename.replace('/', '')
+    return os.path.join(working_folder, filename)

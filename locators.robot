@@ -116,8 +116,6 @@ ${locator.addAsset.item[2].delete}                          xpath=(//div[@id='at
 ${locator.addAsset.SaveButton}                              css=.btn.btn-default.btn-primary
 ${locator.addAsset.AddButton}                               id=add-asset
 
-
-
 # view exchange information
 ${locator.viewExchange.description}  id=description
 ${locator.viewExchange.title}  id=ExternalExchange_Title
@@ -134,22 +132,21 @@ ${locator.viewExchange.legalName}
 ${locator.viewExchange.procurementMethodType}  xpath=//*[@for="ExchangeDetails_ProzorroCategory"]/following-sibling::input
 ${locator.viewExchange.minimalStep.amount}  id=ExchangeDetails_MinimumStepValue
 
-
 ${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
-
-
 ${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div/div[10]/label[2]                      
 ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
-${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]/div[7]
-${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
+${locator.viewExchange.procuringEntity.name}  xpath=(//*[contains(@class, "group-style-dotted")])[last()]
 
-#${locator.viewExchange.auctionPeriod.endDate}               xpath=//div[@class='form-group']/div[3]/div[1]/div[1]/input[2]
-#${locator.viewExchange.tenderPeriod.startDate}              xpath=//div[@class='form-group']/div[2]/div[1]/div[1]/input[1]
-${locator.viewExchange.tenderPeriod.endDate}                 xpath=//label[text()="Tender Period"]/following-sibling::div/input[2]
-#${locator.viewExchange.enquiryPeriod.startDate}             xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[1]
-#${locator.viewExchange.enquiryPeriod.endDate}               xpath=//div[@class='form-group']/div[1]/div[1]/div[1]/input[2]
+# auction dates on bids page
+${locator.viewExchange.auctionPeriod.startDate}  id=auctioPeriodStart
+${locator.viewExchange.auctionPeriod.endDate}  id=auctionPeriodEnd
+${locator.viewExchange.tenderPeriod.startDate}  id=tenderPeriodStart
+${locator.viewExchange.tenderPeriod.endDate}  id=tenderPeriodEnd
+${locator.viewExchange.enquiryPeriod.startDate}  id=enquiryPeriodStart
+${locator.viewExchange.enquiryPeriod.endDate}  id=enquiryPeriodEnd
 
+# assets info
 ${item_id}
 ${locator.viewExchange.item.description}  xpath=//*[contains(@value,"${item_id}")]
 ${locator.viewExchange.item.quantity}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Quantity")]
@@ -158,31 +155,6 @@ ${locator.viewExchange.item.classification.id}  xpath=//*[contains(@value,"${ite
 ${locator.viewExchange.item.classification.description}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Classification_Description")]
 ${locator.viewExchange.item.unit.name}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Unit")]/..
 ${locator.viewExchange.item.unit.code}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Unit")]
-
-
-#${locator.viewExchange.items[0].description}  id=Assets_0__Description
-#${locator.viewExchange.items[0].quantity}  id=Assets_0__Quantity
-#${locator.viewExchange.items[0].classification.scheme}  id=Assets_0__Classification_Scheme
-#${locator.viewExchange.items[0].classification.id}  id=Assets_0__ClassificationCode
-#${locator.viewExchange.items[0].classification.description}  id=Assets_0__Classification_Description
-#${locator.viewExchange.items[0].unit.name}  xpath=//*[@id='at-asset-container-0']/div[3]
-#${locator.viewExchange.items[0].unit.code}  id=Assets_0__UnitCode
-#
-#${locator.viewExchange.items[1].description}  id=Assets_1__Description
-#${locator.viewExchange.items[1].quantity}  id=Assets_1__Quantity
-#${locator.viewExchange.items[1].classification.scheme}  id=Assets_1__Classification_Scheme
-#${locator.viewExchange.items[1].classification.id}  id=Assets_1__ClassificationCode
-#${locator.viewExchange.items[1].classification.description}  id=Assets_1__Classification_Description
-#${locator.viewExchange.items[1].unit.name}  xpath=//*[@id='at-asset-container-1']/div[3]
-#${locator.viewExchange.items[1].unit.code}  id=Assets_1__UnitCode
-#
-#${locator.viewExchange.items[2].description}  id=Assets_2__Description
-#${locator.viewExchange.items[2].quantity}  id=Assets_2__Quantity
-#${locator.viewExchange.items[2].classification.scheme}  id=Assets_2__Classification_Scheme
-#${locator.viewExchange.items[2].classification.id}  id=Assets_2__ClassificationCode
-#${locator.viewExchange.items[2].classification.description}  id=Assets_2__Classification_Description
-#${locator.viewExchange.items[2].unit.name}  xpath=//*[@id='at-asset-container-2']/div[3]
-#${locator.viewExchange.items[2].unit.code}  id=Assets_2__UnitCode
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
