@@ -86,6 +86,7 @@ ${locator.createExchange.SubmitButton}                      id=create-exchange-s
 ${locator.editExchange.title}  name=Exchange.Title
 ${locator.editExchange.dgfId}  name=ExchangeDetails.DgfId
 ${locator.editExchange.dgfDecisionID}  name=ExchangeDetails.DgfDecisionId
+${locator.editExchange.dgfDecisionDate}  id=DgfDecisionDateInput
 ${locator.editExchange.description}  id=description
 ${locator.editExchange.tenderAttempts}  name=ExchangeDetails.TenderAttempts
 ${locator.editExchange.SubmitButton}  //*[@value="Save"]
@@ -130,13 +131,15 @@ ${locator.viewExchange.tenderAttempts}  id=tenderAttempts
 ${locator.viewExchange.value.amount}  id=startingPrice
 ${locator.viewExchange.legalName}
 ${locator.viewExchange.procurementMethodType}  xpath=//*[@for="ExchangeDetails_ProzorroCategory"]/following-sibling::input
-${locator.viewExchange.minimalStep.amount}  id=ExchangeDetails_MinimumStepValue
+${locator.viewExchange.minimalStep.amount}  xpath=//input[contains(@id,"inimumStepValue")]
+
 
 ${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
 ${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div/div[10]/label[2]                      
 ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
-${locator.viewExchange.procuringEntity.name}  xpath=(//*[contains(@class, "group-style-dotted")])[last()]
+${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]/div[7]
+${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
 
 # auction dates on bids page
 ${locator.viewExchange.auctionPeriod.startDate}  id=auctioPeriodStart
@@ -197,7 +200,8 @@ ${locator.Bidding.CancelBidYesButton}       id=cancel-bid-dialog-yes
 
 # file operations
 ${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room
-${locator.Dataroom.Upload}                  id=dataroom-upload
+${locator.Dataroom.UploadIcon}              id=dataroom-upload
+#${locator.Dataroom.Upload}                  id=dataroom-upload
 ${locator.Dataroom.RulesDialogYes}          id=exchangerules-dialog-yes
 ${locator.Dataroom.UploadSelect}            id=dataroom-upload
 ${locator.Dataroom.SelectFiles}             id=files
