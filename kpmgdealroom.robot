@@ -79,7 +79,7 @@ Add Item
 # Prepare data for tender announcement
 Підготувати дані для оголошення тендера
   [Arguments]  ${username}  ${tender_data}  ${role_name}
-  ${tender_data}=  kpmgdealroom_service.adapt_tender_data  ${tender_data}
+  ${tender_data}=  kpmgdealroom_service.adapt_tender_data  ${tender_data}  ${role_name}
   [Return]  ${tender_data}
 
 # Create a tender (KDR-1072)
@@ -91,8 +91,8 @@ Add Item
   ${guarantee}=  convert_number_to_currency_str  ${tender_data.data.guarantee.amount}
   ${budget}=  convert_number_to_currency_str  ${tender_data.data.value.amount}
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
-  ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
-  ${dp_dgf_decision_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}
+  ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}  Date
+  ${dp_dgf_decision_date}=  convert_date_to_dp_format  ${tender_data.data.dgfDecisionDate}  Date
   Switch Browser  ${username}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
@@ -102,7 +102,6 @@ Add Item
   Input Text  ${locator.createExchange.Name}  ${tender_data.data.title}
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
-  Execute Javascript  window.scroll(2500,2500);
   Click Element  ${locator.createExchange.TypeSelector}
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Click Element  ${locator.createExchange.TypeSelector.Prozorro}
@@ -171,7 +170,7 @@ Search Auction As Provider1
 Search Auction As Tender_owner
   [Arguments]  ${tender_uaid}
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
-  Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td[text()="Prozorro"]/preceding-sibling::td/a[contains(@href,"/Exchange/")]  10
+  Wait Until Keyword Succeeds  10 x  1 s  Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td[text()="Prozorro"]/preceding-sibling::td/a[contains(@href,"/Exchange/")]  10
 
 Set Interested And Filter Auction In My Auctions
   [Arguments]  ${tender_uaid}
@@ -217,19 +216,11 @@ Filter Auction
 # Make changes to the tender
 Внести зміни в тендер
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
-  Search KDR Auction  ${username}  ${tender_uaid}
-  Run Keyword If  "dgfDecisionDate" not in "${fieldname}"
-  ...  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
-  ...  ELSE  Input Date  DgfDecisionDate  ${fieldvalue}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  ${fieldvalue}=  convert_date_to_dp_format  ${fieldvalue}  ${fieldname}
+  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
   Click Element  ${locator.editExchange.SubmitButton}
 
-### Get the number of documents in the tender
-Отримати кількість документів в тендері
-  [Arguments]  ${username}  ${tender_uaid}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait and Click Element  xpath=//*[contains(@href, "/DataRoom/")]  5
-  ${tender_doc_number}=  Get Matching Xpath Count  xpath=(//*[@id='externalDataroomDocumentPaneGrid']/table/tbody)
-  [Return]  ${tender_doc_number}
 
 #--------------------------------------------------------------------------
 #  CANCELLATION - СКАСУВАННЯ 
@@ -259,46 +250,25 @@ Filter Auction
 
 # Upload document
 Завантажити документ
-  [Arguments]  @{ARGUMENTS}
-  [Documentation]  ${ARGUMENTS[0]} == username
-  ...  ${ARGUMENTS[1]} == ${filepath}
-  ...  ${ARGUMENTS[2]} == ${TENDER}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}  ${ARGUMENTS[2]}
+  [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${documentType}=technicalSpecifications
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  Click Element  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.Dataroom.UploadIcon}  10
-  Click Element  ${locator.Dataroom.SelectFiles}
-  Input Text  ${locator.Dataroom.SelectFiles}  ${ARGUMENTS[1]}
-  # TODO : Select file type: Document
-  Click Element  ${locator.Dataroom.UploadFileButtond}
-  Sleep  2
-  Reload Page
+  Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
+  Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
+  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Wait And Click Element  xpath=//a[@data-value='${documentType}']  10
+  Wait And Click Element  xpath=//button[contains(@class,"k-upload-selected")]  10
 
 # Upload a document in a tender with a type
 Завантажити документ в тендер з типом
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}  ${doc_type}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  id = update-btn
-  Click Element  id=update-btn
-  Select From List By Value  id = files-type  ${doc_type}
-  Choose File  css = div.file-caption-name  ${filepath}
-  Sleep  2
-  Click Element  id=upload_button
+   kpmgdealroom.Завантажити документ  ${username}  ${filepath}  ${tender_uaid}  ${doc_type}
 
 # Upload the illustration
 Завантажити ілюстрацію
-  [Arguments]  @{ARGUMENTS}
-  [Documentation]  ${ARGUMENTS[0]} == username
-  ...  ${ARGUMENTS[1]} == \ ${filepath}
-  ...  ${ARGUMENTS[2]} == ${tender_uaid}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}  ${ARGUMENTS[2]}
-  Wait Until Page Contains Element  id = update-btn
-  Click Element  id=update-btn
-  Select From List By Value  id = files-type  6
-  Choose File  id = auction-file  ${ARGUMENTS[1]}
-  Sleep  2
-  Click Element  id=upload_button
-  Reload Page
+  [Arguments]  ${username}  ${tender_uaid}  ${filepath}
+   kpmgdealroom.Завантажити документ  ${username}  ${filepath}  ${tender_uaid}  illustration
 
 # Upload the auction protocol
 Завантажити протокол аукціону
@@ -316,33 +286,18 @@ Filter Auction
 
 #Add virtual data room
 Додати Virtual Data Room
-  [Arguments]  @{ARGUMENTS}
-  [Documentation]  ${ARGUMENTS[0]} == username
-  ...  ${ARGUMENTS[1]} == tenderId
-  ...  ${ARGUMENTS[2]} == ${vdr_url}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}  ${ARGUMENTS[2]}
-  Wait Until Page Contains Element  id = update-btn
-  Click Element  id=update-btn
-  Select From List By Value  id = files-type  10
-  Choose File  id = auction-file  ${ARGUMENTS[1]}
-  Sleep  2
-  Click Element  id=upload_button
-  Reload Page
+  [Arguments]  ${username}  ${tender_uaid}  ${vdr_url}  ${title}=Sample Virtual Data Room
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Input Text  id=ExchangeDetails_VirtualDataRoomLink  ${vdr_url}
+  Click Element  //input[@value="Upload"]
+
 
 #Add a public passport to the asset
 Додати публічний паспорт активу
-  [Arguments]  @{ARGUMENTS}
-  [Documentation]  ${ARGUMENTS[0]} == username
-  ...  ${ARGUMENTS[1]} == tenderId
-  ...  ${ARGUMENTS[2]} == ${vdr_url}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${ARGUMENTS[0]}  ${ARGUMENTS[2]}
-  Wait Until Page Contains Element  id = update-btn
-  Click Element  id=update-btn
-  Select From List By Value  id = files-type  2
-  Choose File  id = auction-file  ${ARGUMENTS[1]}
-  Sleep  2
-  Click Element  id=upload_button
-  Reload Page
+  [Arguments]  ${username}  ${tender_uaid}  ${certificate_url}  ${title}=Public Asset Certificate
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Input Text  id=ExchangeDetails_PublicEquityPassportLink  ${certificate_url}
+  Click Element  //input[@value="Upload"]
 
 Додати офлайн документ
   [Arguments]  ${username}  ${tender_uaid}  ${accessDetails}  ${title}=Familiarization with bank asset
@@ -360,26 +315,41 @@ Filter Auction
 # Get information from a document
 Отримати інформацію із документа
   [Arguments]  ${username}  ${tender_uaid}  ${doc_id}  ${field_name}
-  ${doc_value}=  Get Text  id = doc_id
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  ${doc_value}=  Get Text  xpath=//*[contains(text(),"${doc_id}")]
   [Return]  ${doc_value}
 
 # Get information from index document
 Отримати інформацію із документа по індексу
   [Arguments]  ${username}  ${tender_uaid}  ${document_index}  ${field}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  ${doc_value}=  Get Text  id = doc_id
-  [Return]  ${doc_value}
+  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  ${doc_value}=  Get Text  xpath=//*[contains(@id,"DataroomDocument")]/descendant::tbody/tr[${document_index + 1}]/td[2]
+  [Return]  ${doc_value.replace("Platform Legal Details", "x_dgfPlatformLegalDetails")}
 
 # Get a document
 Отримати документ
   [Arguments]  ${username}  ${tender_uaid}  ${doc_id}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  id = update-btn
-  sleep  3
-  ${file_name}=  Get Text  id = doc-id
-  ${url}=  Get Element Attribute  id = doc-id@name
-  Upload_file  ${url}  ${file_name.split('/')[-1]}  ${OUTPUT_DIR}
-  [Return]  ${file_name.split('/')[-1]}
+  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  ${file_name}=   Get Text   xpath=//*[contains(text(),"${doc_id}")]
+  ${url}=   Get Element Attribute   xpath=//*[contains(text(),'${doc_id}')]@href
+  kpmg_download_file   ${url}  ${file_name}  ${OUTPUT_DIR}
+  [return]  ${file_name}
+
+
+Отримати кількість документів в тендері
+  [Arguments]  ${username}  ${tender_uaid}
+  [Documentation]  Get a document amount
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
+  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  ${number_of_documents}=  Get Matching Xpath Count  xpath=//*[contains(@id,"DataroomDocument")]/descendant::tbody/tr
+  [return]  ${number_of_documents}
 
 # Add item to auction
 Додати предмет закупівлі
