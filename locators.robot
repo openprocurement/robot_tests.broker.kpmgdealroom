@@ -174,6 +174,7 @@ ${locator.exchangeList.ProzorroFilteredFirstRow}  //div[@id='prozorroExchangesTa
 # questions and answers
 ${question_id}
 ${locator.Questions.DraftQuestionButton}    css=a.btn.btn-primary
+${locator.Questions.expandButton}           xpath=//*[contains(text(), "${question_id}")]/../../i[contains(@class, 'fa-plus-square')]
 ${locator.Questions.title}                  xpath=//*[contains(text(),"${question_id}")]
 ${locator.Questions.description}            xpath=//*[contains(text(), "${question_id}")]/../../../..//*[contains(@class, 'faq-q-description')]
 ${locator.Questions.answer}                 xpath=//*[contains(text(), "${question_id}")]/../../../..//*[contains(@class, 'faq-q-answer')]

@@ -22,6 +22,11 @@ Wait And Click Element
   Wait Until Element Is Visible  ${locator}  ${delay}
   Click Element  ${locator}
 
+Click If Page Contains Element
+  [Arguments]  ${locator}
+  ${status}=  Run Keyword And Return Status  Element Should Be Visible  ${locator}
+  Run Keyword If  ${status}  Click Element  ${locator}
+
 JQuery Ajax Should Complete
   ${active}=  Execute Javascript  return jQuery.active
   Should Be Equal  "${active}"  "0"
@@ -73,8 +78,9 @@ Add Item
   [Arguments]  ${username}
   Set Global Variable   ${KPMG_MODIFICATION_DATE}   ${EMPTY}
   Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}
-  Set Window Size  @{USERS.users['${username}'].size}
-  Set Window Position  @{USERS.users['${username}'].position}
+  #Set Window Size  @{USERS.users['${username}'].size}
+  #Set Window Position  @{USERS.users['${username}'].position}
+  Maximize Browser Window
   Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Login  ${username}
 
 # Prepare data for tender announcement
@@ -329,6 +335,7 @@ Filter Auction
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
   Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
+  Capture Page Screenshot
   ${doc_value}=  Get Text  xpath=//*[contains(text(),"${doc_id}")]
   [Return]  ${doc_value}
 
@@ -412,7 +419,8 @@ Filter Auction
   [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//a[contains(@href,"Question") or contains(@href,"/Faq/")]
-  Click Element  xpath=//a[contains(text(),"${question_id}")]
+  Click If Page Contains Element  ${locator.Questions.expandButton}
+  Sleep  1
   ${return_value}=  Get Text  ${locator.Questions.${field_name}}
   [Return]  ${return_value}
 
