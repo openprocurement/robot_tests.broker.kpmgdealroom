@@ -134,11 +134,11 @@ ${locator.viewExchange.procurementMethodType}  xpath=//*[@for="ExchangeDetails_P
 ${locator.viewExchange.minimalStep.amount}  xpath=//input[contains(@id,"inimumStepValue")]
 
 
-${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[2]/div/div[3]/label[2]
-${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div/div[10]/label[2]                      
+${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[2]/div[1]/div[7]/label[2]
+${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div[1]/div[11]/label[2]
 ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
-${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]/div[7]
+${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]
 ${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
 
 # auction dates on bids page
@@ -175,8 +175,8 @@ ${locator.exchangeList.ProzorroFilteredFirstRow}  //div[@id='prozorroExchangesTa
 ${question_id}
 ${locator.Questions.DraftQuestionButton}    css=a.btn.btn-primary
 ${locator.Questions.title}                  xpath=//*[contains(text(),"${question_id}")]
-${locator.Questions.description}            xpath=//*[contains(text(),"${question_id}")]/../descendant::p
-${locator.Questions.answer}                 xpath=//*[contains(text(),"${question_id}")]/../descendant::*[@id="Question_Answer"]
+${locator.Questions.description}            xpath=//*[contains(text(), "${question_id}")]/../../../..//*[contains(@class, 'faq-q-description')]
+${locator.Questions.answer}                 xpath=//*[contains(text(), "${question_id}")]/../../../..//*[contains(@class, 'faq-q-answer')]
 ${locator.Questions.SubmitQuestionButton}   //button[@type='submit']
 ${locator.Questions.ApproveQuestion}        id=question-Approved
 ${locator.Questions.Confirm}                id=confirm-edit-yes

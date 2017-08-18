@@ -48,6 +48,14 @@ def adapt_tender_data(tender_data, role):
         tender_data['data']['procuringEntity']['name'] = u'Prozorro Seller Entity'
     return tender_data
 
+def format_local_date(date):
+    dst_active = time.daylight and time.localtime().tm_isdst > 0
+    utc_offset = -(time.altzone if dst_active else time.timezone)
+    hours = utc_offset // 3600
+    minutes = (utc_offset % 3600) // 60
+    fmt_date = date.replace("/", "-").replace(" ", "T") + ":00"
+    return "{0:s}{1:+03d}:{2:02d}".format(fmt_date, hours, minutes)
+
 
 def convert_date_to_dash_format(date):
     return datetime.strptime(date, '%d/%m/%Y').strftime('%Y-%m-%d')
@@ -77,7 +85,9 @@ def extract_procuring_entity_name(value):
 
 
 def post_process_field(field_name, value):
-    if field_name == 'tenderAttempts' or 'quantity' in field_name:
+    if field_name == 'tenderAttempts':
+        return_value = int(value.split(" ")[0])
+    elif 'quantity' in field_name:
         return_value = int(value)
     elif field_name == 'value.amount' or field_name == 'minimalStep.amount':
         return_value = float(value.replace(' ', '').replace(',', '.'))
@@ -88,9 +98,9 @@ def post_process_field(field_name, value):
     elif field_name == 'value.valueAddedTaxIncluded':
         return_value = (str(value).lower() == 'true')
     elif field_name == 'procuringEntity.name':
-        return_value = value.replace("Name:", "").strip()
-    elif 'date' in field_name:
-        return_value = custom_convert_time(value)
+        return_value = extract_procuring_entity_name(value) #value.replace("Name:", "").strip()
+    elif 'Date' in field_name:
+        return_value = format_local_date(value)
     else:
         return_value = value
     return return_value

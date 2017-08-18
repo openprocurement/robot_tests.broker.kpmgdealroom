@@ -71,6 +71,7 @@ Add Item
 # Prepare client for user
 Підготувати клієнт для користувача
   [Arguments]  ${username}
+  Set Global Variable   ${KPMG_MODIFICATION_DATE}   ${EMPTY}
   Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}
   Set Window Size  @{USERS.users['${username}'].size}
   Set Window Position  @{USERS.users['${username}'].position}
@@ -98,7 +99,8 @@ Add Item
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
   Wait Until Element Is Visible  ${locator.createExchange.ClientSelector.Prozorro}  2
   Click Element  ${locator.createExchange.ClientSelector.Prozorro}
-  Wait Until Keyword Succeeds  10 x  1 s  JQuery Ajax Should Complete
+  #Wait Until Keyword Succeeds  10 x  1 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  10 x  10 s  JQuery Ajax Should Complete
   Input Text  ${locator.createExchange.Name}  ${tender_data.data.title}
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
@@ -164,13 +166,21 @@ Search Auction As Provider1
   [Arguments]  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
   Run Keyword If  not ${status}  Set Interested And Filter Auction In My Auctions   ${tender_uaid}
-  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  20 x  30 s  JQuery Ajax Should Complete
   Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td/a[contains(@href,"ExternalExchange")]  10
 
 Search Auction As Tender_owner
   [Arguments]  ${tender_uaid}
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
   Wait Until Keyword Succeeds  10 x  1 s  Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td[text()="Prozorro"]/preceding-sibling::td/a[contains(@href,"/Exchange/")]  10
+
+Search Auction If Modified
+  [Arguments]  ${last_mod_date}  ${username}  ${tender_uaid}
+  ${status_mod}=  Run Keyword And Return Status   Should Not Be Equal   ${KPMG_MODIFICATION_DATE}   ${last_mod_date}
+  ${url}=  Get Location
+  ${status_url}=  Run Keyword And Return Status  Should Contain  ${url}  /Bids/
+  Run Keyword If  ${status_mod} or ${status_url}   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Set Global Variable  ${KPMG_MODIFICATION_DATE}  ${last_mod_date}
 
 Set Interested And Filter Auction In My Auctions
   [Arguments]  ${tender_uaid}
@@ -203,7 +213,7 @@ Filter Auction
 # Get information about the tender
 Отримати інформацію із тендера
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}  
   # get value
   Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
@@ -243,9 +253,9 @@ Filter Auction
 #--------------------------------------------------------------------------
 Отримати посилання на аукціон для глядача
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
-  Sleep  120
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]
+  Wait Until Keyword Succeeds  20 x  5 s  Wait Until Page Contains Element  xpath=//a[contains(@href,"/auctions/")]  1
+  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]@href
   [return]  ${url}
 
 # Upload document
@@ -318,22 +328,23 @@ Filter Auction
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
   Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
   ${doc_value}=  Get Text  xpath=//*[contains(text(),"${doc_id}")]
   [Return]  ${doc_value}
 
 # Get information from index document
 Отримати інформацію із документа по індексу
   [Arguments]  ${username}  ${tender_uaid}  ${document_index}  ${field}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
   ${doc_value}=  Get Text  xpath=//*[contains(@id,"DataroomDocument")]/descendant::tbody/tr[${document_index + 1}]/td[2]
   [Return]  ${doc_value.replace("Platform Legal Details", "x_dgfPlatformLegalDetails")}
 
 # Get a document
 Отримати документ
   [Arguments]  ${username}  ${tender_uaid}  ${doc_id}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
   Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
   ${file_name}=   Get Text   xpath=//*[contains(text(),"${doc_id}")]
@@ -341,11 +352,11 @@ Filter Auction
   kpmg_download_file   ${url}  ${file_name}  ${OUTPUT_DIR}
   [return]  ${file_name}
 
-
+# Get number of documents
 Отримати кількість документів в тендері
   [Arguments]  ${username}  ${tender_uaid}
   [Documentation]  Get a document amount
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
   Wait Until Keyword Succeeds  20 x  2 s  JQuery Ajax Should Complete
   ${number_of_documents}=  Get Matching Xpath Count  xpath=//*[contains(@id,"DataroomDocument")]/descendant::tbody/tr
@@ -362,7 +373,7 @@ Filter Auction
 # Obtain information from field
 Отримати інформацію із предмету
   [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${field_name}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   ${value}=  Run Keyword If  '${field_name}' == 'unit.name'  Get Text  ${locator.viewExchange.item.${field_name}}
   ...  ELSE  Get Value  ${locator.viewExchange.item.${field_name}}
   ${return_value} =  post_process_field  ${field_name}  ${value}
