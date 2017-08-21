@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-import pytz
 import dateutil.parser
 import urllib
 import time
 import os
-
 from datetime import datetime
-from iso8601 import parse_date
-from robot.libraries.BuiltIn import BuiltIn
-from pytz import timezone 
+from pytz import timezone
+
 
 # asset units name translation dictionary
 unitNameDictionary = {
@@ -61,7 +58,7 @@ def convert_date_to_dash_format(date):
     return datetime.strptime(date, '%d/%m/%Y').strftime('%Y-%m-%d')
 
 
-def custom_convert_time(date):    
+def custom_convert_time(date):
     date = datetime.strptime(date, "%d/%m/%Y %H:%M")
     return timezone('Europe/Kiev').localize(date).strftime('%Y-%m-%dT%H:%M:30.%f%z')
 
@@ -108,3 +105,7 @@ def post_process_field(field_name, value):
 
 def kpmg_download_file(url, file_name, output_dir):
     urllib.urlretrieve(url, ('{}/{}'.format(output_dir, file_name)))
+
+
+def get_upload_file_path(file_name):
+    return os.path.join(os.getcwd(), 'src', 'robot_tests.broker.kpmgdealroom', file_name)
