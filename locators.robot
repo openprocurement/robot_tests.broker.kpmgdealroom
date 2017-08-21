@@ -20,7 +20,7 @@ ${locator.exchangeToolbar.Bids}                             id=li-exchange-toolb
 ${locator.exchangeToolbar.Admin}                            id=li-exchange-toolbar-admin
 
 # publish exchange
-${locator.exchangeAdmin.nav.Publish}                        id=leftNavLink_Publish_Exchange
+${locator.exchangeAdmin.nav.Publish}                        xpath=//*[contains(@href,"/Exchange/Admin/Publish")]
 ${locator.exchangeAdmin.publish.publishButton}              id=publish-exchange-submit
 ${locator.exchangeAdmin.publish.confirmButton}              id=publishExchange-dialog-yes
 ${locator.exchangeAdmin.publish.publishedID}                id=providerAuctionId
@@ -191,6 +191,7 @@ ${locator.Answers.Publish}                  id=question-Published
 ${locator.Bidding.UploadFilesButton}        //button[@type='submit']
 ${locator.Bidding.EligibilityFile}          id=BidDocuments_EligibilityDocument
 ${locator.Bidding.QualificationFile}        id=BidDocuments_QualificationDocument
+${locator.Bidding.FinancialFile}            id=BidDocuments_FinancialLicenseDocument
 ${locator.Bidding.InitialBiddingLink}       //td/a
 ${locator.Bidding.BiddingAmount}            id=ExternalExchangeBid_Amount
 ${locator.Bidding.SubmitBidButton}          id=submit-bid-submitbtn
