@@ -78,7 +78,7 @@ ${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails
 ${locator.createExchange.dgfDecisionDate}                   id=DgfDecisionDateInput
 ${locator.createExchange.dgfDecisionDateField}              DgfDecisionDateInput
 ${locator.createExchange.description}                       name=ExchangeDetails.Description
-${locator.createExchange.tenderAttempts}                    name=ExchangeDetails.TenderAttempts   
+${locator.createExchange.tenderAttempts}                    name=_ExchangeDetails.TenderAttempts   
 
 ${locator.createExchange.SubmitButton}                      id=create-exchange-submit
 
