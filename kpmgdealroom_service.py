@@ -37,7 +37,7 @@ AUCTION_STATE_DICT = {
     'Qualifcation' : 'active.qualifications',
     'Awarded':'active.awarded',
     'Unsuccessful' : 'unsuccessful',
-    'Complete': 'complete',
+    'Completed': 'complete',
     'Cancelled':'cancelled'
 }
 
