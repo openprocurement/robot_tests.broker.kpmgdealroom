@@ -133,15 +133,14 @@ ${locator.viewExchange.legalName}
 ${locator.viewExchange.procurementMethodType}  xpath=//*[@for="ExchangeDetails_ProzorroCategory"]/following-sibling::input
 ${locator.viewExchange.minimalStep.amount}  xpath=//input[contains(@id,"inimumStepValue")]
 
-
 ${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[2]/div[1]/div[7]/label[2]
 ${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div[1]/div[11]/label[2]
 ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
 ${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]
-${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
 
 # auction dates on bids page
+#${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
 ${locator.viewExchange.auctionPeriod.startDate}  id=auctioPeriodStart
 ${locator.viewExchange.auctionPeriod.endDate}  id=auctionPeriodEnd
 ${locator.viewExchange.tenderPeriod.startDate}  id=tenderPeriodStart
