@@ -217,6 +217,7 @@ Search Auction If Modified
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
+  Capture Page Screenshot
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
   [Return]  ${return_value}
@@ -251,9 +252,11 @@ Search Auction If Modified
 #--------------------------------------------------------------------------
 Отримати посилання на аукціон для глядача
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Keyword Succeeds  20 x  5 s  Wait Until Page Contains Element  xpath=//a[contains(@href,"/auctions/")]  1
-  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]@href
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}  
+  Wait Until Keyword Succeeds  20 x  60 s  Run Keywords
+  ...  Reload Page
+  ...  AND  Wait Until Page Contains Element  xpath=//a[contains(@href,"/auctions/")]  1  
+  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]@href  
   [return]  ${url}
 
 # Upload document

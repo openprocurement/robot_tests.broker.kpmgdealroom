@@ -8,7 +8,7 @@ from pytz import timezone
 
 
 # asset units name translation dictionary
-unitNameDictionary = {
+UNITS_NAME_DICT = {
     'pair' : u'пара',
     'litre': u'літр',
     'set': u'набір',
@@ -29,6 +29,16 @@ unitNameDictionary = {
     'hectare': u'гектар',
     'kilogram': u'кілограми',
     'block': u'блок'
+}
+
+AUCTION_STATE_DICT = {
+    'Tendering' : 'active.tendering',
+    'Auction' : 'active.auction',
+    'Qualifcation' : 'active.qualifications',
+    'Awarded':'active.awarded',
+    'Unsuccessful' : 'unsuccessful',
+    'Complete': 'complete',
+    'Cancelled':'cancelled'
 }
 
 
@@ -68,7 +78,11 @@ def convert_number_to_currency_str(number):
 
 
 def convert_unit_name(name):
-    return unitNameDictionary.get(name, name)
+    return UNITS_NAME_DICT.get(name, name)
+
+
+def convert_auction_status(status):
+    return AUCTION_STATE_DICT.get(status, status)
 
 
 def extract_unit_name(value):
@@ -98,6 +112,8 @@ def post_process_field(field_name, value):
         return_value = extract_procuring_entity_name(value) #value.replace("Name:", "").strip()
     elif 'Date' in field_name:
         return_value = format_local_date(value)
+    elif field_name == 'status':
+        return_value = convert_auction_status(value)
     else:
         return_value = value
     return return_value

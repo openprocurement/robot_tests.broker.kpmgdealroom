@@ -120,7 +120,7 @@ ${locator.addAsset.AddButton}                               id=add-asset
 # view exchange information
 ${locator.viewExchange.description}  id=description
 ${locator.viewExchange.title}  id=ExternalExchange_Title
-${locator.viewExchange.status}  id=ExchangeDetails_Status
+${locator.viewExchange.status}  //*[@for="ExchangeDetails_Status"]/following-sibling::input
 ${locator.viewExchange.auctionID}  id=ExchangeDetails_AuctionCode
 
 ${locator.viewExchange.dgfID}  id=dgfId
