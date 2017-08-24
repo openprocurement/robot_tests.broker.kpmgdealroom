@@ -34,7 +34,7 @@ UNITS_NAME_DICT = {
 AUCTION_STATE_DICT = {
     'Tendering' : 'active.tendering',
     'Auction' : 'active.auction',
-    'Qualifcation' : 'active.qualifications',
+    'Qualification' : 'active.qualification',
     'Awarded':'active.awarded',
     'Unsuccessful' : 'unsuccessful',
     'Completed': 'complete',

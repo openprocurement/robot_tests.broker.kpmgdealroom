@@ -140,7 +140,6 @@ ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 ${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]
 
 # auction dates on bids page
-#${locator.viewExchange.auctionPeriod.startDate}  id=ExchangeDetails_AuctionStartDate
 ${locator.viewExchange.auctionPeriod.startDate}  id=auctionPeriodStart
 ${locator.viewExchange.auctionPeriod.endDate}  id=auctionPeriodEnd
 ${locator.viewExchange.tenderPeriod.startDate}  id=tenderPeriodStart
