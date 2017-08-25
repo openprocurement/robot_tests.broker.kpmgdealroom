@@ -232,10 +232,14 @@ Search Auction If Modified
 # Make changes to the tender
 Внести зміни в тендер
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
+  ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ${fieldvalue}=  convert_date_to_dp_format  ${fieldvalue}  ${fieldname}
-  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
+  Run Keyword If  '${fieldname}' == 'tenderAttempts'  Select From KPMG List By Data-Value  _ExchangeDetails.TenderAttempts_dropdown  ${fieldvalue}
+  ...  ELSE  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
+  Choose File  id=ExchangeDetails_ClarificationDocument  ${file_path}
   Click Element  ${locator.editExchange.SubmitButton}
+  Remove File  ${file_path}
 
 
 #--------------------------------------------------------------------------
