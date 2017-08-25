@@ -279,7 +279,7 @@ Search Auction If Modified
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
-  Wait And Click Element  xpath=//a[@data-value='${documentType}']  10
+  Wait And Click Element  xpath=//a[@data-value='${documentType.replace("tenderNotice","notice")}']  10
   Wait And Click Element  xpath=//button[contains(@class,"k-upload-selected")]  10
 
 # Upload a document in a tender with a type
