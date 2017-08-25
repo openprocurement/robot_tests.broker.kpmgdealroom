@@ -568,9 +568,10 @@ Approve Bid
 
 Підтвердити наявність протоколу аукціону
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}
+  ${index}=  Convert To Integer  ${award_index}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Wait Until Page Contains Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${award_index}]/td[contains(text(),"pending.payment")]  10
+  Wait Until Page Contains Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"pending.payment")]  10
 
 # Upload the decision document of the qualification commission
 Завантажити документ рішення кваліфікаційної комісії
@@ -585,20 +586,11 @@ Approve Bid
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
+  ${index}=  Convert To Integer  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Keyword Succeeds  15 x  1 m  Run Keywords
-  ...  Reload Page
-  ...  AND  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
-  ...  AND  Клікнути по елементу  xpath=//a[@data-bid-action="protocol"]
-  Підтвердити дію
-  Wait Until Page Contains  Підтвердження протоколу
-  Wait Until Keyword Succeeds  10 x  30 s  Run Keywords
-  ...  Reload Page
-  ...  AND  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
-  ...  AND  Клікнути по елементу  xpath=//a[@data-bid-action="paid"]
-  Підтвердити дію
-  Wait Until Element Is Not Visible  xpath=/html/body[@class="blocked"]
-  Wait Until Page Contains  оплату отримано
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Click Element  id=change-status-button
+  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"active")]
 
 Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}  ${description}
