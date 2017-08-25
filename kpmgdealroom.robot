@@ -45,6 +45,12 @@ Position Should Equals
   Set Test Variable  ${prev_vert_pos}  ${current_vert_pos}
   Should Be True  ${status}
 
+Select From KPMG List By Data-Value
+  [Arguments]  ${element_id}  ${data_value}
+  Click Element  xpath=//div[@id="${element_id}"]/div[2]
+  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Click Element  xpath=//*[@id="${element_id}"]/descendant::a[@data-value="${data_value}"]
+
 Add Item
   [Arguments]  ${item}  ${index}
   Run Keyword If  ${index} != 0  Click Element  ${locator.addAsset.AddButton} 
@@ -115,9 +121,7 @@ Add Item
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
   Input Text  id=DgfDecisionDateInput  ${dp_dgf_decision_date}
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
-  Click Element  xpath=//div[@id='_ExchangeDetails.TenderAttempts_dropdown']/div[2]  
-  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
-  Click Element  xpath=//*[@id="_ExchangeDetails.TenderAttempts_dropdown"]/descendant::a[@data-value="${tender_data.data.tenderAttempts}"]
+  Select From KPMG List By Data-Value  _ExchangeDetails.TenderAttempts_dropdown  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
   Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
   :FOR  ${index}  IN RANGE  ${number_of_items}
@@ -151,6 +155,7 @@ Check Auction Status
   Go to  ${USERS.users['${username}'].default_page}
   Run Keyword  Search Auction As ${ROLE}  ${tender_uaid}
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
+  Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
 
 Search Auction As Viewer
@@ -214,12 +219,12 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   # get value
-  Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Run Keyword If  'awards' in '${field_name}'  Отримати інформацію про авард  ${username}  ${tender_uaid}  ${field_name}
+  ...  ELSE IF  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
   ...  ELSE IF  'status' in '${field_name}'  Reload Page
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
-  Capture Page Screenshot
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
   [Return]  ${return_value}
@@ -227,10 +232,14 @@ Search Auction If Modified
 # Make changes to the tender
 Внести зміни в тендер
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
+  ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ${fieldvalue}=  convert_date_to_dp_format  ${fieldvalue}  ${fieldname}
-  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
+  Run Keyword If  '${fieldname}' == 'tenderAttempts'  Select From KPMG List By Data-Value  _ExchangeDetails.TenderAttempts_dropdown  ${fieldvalue}
+  ...  ELSE  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
+  Choose File  id=ExchangeDetails_ClarificationDocument  ${file_path}
   Click Element  ${locator.editExchange.SubmitButton}
+  Remove File  ${file_path}
 
 
 #--------------------------------------------------------------------------
@@ -270,7 +279,7 @@ Search Auction If Modified
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
-  Wait And Click Element  xpath=//a[@data-value='${documentType}']  10
+  Wait And Click Element  xpath=//a[@data-value='${documentType.replace("tenderNotice","notice")}']  10
   Wait And Click Element  xpath=//button[contains(@class,"k-upload-selected")]  10
 
 # Upload a document in a tender with a type
@@ -414,8 +423,8 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//a[contains(@href,"Question") or contains(@href,"/Faq/")]
-  Click If Page Contains Element  ${locator.Questions.expandButton}
-  Sleep  1
+  Run Keyword If  '${ROLE}' == 'tender_owner'  Click Element  xpath=//a[contains(text(),"${question_id}")]
+  ...  ELSE  Click If Page Contains Element  ${locator.Questions.expandButton}
   ${return_value}=  Get Text  ${locator.Questions.${field_name}}
   [Return]  ${return_value}
 
@@ -492,12 +501,11 @@ Approve Bid
 Скасувати цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  ${locator.exchangeToolbar.Bids}
-  Sleep  20
-  Wait And Click Element  ${locator.Bidding.InitialBiddingLink} 5
-  Wait And Click Element  ${locator.Bidding.CancelBidButton} 10
-  Wait And Click Element  ${locator.Bidding.CancelBidYesButton} 5
-  Wait Until Element Is Visible  ${locator.Bidding.SubmitBidButton}
+  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Wait And Click Element  ${locator.Bidding.InitialBiddingLink}  10
+  Wait And Click Element  ${locator.Bidding.CancelBidButton}  10
+  Wait And Click Element  ${locator.Bidding.CancelBidYesButton}  10
+  Wait Until Element Is Visible  xpath=//*[contains(@class,"alert-success")]
 
 Змінити документ в ставці
   [Arguments]  ${username}  ${tender_uaid}  ${path}  ${docid}
@@ -560,9 +568,10 @@ Approve Bid
 
 Підтвердити наявність протоколу аукціону
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}
+  ${index}=  Convert To Integer  ${award_index}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Wait Until Page Contains Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${award_index}]/td[contains(text(),"pending.payment")]  10
+  Wait Until Page Contains Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"pending.payment")]  10
 
 # Upload the decision document of the qualification commission
 Завантажити документ рішення кваліфікаційної комісії
@@ -577,20 +586,11 @@ Approve Bid
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
+  ${index}=  Convert To Integer  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Keyword Succeeds  15 x  1 m  Run Keywords
-  ...  Reload Page
-  ...  AND  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
-  ...  AND  Клікнути по елементу  xpath=//a[@data-bid-action="protocol"]
-  Підтвердити дію
-  Wait Until Page Contains  Підтвердження протоколу
-  Wait Until Keyword Succeeds  10 x  30 s  Run Keywords
-  ...  Reload Page
-  ...  AND  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
-  ...  AND  Клікнути по елементу  xpath=//a[@data-bid-action="paid"]
-  Підтвердити дію
-  Wait Until Element Is Not Visible  xpath=/html/body[@class="blocked"]
-  Wait Until Page Contains  оплату отримано
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Click Element  id=change-status-button
+  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"active")]
 
 Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}  ${description}
