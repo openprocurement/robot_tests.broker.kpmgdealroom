@@ -501,12 +501,11 @@ Approve Bid
 Скасувати цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  ${locator.exchangeToolbar.Bids}
-  Sleep  20
-  Wait And Click Element  ${locator.Bidding.InitialBiddingLink} 5
-  Wait And Click Element  ${locator.Bidding.CancelBidButton} 10
-  Wait And Click Element  ${locator.Bidding.CancelBidYesButton} 5
-  Wait Until Element Is Visible  ${locator.Bidding.SubmitBidButton}
+  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Wait And Click Element  ${locator.Bidding.InitialBiddingLink}  10
+  Wait And Click Element  ${locator.Bidding.CancelBidButton}  10
+  Wait And Click Element  ${locator.Bidding.CancelBidYesButton}  10
+  Wait Until Element Is Visible  xpath=//*[contains(@class,"alert-success")]
 
 Змінити документ в ставці
   [Arguments]  ${username}  ${tender_uaid}  ${path}  ${docid}
