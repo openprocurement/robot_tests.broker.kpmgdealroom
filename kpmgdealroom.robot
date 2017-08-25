@@ -219,12 +219,12 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   # get value
-  Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Run Keyword If  'awards' in '${field_name}'  Отримати інформацію про авард  ${username}  ${tender_uaid}  ${field_name}
+  ...  ELSE IF  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
   ...  ELSE IF  'status' in '${field_name}'  Reload Page
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
-  Capture Page Screenshot
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
   [Return]  ${return_value}
