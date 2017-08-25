@@ -45,6 +45,12 @@ Position Should Equals
   Set Test Variable  ${prev_vert_pos}  ${current_vert_pos}
   Should Be True  ${status}
 
+Select From KPMG List By Data-Value
+  [Arguments]  ${element_id}  ${data_value}
+  Click Element  xpath=//div[@id="${element_id}"]/div[2]
+  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Click Element  xpath=//*[@id="${element_id}"]/descendant::a[@data-value="${data_value}"]
+
 Add Item
   [Arguments]  ${item}  ${index}
   Run Keyword If  ${index} != 0  Click Element  ${locator.addAsset.AddButton} 
@@ -115,9 +121,7 @@ Add Item
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
   Input Text  id=DgfDecisionDateInput  ${dp_dgf_decision_date}
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
-  Click Element  xpath=//div[@id='_ExchangeDetails.TenderAttempts_dropdown']/div[2]  
-  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
-  Click Element  xpath=//*[@id="_ExchangeDetails.TenderAttempts_dropdown"]/descendant::a[@data-value="${tender_data.data.tenderAttempts}"]
+  Select From KPMG List By Data-Value  _ExchangeDetails.TenderAttempts_dropdown  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
   Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
   :FOR  ${index}  IN RANGE  ${number_of_items}
