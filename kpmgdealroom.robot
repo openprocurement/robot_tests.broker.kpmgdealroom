@@ -155,6 +155,7 @@ Check Auction Status
   Go to  ${USERS.users['${username}'].default_page}
   Run Keyword  Search Auction As ${ROLE}  ${tender_uaid}
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
+  Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
 
 Search Auction As Viewer
