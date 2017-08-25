@@ -423,8 +423,8 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//a[contains(@href,"Question") or contains(@href,"/Faq/")]
-  Click If Page Contains Element  ${locator.Questions.expandButton}
-  Sleep  1
+  Run Keyword If  '${ROLE}' == 'tender_owner'  Click Element  xpath=//a[contains(text(),"${question_id}")]
+  ...  ELSE  Click If Page Contains Element  ${locator.Questions.expandButton}
   ${return_value}=  Get Text  ${locator.Questions.${field_name}}
   [Return]  ${return_value}
 
