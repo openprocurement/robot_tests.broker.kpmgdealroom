@@ -426,6 +426,7 @@ Search Auction If Modified
   Click Element  xpath=//a[contains(@href,"Question") or contains(@href,"/Faq/")]
   Run Keyword If  '${ROLE}' == 'tender_owner'  Click Element  xpath=//a[contains(text(),"${question_id}")]
   ...  ELSE  Click If Page Contains Element  ${locator.Questions.expandButton}
+  Wait Until Element Is Visible  ${locator.Questions.${field_name}}  10
   ${return_value}=  Get Text  ${locator.Questions.${field_name}}
   [Return]  ${return_value}
 
