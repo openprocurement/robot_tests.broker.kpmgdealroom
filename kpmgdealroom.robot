@@ -21,7 +21,7 @@ Login
 
 Wait And Click Element
   [Arguments]  ${locator}  ${delay}
-  Wait Until Element Is Visible  ${locator}  ${delay}
+  Wait Until Keyword Succeeds  ${delay} x  1 s  Element Should Be Visible  ${locator}
   Click Element  ${locator}
 
 Click If Page Contains Element
@@ -276,7 +276,7 @@ Search Auction If Modified
   [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${documentType}=technicalSpecifications
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  Wait And Click Element  ${locator.Dataroom.UploadIcon}  10
+  Wait And Click Element  ${locator.Dataroom.UploadIcon}  60
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
