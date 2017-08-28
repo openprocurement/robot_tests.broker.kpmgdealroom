@@ -141,6 +141,12 @@ ${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div
 
 # auction dates on bids page
 ${locator.viewExchange.auctionPeriod.startDate}  id=auctionPeriodStart
+
+${award_index}
+${locator.viewExchange.award.status}  xpath=//*[text()="Award Bidders"]/following-sibling::table/tbody/tr[${award_index}]/td[5]
+
+# auction dates on bids page
+${locator.viewExchange.auctionPeriod.startDate}  id=auctioPeriodStart
 ${locator.viewExchange.auctionPeriod.endDate}  id=auctionPeriodEnd
 ${locator.viewExchange.tenderPeriod.startDate}  id=tenderPeriodStart
 ${locator.viewExchange.tenderPeriod.endDate}  id=tenderPeriodEnd
@@ -174,7 +180,7 @@ ${question_id}
 ${locator.Questions.DraftQuestionButton}    css=a.btn.btn-primary
 ${locator.Questions.expandButton}           xpath=//*[contains(text(), "${question_id}")]/../../i[contains(@class, 'fa-plus-square')]
 ${locator.Questions.title}                  xpath=//*[contains(text(),"${question_id}")]
-${locator.Questions.description}            xpath=//*[contains(text(), "${question_id}")]/../../../..//*[contains(@class, 'faq-q-description')]
+${locator.Questions.description}            xpath=//*[contains(text(),"${question_id}")]/../../../../descendant::*[contains(text(), "Question detail")]/following-sibling::p
 ${locator.Questions.answer}                 xpath=//*[contains(text(), "${question_id}")]/../../../..//*[contains(@class, 'faq-q-answer')]
 ${locator.Questions.SubmitQuestionButton}   //button[@type='submit']
 ${locator.Questions.ApproveQuestion}        id=question-Approved
@@ -190,7 +196,7 @@ ${locator.Bidding.UploadFilesButton}        //button[@type='submit']
 ${locator.Bidding.EligibilityFile}          id=BidDocuments_EligibilityDocument
 ${locator.Bidding.QualificationFile}        id=BidDocuments_QualificationDocument
 ${locator.Bidding.FinancialFile}            id=BidDocuments_FinancialLicenseDocument
-${locator.Bidding.InitialBiddingLink}       //td/a
+${locator.Bidding.InitialBiddingLink}       xpath=//*[contains(@href,"Bids/Submit/")]
 ${locator.Bidding.BiddingAmount}            id=ExternalExchangeBid_Amount
 ${locator.Bidding.SubmitBidButton}          id=submit-bid-submitbtn
 ${locator.Bidding.ConfirmBidPassword}       id=Password
