@@ -207,6 +207,7 @@ Search Auction If Modified
 # Refresh the page with the tender
 Оновити сторінку з тендером
   [Arguments]  ${username}  ${tender_uaid}
+  Switch Browser  ${username}
   Reload Page
 
 # Get information about the tender
