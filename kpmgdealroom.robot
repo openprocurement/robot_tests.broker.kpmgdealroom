@@ -548,10 +548,13 @@ Approve Bid
 
 Отримати посилання на аукціон для учасника
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
+  Run Keyword And Ignore Error  Login  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Клікнути по елементу  xpath=//a[@class="reverse getAuctionUrl"]
-  Wait Until Page Contains Element  xpath=//a[contains(text(),"Перейдіть до аукціону")]
-  ${url}=  Get Element Attribute  xpath=//a[contains(text(),"Перейдіть до аукціону")]@href
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Wait Until Keyword Succeeds  20 x  60 s  Run Keywords
+  ...  Reload Page
+  ...  AND  Wait Until Page Contains Element  xpath=//a[contains(@href,"/auctions/")]  1
+  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]@href
   [return]  ${url}
 
 #--------------------------------------------------------------------------
