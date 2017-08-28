@@ -282,6 +282,7 @@ Search Auction If Modified
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Wait And Click Element  xpath=//a[@data-value='${documentType.replace("tenderNotice","notice")}']  10
   Wait And Click Element  xpath=//button[contains(@class,"k-upload-selected")]  10
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[contains(@class,"k-upload-status-total") and contains(text(),"Done")]
 
 # Upload a document in a tender with a type
 Завантажити документ в тендер з типом
