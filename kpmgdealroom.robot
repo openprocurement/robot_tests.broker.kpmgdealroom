@@ -250,14 +250,16 @@ Search Auction If Modified
 Скасувати закупівлю
   [Arguments]  ${username}  ${tender_uaid}  ${cancellation_reason}  ${document}  ${new_description}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
+  Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
   Click Element  ${locator.exchangeToolbar.Admin}
   Wait And Click Element  ${locator.exchangeAdmin.nav.Cancel}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.cancel.submitButton}  10
-  Input Date  ${locator.exchangeAdmin.cancel.date} 
-  Choose File  ${locatorexchangeAdming.cancel.file}  ${document}
+  Input Text  id=Reason  ${cancellation_reason}
+  Input Text  ${locator.exchangeAdmin.cancel.date}  28/08/2017
+  Choose File  ${locator.exchangeAdmin.cancel.file}  ${document}
   Click Element  ${locator.exchangeAdmin.cancel.submitButton}
   Wait And Click Element  ${locator.exchangeAdmin.cancel.confirmButton}  5
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
 #--------------------------------------------------------------------------
 #  ПИТАННЯ

@@ -28,7 +28,7 @@ ${locator.exchangeAdmin.publish.publishedID}                id=providerAuctionId
 # cancel exchange
 ${locator.exchangeAdmin.nav.Cancel}  id=leftNavLink_Cancel_Exchange
 ${locator.exchangeAdmin.cancel.reason}  id=Reason
-${locator.exchangeAdmin.cancel.date}  id=CancellationDateHidden
+${locator.exchangeAdmin.cancel.date}  id=CancellationDate
 ${locator.exchangeAdmin.cancel.file}  id=cancellation-file-upload
 ${locator.exchangeAdmin.cancel.submitButton}  id=close-cancel-exchange-submit
 ${locator.exchangeAdmin.cancel.confirmButton}  id=closeCancelExchange-dialog-yes
