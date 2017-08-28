@@ -21,7 +21,7 @@ Login
 
 Wait And Click Element
   [Arguments]  ${locator}  ${delay}
-  Wait Until Element Is Visible  ${locator}  ${delay}
+  Wait Until Keyword Succeeds  ${delay} x  1 s  Element Should Be Visible  ${locator}
   Click Element  ${locator}
 
 Click If Page Contains Element
@@ -250,14 +250,16 @@ Search Auction If Modified
 Скасувати закупівлю
   [Arguments]  ${username}  ${tender_uaid}  ${cancellation_reason}  ${document}  ${new_description}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
+  Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
   Click Element  ${locator.exchangeToolbar.Admin}
   Wait And Click Element  ${locator.exchangeAdmin.nav.Cancel}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.cancel.submitButton}  10
-  Input Date  ${locator.exchangeAdmin.cancel.date} 
-  Choose File  ${locatorexchangeAdming.cancel.file}  ${document}
+  Input Text  id=Reason  ${cancellation_reason}
+  Input Text  ${locator.exchangeAdmin.cancel.date}  28/08/2017
+  Choose File  ${locator.exchangeAdmin.cancel.file}  ${document}
   Click Element  ${locator.exchangeAdmin.cancel.submitButton}
   Wait And Click Element  ${locator.exchangeAdmin.cancel.confirmButton}  5
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
 #--------------------------------------------------------------------------
 #  ПИТАННЯ
@@ -276,12 +278,13 @@ Search Auction If Modified
   [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${documentType}=technicalSpecifications
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  Wait And Click Element  ${locator.Dataroom.UploadIcon}  10
+  Wait And Click Element  ${locator.Dataroom.UploadIcon}  60
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
   Wait And Click Element  xpath=//a[@data-value='${documentType.replace("tenderNotice","notice")}']  10
   Wait And Click Element  xpath=//button[contains(@class,"k-upload-selected")]  10
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[contains(@class,"k-upload-status-total") and contains(text(),"Done")]
 
 # Upload a document in a tender with a type
 Завантажити документ в тендер з типом
@@ -426,6 +429,7 @@ Search Auction If Modified
   Click Element  xpath=//a[contains(@href,"Question") or contains(@href,"/Faq/")]
   Run Keyword If  '${ROLE}' == 'tender_owner'  Click Element  xpath=//a[contains(text(),"${question_id}")]
   ...  ELSE  Click If Page Contains Element  ${locator.Questions.expandButton}
+  Wait Until Element Is Visible  ${locator.Questions.${field_name}}  10
   ${return_value}=  Get Text  ${locator.Questions.${field_name}}
   [Return]  ${return_value}
 
@@ -544,10 +548,13 @@ Approve Bid
 
 Отримати посилання на аукціон для учасника
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
+  Run Keyword And Ignore Error  Login  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Клікнути по елементу  xpath=//a[@class="reverse getAuctionUrl"]
-  Wait Until Page Contains Element  xpath=//a[contains(text(),"Перейдіть до аукціону")]
-  ${url}=  Get Element Attribute  xpath=//a[contains(text(),"Перейдіть до аукціону")]@href
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Wait Until Keyword Succeeds  20 x  60 s  Run Keywords
+  ...  Reload Page
+  ...  AND  Wait Until Page Contains Element  xpath=//a[contains(@href,"/auctions/")]  1
+  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]@href
   [return]  ${url}
 
 #--------------------------------------------------------------------------
