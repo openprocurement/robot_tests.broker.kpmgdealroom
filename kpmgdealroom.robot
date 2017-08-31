@@ -279,6 +279,7 @@ Search Auction If Modified
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
   Wait And Click Element  ${locator.Dataroom.UploadIcon}  60
+  Wait Modal Animation  ${locator.Dataroom.SelectFiles}
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
@@ -618,9 +619,8 @@ Approve Bid
 Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
-  Sleep  1
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Wait And Click Element  id=submit-bid-award-cancelbtn  20
 
 #--------------------------------------------------------------------------
 #  CONTRACT SINGING - 
