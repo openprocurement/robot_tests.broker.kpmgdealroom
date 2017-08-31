@@ -479,7 +479,6 @@ Approve Bid
   Click Element  xpath=//*[contains(@for,"_Eligible")]
   Click Element  xpath=//*[contains(@for,"_Qualified")]
   Click Element  xpath=//button[text()="Save"]
-  Close Browser
   Switch Browser  ${username}
 
 # Upload a financial license
@@ -601,7 +600,7 @@ Approve Bid
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   Click Element  id=change-status-button
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"active")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Active")]
 
 Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}  ${description}
