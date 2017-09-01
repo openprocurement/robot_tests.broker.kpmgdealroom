@@ -195,6 +195,7 @@ Filter Auction
   Wait Until Element Is Visible  ${search_btn_locator}
   Click Element  ${search_btn_locator}
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.exchangeList.FilterTextField}
+  Clear Element Text  ${locator.exchangeList.FilterTextField}
   Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
