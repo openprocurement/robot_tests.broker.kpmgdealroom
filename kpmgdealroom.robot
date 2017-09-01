@@ -627,20 +627,16 @@ Approve Bid
 # Confirm the signing of the contract
 Підтвердити підписання контракту
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
-  ${file_path}  ${file_title}  ${file_content}=  create_fake_doc
-  Sleep  5
-  kpmgdealroom.Завантажити угоду до тендера  ${username}  ${tender_uaid}  1  ${filepath}
-  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//span[contains(@class, 'contract_register')])
+  Input Text  id=contract-number  777
+  Click Element  xpath=(//*[@id="upload-contract-document"])[1]
+  Click Element  id=complete-auction
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
 # Upload an agreement to the tender
 Завантажити угоду до тендера
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}  ${filepath}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//div[contains(@class, 'contract_docs')]//span[contains(@class, 'add_document')])
-  Select From List By Value  id=slFile_documentType  contractSigned
-  Choose File  xpath=(//*[@id='upload_form']/input[2])  ${filepath}
-  Sleep  2
-  Click Element  id=upload_button
-  Reload Page
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Select From KPMG List By Data-Value  _contractType_dropdown  2
+  Choose File  id=contract-file-upload  ${filepath}
+  Click Element  xpath=(//*[@id="upload-contract-document"])[2]
