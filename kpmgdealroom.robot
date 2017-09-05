@@ -195,6 +195,7 @@ Filter Auction
   Wait Until Element Is Visible  ${search_btn_locator}
   Click Element  ${search_btn_locator}
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.exchangeList.FilterTextField}
+  Clear Element Text  ${locator.exchangeList.FilterTextField}
   Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
@@ -279,6 +280,7 @@ Search Auction If Modified
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
   Wait And Click Element  ${locator.Dataroom.UploadIcon}  60
+  Wait Modal Animation  ${locator.Dataroom.SelectFiles}
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
   Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
@@ -478,7 +480,6 @@ Approve Bid
   Click Element  xpath=//*[contains(@for,"_Eligible")]
   Click Element  xpath=//*[contains(@for,"_Qualified")]
   Click Element  xpath=//button[text()="Save"]
-  Close Browser
   Switch Browser  ${username}
 
 # Upload a financial license
@@ -563,6 +564,7 @@ Approve Bid
 
 Завантажити протокол аукціону в авард
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}  ${award_index}
+  ${index}=  Convert To Integer  ${award_index}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   Choose File  id=protocol-file-upload  ${filepath}
@@ -573,6 +575,7 @@ Approve Bid
   Click Element  id=change-status-button
 #########################################################################################################
 
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Payment")]
 
 Підтвердити наявність протоколу аукціону
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}
@@ -598,25 +601,26 @@ Approve Bid
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   Click Element  id=change-status-button
-  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"active")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Active")]
 
 Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}  ${description}
   ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
+  ${index}=  Convert To Integer  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   Choose File  id=disqualification-file-upload  ${file_path}
-  Remove File  ${file_path}
   Input Text  id=disqualification-reason  Some disqualification reason text
   Click Element  xpath=//*[contains(@class,"disqualify-btn")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
+  Remove File  ${file_path}
 
 # Cancellation of the decision of the qualification commission
 Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
-  Sleep  1
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//*[contains(@class, 'Cancel_button')])
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Wait And Click Element  id=submit-bid-award-cancelbtn  20
 
 #--------------------------------------------------------------------------
 #  CONTRACT SINGING - 
@@ -624,20 +628,16 @@ Approve Bid
 # Confirm the signing of the contract
 Підтвердити підписання контракту
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
-  ${file_path}  ${file_title}  ${file_content}=  create_fake_doc
-  Sleep  5
-  kpmgdealroom.Завантажити угоду до тендера  ${username}  ${tender_uaid}  1  ${filepath}
-  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//span[contains(@class, 'contract_register')])
+  Input Text  id=contract-number  777
+  Click Element  xpath=(//*[@id="upload-contract-document"])[1]
+  Click Element  id=complete-auction
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
 # Upload an agreement to the tender
 Завантажити угоду до тендера
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}  ${filepath}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//div[contains(@class, 'contract_docs')]//span[contains(@class, 'add_document')])
-  Select From List By Value  id=slFile_documentType  contractSigned
-  Choose File  xpath=(//*[@id='upload_form']/input[2])  ${filepath}
-  Sleep  2
-  Click Element  id=upload_button
-  Reload Page
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Select From KPMG List By Data-Value  _contractType_dropdown  2
+  Choose File  id=contract-file-upload  ${filepath}
+  Click Element  xpath=(//*[@id="upload-contract-document"])[2]

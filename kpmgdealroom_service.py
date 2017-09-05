@@ -5,7 +5,10 @@ import time
 import os
 from datetime import datetime
 from pytz import timezone
+from dateutil.tz import tzlocal
 
+
+tzlocal = tzlocal()
 
 # asset units name translation dictionary
 UNITS_NAME_DICT = {
@@ -69,8 +72,8 @@ def convert_date_to_dash_format(date):
 
 
 def custom_convert_time(date):
-    date = datetime.strptime(date, "%d/%m/%Y %H:%M")
-    return timezone('Europe/Kiev').localize(date).strftime('%Y-%m-%dT%H:%M:30.%f%z')
+    date_obj = datetime.strptime(date, "%d/%m/%Y %H:%M").replace(tzinfo=tzlocal)
+    return date_obj.astimezone(timezone('Europe/Kiev')).strftime('%Y-%m-%dT%H:%M:30.%f%z')
 
 
 def convert_number_to_currency_str(number):
@@ -111,7 +114,7 @@ def post_process_field(field_name, value):
     elif field_name == 'procuringEntity.name':
         return_value = extract_procuring_entity_name(value) #value.replace("Name:", "").strip()
     elif 'Date' in field_name:
-        return_value = format_local_date(value)
+        return_value = custom_convert_time(value)
     elif field_name == 'status':
         return_value = convert_auction_status(value)
     else:
