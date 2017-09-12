@@ -163,6 +163,10 @@ ${locator.viewExchange.item.classification.description}  xpath=//*[contains(@val
 ${locator.viewExchange.item.unit.name}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Unit")]/..
 ${locator.viewExchange.item.unit.code}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Unit")]
 
+# cancellation info
+${locator.viewExchange.cancellations.status}  xpath=//*[text()="Auction Status"]/following-sibling::input
+${locator.viewExchange.cancellations.reason}  xpath=//*[@data-test-id="cancellation-reason"]
+
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
 ${locator.exchangeList.FilterByIdButton}  //*[contains(@class,"k-state-active")]/descendant::*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]

@@ -226,6 +226,7 @@ Search Auction If Modified
   ...  ELSE IF  'status' in '${field_name}'  Reload Page
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
+  ...  ELSE IF  'cancellations' in '${field_name}'  Get Value  ${locator.viewExchange.${field_name.replace('[0]','')}}
   ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
@@ -350,9 +351,10 @@ Search Auction If Modified
 Отримати інформацію із документа
   [Arguments]  ${username}  ${tender_uaid}  ${doc_id}  ${field_name}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
-  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
-  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
+  Run Keyword If  'скасування' not in '${TEST_NAME}'  Run Keywords
+  ...  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
+  ...  AND  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  ...  AND  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
   ${doc_value}=  Get Text  xpath=//*[contains(text(),"${doc_id}")]
   [Return]  ${doc_value}
 
