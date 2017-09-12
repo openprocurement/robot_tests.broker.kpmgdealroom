@@ -325,27 +325,20 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${vdr_url}  ${title}=Sample Virtual Data Room
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Input Text  id=ExchangeDetails_VirtualDataRoomLink  ${vdr_url}
-  Click Element  //input[@value="Upload"]
+  Click Element  ${locator.editExchange.SubmitButton}
 
 #Add a public passport to the asset
 Додати публічний паспорт активу
   [Arguments]  ${username}  ${tender_uaid}  ${certificate_url}  ${title}=Public Asset Certificate
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Input Text  id=ExchangeDetails_PublicEquityPassportLink  ${certificate_url}
-  Click Element  //input[@value="Upload"]
+  Click Element  ${locator.editExchange.SubmitButton}
 
 Додати офлайн документ
   [Arguments]  ${username}  ${tender_uaid}  ${accessDetails}  ${title}=Familiarization with bank asset
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Клікнути по елементу  xpath=//a[contains(text(),'Редагувати')]
-  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
-  Клікнути по елементу  xpath=//h3[contains(text(),'Документація до лоту')]/following-sibling::a
-  Клікнути по елементу  xpath=//a[@data-upload="accessDetails"]
-  Ввести текст  name=accessDetails  ${accessDetails}
-  Клікнути по елементу  xpath=//button[@class="bidAction"]
-  Run Keyword And Ignore Error  Wait Until Element Is Not Visible  xpath=//button[@class="bidAction"]
-  Клікнути по елементу  name=do
-  Wait Until Element Is Not Visible  xpath=/html/body[@class="blocked"]
+  Input Text  id=ExchangeDetails_AssetFamiliarizationMessage  ${accessDetails}
+  Click Element  ${locator.editExchange.SubmitButton}
 
 # Get information from a document
 Отримати інформацію із документа
