@@ -231,6 +231,13 @@ Search Auction If Modified
   ${return_value} =  post_process_field  ${field_name}  ${value}
   [Return]  ${return_value}
 
+Отримати інформацію про авард
+  [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  ${award_index}=  Convert To Integer  ${field_name[7:8]}
+  ${value}=  Get Text  xpath=//*[text()="Award Bidders"]/../descendant::tbody/tr[${award_index + 1}]
+  [Return]  ${value}
+
 # Make changes to the tender
 Внести зміни в тендер
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
@@ -582,7 +589,9 @@ Approve Bid
   ${index}=  Convert To Integer  ${award_index}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Wait Until Page Contains Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"pending.payment")]  10
+  Click Element  xpath=(//*[@type="button" and text()="Documents"])[${index + 1}]
+  Wait Modal Animation  xpath=//*[@data-test-id="public_documents"]
+  Page Should Contain Element  xpath=//*[@data-test-id="public_documents"]/descendant::*[text()="Auction Protocol"]
 
 # Upload the decision document of the qualification commission
 Завантажити документ рішення кваліфікаційної комісії

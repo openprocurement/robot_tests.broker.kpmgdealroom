@@ -134,7 +134,7 @@ ${locator.viewExchange.procurementMethodType}  xpath=//*[@for="ExchangeDetails_P
 ${locator.viewExchange.minimalStep.amount}  xpath=//input[contains(@id,"inimumStepValue")]
 
 ${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[2]/div[1]/div[7]/label[2]
-${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div[1]/div[11]/label[2]
+${locator.viewExchange.value.currency}  xpath=//*[text()="Currency"]/following-sibling::label
 ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
 ${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]
