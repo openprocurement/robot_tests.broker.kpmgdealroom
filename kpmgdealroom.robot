@@ -221,12 +221,12 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   # get value
-  Run Keyword If  'awards' in '${field_name}'  Отримати інформацію про авард  ${username}  ${tender_uaid}  ${field_name}
-  ...  ELSE IF  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
   ...  ELSE IF  'status' in '${field_name}'  Reload Page
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  'cancellations' in '${field_name}'  Get Value  ${locator.viewExchange.${field_name.replace('[0]','')}}
+  ...  ELSE IF  'awards' in '${field_name}'  Отримати інформацію про авард  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
@@ -236,7 +236,7 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   ${award_index}=  Convert To Integer  ${field_name[7:8]}
-  ${value}=  Get Text  xpath=//*[text()="Award Bidders"]/../descendant::tbody/tr[${award_index + 1}]
+  ${value}=  Get Text  xpath=//*[text()="Award Bidders"]/../descendant::tbody/tr[${award_index + 1}]/td[5]
   [Return]  ${value}
 
 # Make changes to the tender
@@ -584,9 +584,7 @@ Approve Bid
   ${index}=  Convert To Integer  ${award_index}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Click Element  xpath=(//*[@type="button" and text()="Documents"])[${index + 1}]
-  Wait Modal Animation  xpath=//*[@data-test-id="public_documents"]
-  Page Should Contain Element  xpath=//*[@data-test-id="public_documents"]/descendant::*[text()="Auction Protocol"]
+  Page Should Contain  Download Auction Protocol Document
 
 # Upload the decision document of the qualification commission
 Завантажити документ рішення кваліфікаційної комісії
