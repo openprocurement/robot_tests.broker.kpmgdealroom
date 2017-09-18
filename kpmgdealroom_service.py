@@ -117,6 +117,8 @@ def post_process_field(field_name, value):
         return_value = custom_convert_time(value)
     elif field_name == 'status':
         return_value = convert_auction_status(value)
+    elif field_name == 'cancellations[0].status' and value == 'Cancelled':
+        return_value = 'active'
     else:
         return_value = value
     return return_value

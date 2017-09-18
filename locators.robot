@@ -134,7 +134,7 @@ ${locator.viewExchange.procurementMethodType}  xpath=//*[@for="ExchangeDetails_P
 ${locator.viewExchange.minimalStep.amount}  xpath=//input[contains(@id,"inimumStepValue")]
 
 ${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[2]/div[1]/div[7]/label[2]
-${locator.viewExchange.value.currency}  xpath=//div[2]/div/div/div/div/div[2]/div[1]/div[11]/label[2]
+${locator.viewExchange.value.currency}  xpath=//*[text()="Currency"]/following-sibling::label
 ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
 ${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]
@@ -162,6 +162,10 @@ ${locator.viewExchange.item.classification.id}  xpath=//*[contains(@value,"${ite
 ${locator.viewExchange.item.classification.description}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Classification_Description")]
 ${locator.viewExchange.item.unit.name}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Unit")]/..
 ${locator.viewExchange.item.unit.code}  xpath=//*[contains(@value,"${item_id}")]/ancestor::*[contains(@id,"asset-container")]/descendant::*[contains(@id,"Unit")]
+
+# cancellation info
+${locator.viewExchange.cancellations.status}  xpath=//*[text()="Auction Status"]/following-sibling::input
+${locator.viewExchange.cancellations.reason}  xpath=//*[@data-test-id="cancellation-reason"]
 
 # search exchange list
 #${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span

@@ -221,15 +221,23 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   # get value
-  Run Keyword If  'awards' in '${field_name}'  Отримати інформацію про авард  ${username}  ${tender_uaid}  ${field_name}
-  ...  ELSE IF  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
   ...  ELSE IF  'status' in '${field_name}'  Reload Page
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
+  ...  ELSE IF  'cancellations' in '${field_name}'  Get Value  ${locator.viewExchange.${field_name.replace('[0]','')}}
+  ...  ELSE IF  'awards' in '${field_name}'  Отримати інформацію про авард  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
   [Return]  ${return_value}
+
+Отримати інформацію про авард
+  [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  ${award_index}=  Convert To Integer  ${field_name[7:8]}
+  ${value}=  Get Text  xpath=//*[text()="Award Bidders"]/../descendant::tbody/tr[${award_index + 1}]/td[5]
+  [Return]  ${value}
 
 # Make changes to the tender
 Внести зміни в тендер
@@ -317,35 +325,29 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${vdr_url}  ${title}=Sample Virtual Data Room
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Input Text  id=ExchangeDetails_VirtualDataRoomLink  ${vdr_url}
-  Click Element  //input[@value="Upload"]
+  Click Element  ${locator.editExchange.SubmitButton}
 
 #Add a public passport to the asset
 Додати публічний паспорт активу
   [Arguments]  ${username}  ${tender_uaid}  ${certificate_url}  ${title}=Public Asset Certificate
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Input Text  id=ExchangeDetails_PublicEquityPassportLink  ${certificate_url}
-  Click Element  //input[@value="Upload"]
+  Click Element  ${locator.editExchange.SubmitButton}
 
 Додати офлайн документ
   [Arguments]  ${username}  ${tender_uaid}  ${accessDetails}  ${title}=Familiarization with bank asset
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Клікнути по елементу  xpath=//a[contains(text(),'Редагувати')]
-  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
-  Клікнути по елементу  xpath=//h3[contains(text(),'Документація до лоту')]/following-sibling::a
-  Клікнути по елементу  xpath=//a[@data-upload="accessDetails"]
-  Ввести текст  name=accessDetails  ${accessDetails}
-  Клікнути по елементу  xpath=//button[@class="bidAction"]
-  Run Keyword And Ignore Error  Wait Until Element Is Not Visible  xpath=//button[@class="bidAction"]
-  Клікнути по елементу  name=do
-  Wait Until Element Is Not Visible  xpath=/html/body[@class="blocked"]
+  Input Text  id=ExchangeDetails_AssetFamiliarizationMessage  ${accessDetails}
+  Click Element  ${locator.editExchange.SubmitButton}
 
 # Get information from a document
 Отримати інформацію із документа
   [Arguments]  ${username}  ${tender_uaid}  ${doc_id}  ${field_name}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
-  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
-  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
+  Run Keyword If  'скасування' not in '${TEST_NAME}'  Run Keywords
+  ...  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
+  ...  AND  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  ...  AND  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
   ${doc_value}=  Get Text  xpath=//*[contains(text(),"${doc_id}")]
   [Return]  ${doc_value}
 
@@ -582,7 +584,7 @@ Approve Bid
   ${index}=  Convert To Integer  ${award_index}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Wait Until Page Contains Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"pending.payment")]  10
+  Page Should Contain  Download Auction Protocol Document
 
 # Upload the decision document of the qualification commission
 Завантажити документ рішення кваліфікаційної комісії
