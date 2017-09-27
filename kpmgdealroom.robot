@@ -611,7 +611,7 @@ Approve Bid
   ${index}=  Convert To Integer  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Choose File  id=disqualification-file-upload  ${file_path}
+  Run Keyword And Ignore Error  Choose File  id=disqualification-file-upload  ${file_path}
   Input Text  id=disqualification-reason  Some disqualification reason text
   Click Element  xpath=//*[contains(@class,"disqualify-btn")]
   Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
