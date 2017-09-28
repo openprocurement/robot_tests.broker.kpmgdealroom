@@ -631,7 +631,8 @@ Approve Bid
 Підтвердити підписання контракту
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
   Input Text  id=contract-number  777
-  Click Element  xpath=(//*[@id="upload-contract-document"])[1]
+  Click Element  id=save-contract-info
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  id=complete-auction
   Click Element  id=complete-auction
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
@@ -642,4 +643,4 @@ Approve Bid
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   Select From KPMG List By Data-Value  _contractType_dropdown  2
   Choose File  id=contract-file-upload  ${filepath}
-  Click Element  xpath=(//*[@id="upload-contract-document"])[2]
+  Click Element  id=upload-contract-document
