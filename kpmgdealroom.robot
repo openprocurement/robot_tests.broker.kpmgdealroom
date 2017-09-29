@@ -513,7 +513,7 @@ Approve Bid
   Wait And Click Element  ${locator.Bidding.InitialBiddingLink}  10
   Wait And Click Element  ${locator.Bidding.CancelBidButton}  10
   Wait And Click Element  ${locator.Bidding.CancelBidYesButton}  10
-  Wait Until Element Is Visible  xpath=//*[contains(@class,"alert-success")]
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
 Змінити документ в ставці
   [Arguments]  ${username}  ${tender_uaid}  ${path}  ${docid}
@@ -623,6 +623,10 @@ Approve Bid
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   Wait And Click Element  id=submit-bid-award-cancelbtn  20
+  Wait Modal Animation  id=cancel-bid-award-dialog-yes
+  Click Element  id=cancel-bid-award-dialog-yes
+  Wait Until Keyword Succeeds  30 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
+
 
 #--------------------------------------------------------------------------
 #  CONTRACT SINGING - 
