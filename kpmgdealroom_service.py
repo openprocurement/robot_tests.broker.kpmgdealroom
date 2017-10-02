@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import dateutil.parser
 import urllib
-import time
 import os
 from datetime import datetime
 from pytz import timezone
@@ -58,20 +57,12 @@ def adapt_tender_data(tender_data, role):
         tender_data['data']['procuringEntity']['name'] = u'Prozorro Seller Entity'
     return tender_data
 
-def format_local_date(date):
-    dst_active = time.daylight and time.localtime().tm_isdst > 0
-    utc_offset = -(time.altzone if dst_active else time.timezone)
-    hours = utc_offset // 3600
-    minutes = (utc_offset % 3600) // 60
-    fmt_date = date.replace("/", "-").replace(" ", "T") + ":00"
-    return "{0:s}{1:+03d}:{2:02d}".format(fmt_date, hours, minutes)
-
 
 def convert_date_to_dash_format(date):
     return datetime.strptime(date, '%d/%m/%Y').strftime('%Y-%m-%d')
 
 
-def custom_convert_time(date):
+def convert_time_to_local(date):
     date_obj = datetime.strptime(date, "%d/%m/%Y %H:%M").replace(tzinfo=tzlocal)
     return date_obj.astimezone(timezone('Europe/Kiev')).strftime('%Y-%m-%dT%H:%M:30.%f%z')
 
@@ -114,10 +105,10 @@ def post_process_field(field_name, value):
     elif field_name == 'procuringEntity.name':
         return_value = extract_procuring_entity_name(value) #value.replace("Name:", "").strip()
     elif 'Date' in field_name:
-        return_value = custom_convert_time(value)
+        return_value = convert_time_to_local(value)
     elif field_name == 'status':
         return_value = convert_auction_status(value)
-    elif field_name == 'cancellations[0].status' and value == 'Cancelled':
+    elif 'cancellations' in field_name and 'status'in field_name and value == 'Cancelled':
         return_value = 'active'
     else:
         return_value = value
@@ -126,7 +117,3 @@ def post_process_field(field_name, value):
 
 def kpmg_download_file(url, file_name, output_dir):
     urllib.urlretrieve(url, ('{}/{}'.format(output_dir, file_name)))
-
-
-def get_upload_file_path(file_name):
-    return os.path.join(os.getcwd(), 'src', 'robot_tests.broker.kpmgdealroom', file_name)
