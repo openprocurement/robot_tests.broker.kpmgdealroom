@@ -137,7 +137,7 @@ ${locator.viewExchange.eligibilityCriteria}  xpath=//div[2]/div/div/div/div/div[
 ${locator.viewExchange.value.currency}  xpath=//*[text()="Currency"]/following-sibling::label
 ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
-${locator.viewExchange.procuringEntity.name}  xpath=//div[2]/div/div/div/div/div[2]/div[2]
+${locator.viewExchange.procuringEntity.name}  xpath=//*[text()="Seller Address"]/..
 
 # auction dates on bids page
 ${locator.viewExchange.auctionPeriod.startDate}  id=auctionPeriodStart

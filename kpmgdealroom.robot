@@ -513,7 +513,7 @@ Approve Bid
   Wait And Click Element  ${locator.Bidding.InitialBiddingLink}  10
   Wait And Click Element  ${locator.Bidding.CancelBidButton}  10
   Wait And Click Element  ${locator.Bidding.CancelBidYesButton}  10
-  Wait Until Element Is Visible  xpath=//*[contains(@class,"alert-success")]
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
 Змінити документ в ставці
   [Arguments]  ${username}  ${tender_uaid}  ${path}  ${docid}
@@ -611,7 +611,7 @@ Approve Bid
   ${index}=  Convert To Integer  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Choose File  id=disqualification-file-upload  ${file_path}
+  Run Keyword And Ignore Error  Choose File  id=disqualification-file-upload  ${file_path}
   Input Text  id=disqualification-reason  Some disqualification reason text
   Click Element  xpath=//*[contains(@class,"disqualify-btn")]
   Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
@@ -623,6 +623,10 @@ Approve Bid
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   Wait And Click Element  id=submit-bid-award-cancelbtn  20
+  Wait Modal Animation  id=cancel-bid-award-dialog-yes
+  Click Element  id=cancel-bid-award-dialog-yes
+  Wait Until Keyword Succeeds  30 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
+
 
 #--------------------------------------------------------------------------
 #  CONTRACT SINGING - 
@@ -631,7 +635,8 @@ Approve Bid
 Підтвердити підписання контракту
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
   Input Text  id=contract-number  777
-  Click Element  xpath=(//*[@id="upload-contract-document"])[1]
+  Click Element  id=save-contract-info
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  id=complete-auction
   Click Element  id=complete-auction
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
 
@@ -642,4 +647,4 @@ Approve Bid
   Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
   Select From KPMG List By Data-Value  _contractType_dropdown  2
   Choose File  id=contract-file-upload  ${filepath}
-  Click Element  xpath=(//*[@id="upload-contract-document"])[2]
+  Click Element  id=upload-contract-document
