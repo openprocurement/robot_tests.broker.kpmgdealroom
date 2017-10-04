@@ -48,7 +48,7 @@ Position Should Equals
 Select From KPMG List By Data-Value
   [Arguments]  ${element_id}  ${data_value}
   Click Element  xpath=//div[@id="${element_id}"]/div[2]
-  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Wait Until Page Contains Element  ${locator.PageElements.Dropdown.Opened} 
   Click Element  xpath=//*[@id="${element_id}"]/descendant::a[@data-value="${data_value}"]
 
 Add Item
@@ -88,7 +88,6 @@ Add Item
 # Create a tender (KDR-1072)
 Створити тендер
   [Arguments]  ${username}  ${tender_data}
-  ${procurementMethodType}=  Get From Dictionary  ${tender_data.data}  procurementMethodType
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${number_of_items}=  Get Length  ${items}
   ${guarantee}=  convert_number_to_currency_str  ${tender_data.data.guarantee.amount}
@@ -106,20 +105,20 @@ Add Item
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
   Click Element  ${locator.createExchange.TypeSelector}
-  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Wait Until Page Contains Element  ${locator.PageElements.Dropdown.Opened} 
   Click Element  ${locator.createExchange.TypeSelector.Prozorro}
   Wait Until Element Is Visible  ${locator.createExchange.StartDate}  2
-  Input Text  id=AuctionStartDateInput  ${dp_auction_start_date}
+  Input Text  ${locator.createExchange.StartDate}  ${dp_auction_start_date}
   Click Element  xpath=//*[@id="ExchangeDetails.ProzorroCategory"]/descendant::*[@data-toggle="dropdown"][2]
-  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Wait Until Page Contains Element  ${locator.PageElements.Dropdown.Opened} 
   Wait And Click Element  ${locator.createExchange.DgfCategorySelector.${tender_data.data.procurementMethodType}}   5
   Input Text  ${locator.createExchange.GuaranteeAmount}  ${guarantee}
   Input Text  ${locator.createExchange.StartPrice}  ${budget}
-  Run Keyword If  ${tender_data.data.value.valueAddedTaxIncluded}  Select Checkbox  name=ExchangeDetails.VatIncluded
+  Run Keyword If  ${tender_data.data.value.valueAddedTaxIncluded}  Select Checkbox  ${locator.createExchange.VatIncluded}
   Input Text  ${locator.createExchange.MinimumStepValue}  ${step_rate}
   Input Text  ${locator.createExchange.dgfID}  ${tender_data.data.dgfID}
   Input Text  ${locator.createExchange.dgfDecisionID}  ${tender_data.data.dgfDecisionID}
-  Input Text  id=DgfDecisionDateInput  ${dp_dgf_decision_date}
+  Input Text  ${locator.createExchange.dgfDecisionDate}  ${dp_dgf_decision_date}
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
   Select From KPMG List By Data-Value  _ExchangeDetails.TenderAttempts_dropdown  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
@@ -145,8 +144,8 @@ Publish Auction
 Check Auction Status
   [Arguments]  ${username}  ${expected_status}
   Go to  ${USERS.users['${username}'].default_page}
-  Filter Auction  ${auction_id}  ${locator.exchangeList.FilterByIdButton}
-  ${status}=  Get Text  xpath=//*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td[3]
+  Filter Auction  ${auction_id}  ${locator.exchangeList.FilterByIdButton.authUser}
+  ${status}=  Get Text  ${locator.exchangeList.OwnerProzorroAuctionStatus}
   Should Be Equal  ${expected_status}  ${status}
 
 # Search for a bid identifier (KDR-1077)
@@ -160,13 +159,13 @@ Check Auction Status
 
 Search Auction As Viewer
   [Arguments]  ${tender_uaid}
-  Filter Auction  ${tender_uaid}  xpath=//*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]
+  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.viewer}
   Execute Javascript  $('a').css({display: "block"})
   Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/following-sibling::td/a[contains(@href,"/ExternalExchangeDetails/")]  10
 
 Search Auction As Provider1
   [Arguments]  ${tender_uaid}
-  ${status}=  Run Keyword And Return Status  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
+  ${status}=  Run Keyword And Return Status  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Run Keyword If  not ${status}  Set Interested And Filter Auction In My Auctions   ${tender_uaid}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
   Execute Javascript  $('a').css({display: "block"})
@@ -174,24 +173,24 @@ Search Auction As Provider1
 
 Search Auction As Tender_owner
   [Arguments]  ${tender_uaid}
-  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
+  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Execute Javascript  $('a').css({display: "block"})
   Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td[text()="Prozorro"]/preceding-sibling::td/a[contains(@href,"/Exchange/")]  10
 
 Set Interested And Filter Auction In My Auctions
   [Arguments]  ${tender_uaid}
   Click Element  ${locator.exchangeList.ProzorroExchangesTab}
-  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
+  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Click Element  xpath=//*[text()="${tender_uaid}"]/../../descendant::label[@class="prozorro-synch"]
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
-  Click Element  xpath=//*[@aria-controls="exchangesTabStrip-1"]
+  Click Element  ${locator.exchangeList.MyExchangesTab}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
-  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton}
+  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
 
 Filter Auction
   [Arguments]  ${tender_uaid}    ${search_btn_locator}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
-  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
+  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
   Wait Until Element Is Visible  ${search_btn_locator}
   Click Element  ${search_btn_locator}
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.exchangeList.FilterTextField}
@@ -199,7 +198,7 @@ Filter Auction
   Input Text  ${locator.exchangeList.FilterTextField}  ${tender_uaid}
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
-  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
+  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
   Page Should Contain  ${tender_uaid}
 
 Search Auction If Modified
@@ -221,7 +220,7 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   # get value
-  Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  ${locator.exchangeToolbar.Bids}
   ...  ELSE IF  'status' in '${field_name}'  Reload Page
   ${value}=  Run Keyword If  'currency' in '${field_name}'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
@@ -234,7 +233,7 @@ Search Auction If Modified
 
 Отримати інформацію про авард
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Click Element  ${locator.exchangeToolbar.Bids}
   ${award_index}=  Convert To Integer  ${field_name[7:8]}
   ${value}=  Get Text  xpath=//*[text()="Award Bidders"]/../descendant::tbody/tr[${award_index + 1}]/td[5]
   [Return]  ${value}
@@ -247,7 +246,7 @@ Search Auction If Modified
   ${fieldvalue}=  convert_date_to_dp_format  ${fieldvalue}  ${fieldname}
   Run Keyword If  '${fieldname}' == 'tenderAttempts'  Select From KPMG List By Data-Value  _ExchangeDetails.TenderAttempts_dropdown  ${fieldvalue}
   ...  ELSE  Input Text  ${locator.editExchange.${fieldname}}  ${fieldvalue}
-  Choose File  id=ExchangeDetails_ClarificationDocument  ${file_path}
+  Choose File  ${locator.editExchange.clarificationDocument}  ${file_path}
   Click Element  ${locator.editExchange.SubmitButton}
   Remove File  ${file_path}
 
@@ -263,12 +262,12 @@ Search Auction If Modified
   Click Element  ${locator.exchangeToolbar.Admin}
   Wait And Click Element  ${locator.exchangeAdmin.nav.Cancel}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.cancel.submitButton}  10
-  Input Text  id=Reason  ${cancellation_reason}
+  Input Text  ${locator.exchangeAdmin.cancel.reason}  ${cancellation_reason}
   Input Text  ${locator.exchangeAdmin.cancel.date}  28/08/2017
   Choose File  ${locator.exchangeAdmin.cancel.file}  ${document}
   Click Element  ${locator.exchangeAdmin.cancel.submitButton}
   Wait And Click Element  ${locator.exchangeAdmin.cancel.confirmButton}  5
-  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 #--------------------------------------------------------------------------
 #  ПИТАННЯ
@@ -278,9 +277,9 @@ Search Auction If Modified
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}  
   Wait Until Keyword Succeeds  20 x  60 s  Run Keywords
   ...  Reload Page
-  ...  AND  Wait Until Page Contains Element  xpath=//a[contains(@href,"/auctions/")]  1  
-  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]@href  
-  [return]  ${url}
+  ...  AND  Wait Until Page Contains Element  ${locator.viewExchange.auctionUrl}  1
+  ${url}=  Get Element Attribute  ${locator.viewExchange.auctionUrl}@href
+  [Return]  ${url}
 
 # Upload document
 Завантажити документ
@@ -291,53 +290,39 @@ Search Auction If Modified
   Wait Modal Animation  ${locator.Dataroom.SelectFiles}
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
-  Wait Until Page Contains Element  xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+  Wait Until Page Contains Element  ${locator.PageElements.Dropdown.Opened} 
   Wait And Click Element  xpath=//a[@data-value='${documentType.replace("tenderNotice","notice")}']  10
-  Wait And Click Element  xpath=//button[contains(@class,"k-upload-selected")]  10
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[contains(@class,"k-upload-status-total") and contains(text(),"Done")]
+  Wait And Click Element  ${locator.Dataroom.UploadFileButton}  10
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  ${locator.Dataroom.UploadFileStatus.Done}
 
 # Upload a document in a tender with a type
 Завантажити документ в тендер з типом
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}  ${doc_type}
-   kpmgdealroom.Завантажити документ  ${username}  ${filepath}  ${tender_uaid}  ${doc_type}
+  kpmgdealroom.Завантажити документ  ${username}  ${filepath}  ${tender_uaid}  ${doc_type}
 
 # Upload the illustration
 Завантажити ілюстрацію
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}
-   kpmgdealroom.Завантажити документ  ${username}  ${filepath}  ${tender_uaid}  illustration
-
-# Upload the auction protocol
-Завантажити протокол аукціону
-  [Arguments]  ${username}  ${tender_uaid}  ${filepath}  ${award_index}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  xpath=(//*[@id='btnShowBid' and not(contains(@style,'display: none'))])
-  Click Element  id=btnShowBid
-  Sleep  1
-  Wait Until Page Contains Element  xpath=(//*[@id='btn_documents_add' and not(contains(@style,'display: none'))])
-  Click Element  id=btn_documents_add
-  Select From List By Value  id=slFile_documentType  auctionProtocol
-  Choose File  xpath=(//*[@id='upload_form']/input[2])  ${filepath}
-  Sleep  2
-  Click Element  id=upload_button
+  kpmgdealroom.Завантажити документ  ${username}  ${filepath}  ${tender_uaid}  illustration
 
 #Add virtual data room
 Додати Virtual Data Room
   [Arguments]  ${username}  ${tender_uaid}  ${vdr_url}  ${title}=Sample Virtual Data Room
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Input Text  id=ExchangeDetails_VirtualDataRoomLink  ${vdr_url}
+  Input Text  ${locator.editExchange.VirtualDataRoomLink}  ${vdr_url}
   Click Element  ${locator.editExchange.SubmitButton}
 
 #Add a public passport to the asset
 Додати публічний паспорт активу
   [Arguments]  ${username}  ${tender_uaid}  ${certificate_url}  ${title}=Public Asset Certificate
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Input Text  id=ExchangeDetails_PublicEquityPassportLink  ${certificate_url}
+  Input Text  ${locator.editExchange.PublicEquityPassportLink}  ${certificate_url}
   Click Element  ${locator.editExchange.SubmitButton}
 
 Додати офлайн документ
   [Arguments]  ${username}  ${tender_uaid}  ${accessDetails}  ${title}=Familiarization with bank asset
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Input Text  id=ExchangeDetails_AssetFamiliarizationMessage  ${accessDetails}
+  Input Text  ${locator.editExchange.AssetFamiliarizationMessage}  ${accessDetails}
   Click Element  ${locator.editExchange.SubmitButton}
 
 # Get information from a document
@@ -347,7 +332,7 @@ Search Auction If Modified
   Run Keyword If  'скасування' not in '${TEST_NAME}'  Run Keywords
   ...  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
   ...  AND  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
-  ...  AND  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  css=div.k-loading-image
+  ...  AND  Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
   ${doc_value}=  Get Text  xpath=//*[contains(text(),"${doc_id}")]
   [Return]  ${doc_value}
 
@@ -369,23 +354,22 @@ Search Auction If Modified
   ${file_name}=   Get Text   xpath=//*[contains(text(),"${doc_id}")]
   ${url}=   Get Element Attribute   xpath=//*[contains(text(),'${doc_id}')]@href
   kpmg_download_file   ${url}  ${file_name}  ${OUTPUT_DIR}
-  [return]  ${file_name}
+  [Return]  ${file_name}
 
 # Get number of documents
 Отримати кількість документів в тендері
   [Arguments]  ${username}  ${tender_uaid}
-  [Documentation]  Get a document amount
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   Wait And Click Element  ${locator.Dataroom.Dataroom}  10
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
-  ${number_of_documents}=  Get Matching Xpath Count  xpath=//*[contains(@id,"DataroomDocument")]/descendant::tbody/tr
-  [return]  ${number_of_documents}
+  ${number_of_documents}=  Get Matching Xpath Count  ${locator.Dataroom.DocumentRaw}
+  [Return]  ${number_of_documents}
 
 # Add item to auction
 Додати предмет закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${item}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  ${index}=  Get Matching Xpath Count  //*[@id="AssetList"]/descendant::*[contains(@id,"at-asset-container")]
+  ${index}=  Get Matching Xpath Count  ${locator.editExchange.ItemBlock}
   Run Keyword And Ignore Error  Add Item  ${item}  ${index}
   Run Keyword And Ignore Error  Click Element  ${locator.addAsset.SaveButton}
 
@@ -408,8 +392,8 @@ Search Auction If Modified
 Отримати кількість предметів в тендері
   [Arguments]  ${username}  ${tender_uaid}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  ${number_of_items}=  Get Matching Xpath Count  //div[@class="tenderItemElement"]
-  [return]  ${number_of_items}
+  ${number_of_items}=  Get Matching Xpath Count  ${locator.editExchange.ItemBlock}
+  [Return]  ${number_of_items}
 
 #--------------------------------------------------------------------------
 # QUESTIONS - СКАРГИ ТА ВИМОГИ 
@@ -430,7 +414,7 @@ Search Auction If Modified
 Отримати інформацію із запитання
   [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//a[contains(@href,"Question") or contains(@href,"/Faq/")]
+  Click Element  ${locator.exchangeToolbar.FAQ}
   Run Keyword If  '${ROLE}' == 'tender_owner'  Click Element  xpath=//a[contains(text(),"${question_id}")]
   ...  ELSE  Click If Page Contains Element  ${locator.Questions.expandButton}
   Wait Until Element Is Visible  ${locator.Questions.${field_name}}  10
@@ -441,11 +425,11 @@ Search Auction If Modified
 Відповісти на запитання
   [Arguments]  ${username}  ${tender_uaid}  ${answer_data}  ${question_id}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//a[contains(@href,"Question")]
+  Click Element  ${locator.exchangeToolbar.FAQ}
   Click Element  xpath=//a[contains(text(),"${question_id}")]
   Input Text  xpath=//*[contains(text(),"${question_id}")]/../descendant::*[@id="Question_Answer"]  ${answer_data.data.answer}
-  Click Element  xpath=//button[@type="submit"]
-  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
+  Click Element  ${locator.Answers.Publish}
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 #--------------------------------------------------------------------------
 #  BIDDING - 
@@ -455,19 +439,19 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${bid}
   ${amount}=  Convert To Integer  ${bid.data.value.amount}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Click Element  ${locator.exchangeToolbar.Bids}
   Click Element  ${locator.Bidding.InitialBiddingLink}
   Wait until Element Is Visible  ${locator.Bidding.BiddingAmount}  10
   Input Text  ${locator.Bidding.BiddingAmount}  ${amount}
   Click Element  ${locator.Bidding.SubmitBidButton}
   Wait Until Element Is Visible  ${locator.Bidding.ConfirmBidPassword}  10
   Wait Modal Animation  ${locator.Bidding.ConfirmBidPassword}
-  Input Text  ${locator.Bidding.ConfirmBidPassword}  Admin12345
-  Click Element  xpath=//*[text()="Ok"]
-  Wait Until Keyword Succeeds  10 x  500 ms  Element Should Not Be Visible  xpath=//*[@class="modal fade in"]
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Input Text  ${locator.Bidding.ConfirmBidPassword}  ${USERS.users['${username}'].password}
+  Click Element  ${locator.PageElements.ModalOk}
+  Wait Until Keyword Succeeds  10 x  500 ms  Element Should Not Be Visible  ${locator.PageElements.ModalFadeIn}
+  Click Element  ${locator.exchangeToolbar.Bids}
   Run Keyword If  '${MODE}' == 'dgfOtherAssets'  Approve Bid  ${username}  ${tender_uaid}
-  [return]  ${bid}
+  [Return]  ${bid}
 
 Approve Bid
   [Arguments]  ${username}  ${tender_uaid}
@@ -478,87 +462,41 @@ Approve Bid
   Input text  ${locator.login.PasswordField}  Admin12345
   Click Element  ${locator.login.LoginButton}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Click Element  xpath=//*[contains(@for,"_Eligible")]
-  Click Element  xpath=//*[contains(@for,"_Qualified")]
-  Click Element  xpath=//button[text()="Save"]
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Click Element  ${locator.Admin.CheckBoxEligible}
+  Click Element  ${locator.Admin.CheckBoxQualified}
+  Click Element  ${locator.PageElements.SaveButton}
   Switch Browser  ${username}
 
 # Upload a financial license
 Завантажити фінансову ліцензію
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Click Element  ${locator.exchangeToolbar.Bids}
   Choose File  ${locator.Bidding.FinancialFile}   ${filepath}
-  Click Element  xpath=//*[text()="Upload Documents"]
+  Click Element  ${locator.Bidding.UploadFilesButton}
   Approve Bid  ${username}  ${tender_uaid}
-
-# Change bid proposal
-Змінити цінову пропозицію
-  [Arguments]  @{ARGUMENTS}
-  [Documentation]  ${ARGUMENTS[0]} == ${test_bid_data}
-  ${amount}=  get_str  ${ARGUMENTS[0].data.value.amount}
-  Go To  https://proumstrade.com.ua/bids/index
-  Wait Until Page Contains Element  id= update-bids-btn
-  Click Element  id= update-bids-btn
-  sleep  3s
-  Input Text  id=bids-value_amount  ${amount}
-  Click Element  id= update-bid-btn
 
 # Cancel your bid
 Скасувати цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"Bids/")]
+  Click Element  ${locator.exchangeToolbar.Bids}
   Wait And Click Element  ${locator.Bidding.InitialBiddingLink}  10
   Wait And Click Element  ${locator.Bidding.CancelBidButton}  10
   Wait And Click Element  ${locator.Bidding.CancelBidYesButton}  10
-  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
-
-Змінити документ в ставці
-  [Arguments]  ${username}  ${tender_uaid}  ${path}  ${docid}
-  kpmgdealroom.Завантажити документ в ставку  ${username}  ${path}  ${tender_uaid}
-
-# Get information from the offer
-Отримати інформацію із пропозиції
-  [Arguments]  ${username}  ${tender_uaid}  ${field}
-  Go To  http://proumstrade.com.ua/bids/index  ${tender_uaid}
-  Wait Until Page Contains Element  id = view-btn
-  Click Element  id = view-btn
-  Wait Until Page Contains Element  id=bids-value-amountEnhanced bifurcated  _kdrtest
-  ${value}=  Get Value  id=bids-value_amount
-  ${value}=  Convert To Number  ${value}
-  [Return]  ${value}
-
-Отримати кількість документів в ставці
-  [Arguments]  ${username}  ${tender_uaid}  ${bid_index}
-#  Дочекатись синхронізації з майданчиком  ${username}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Keyword Succeeds  15 x  1 m  Run Keywords
-  ...  Reload Page
-  ...  AND  Execute Javascript  $(".topFixed").remove(); $(".bottomFixed").remove();
-  ...  AND  Клікнути по елементу  xpath=//preceding-sibling::div[text()='На розгляді']/following-sibling::div/descendant::span[text()='Пропозиція']
-  Wait Until Element Is Visible  xpath=//tr[@class="line docItem documents_url_documents"]
-  ${bid_doc_number}=  Get Matching Xpath Count  //tr[@class="line docItem documents_url_documents"]
-  [return]  ${bid_doc_number}
-
-# Obtain data from the proposal document
-Отримати дані із документу пропозиції
-  [Arguments]  ${username}  ${tender_uaid}  ${bid_index}  ${document_index}  ${field}
-  ${document_index}=  inc  ${document_index}
-  ${result}=  Get Text  xpath=(//*[@id='pnAwardList']/div[last()]/div/div[1]/div/div/div[2]/table[${document_index}]//span[contains(@class, 'documentType')])
-  [Return]  ${result}
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 Отримати посилання на аукціон для учасника
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
   Run Keyword And Ignore Error  Login  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Click Element  ${locator.exchangeToolbar.Bids}
   Wait Until Keyword Succeeds  20 x  60 s  Run Keywords
   ...  Reload Page
-  ...  AND  Wait Until Page Contains Element  xpath=//a[contains(@href,"/auctions/")]  1
-  ${url}=  Get Element Attribute  xpath=//a[contains(@href,"/auctions/")]@href
-  [return]  ${url}
+  ...  AND  Wait Until Page Contains Element  ${locator.viewExchange.auctionUrl}  1
+  ${url}=  Get Element Attribute  ${locator.viewExchange.auctionUrl}@href
+  [Return]  ${url}
 
 #--------------------------------------------------------------------------
 #  QUALIFICATION - 
@@ -568,22 +506,17 @@ Approve Bid
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}  ${award_index}
   ${index}=  Convert To Integer  ${award_index}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Choose File  id=protocol-file-upload  ${filepath}
-  Click Element  id=upload-protocol-document
-
-############## AWARD MUST CHANGE STATUS AUTOMATICALY AFTER UPLOADING PROTOCOL BY SELLER!! ###############
-###########################  DELETE THIS AFTER DEVS FIX DEFFECT !!  #####################################
-  Click Element  id=change-status-button
-#########################################################################################################
-
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Choose File  ${locator.Awarding.UploadProtocolInput}  ${filepath}
+  Click Element  ${locator.Awarding.UploadFileButton}
+  Click Element  ${locator.Awarding.NextStatusButton}
   Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Payment")]
 
 Підтвердити наявність протоколу аукціону
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}
   ${index}=  Convert To Integer  ${award_index}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Click Element  ${locator.exchangeToolbar.Bids}
   Page Should Contain  Download Auction Protocol Document
 
 # Upload the decision document of the qualification commission
@@ -593,16 +526,15 @@ Approve Bid
   Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
   Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//div[contains(@class, 'award_docs')]//span[contains(@class, 'add_document')])
   Choose File  xpath=(//*[@id='upload_form']/input[2])  ${filepath}
-  Sleep  2
-  Click Element  id=upload_button
+  Wait And Click Element  id=upload_button
   Reload Page
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
   ${index}=  Convert To Integer  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Click Element  id=change-status-button
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Click Element  ${locator.Awarding.NextStatusButton}
   Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Active")]
 
 Дискваліфікувати постачальника
@@ -610,10 +542,10 @@ Approve Bid
   ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
   ${index}=  Convert To Integer  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Run Keyword And Ignore Error  Choose File  id=disqualification-file-upload  ${file_path}
-  Input Text  id=disqualification-reason  Some disqualification reason text
-  Click Element  xpath=//*[contains(@class,"disqualify-btn")]
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Run Keyword And Ignore Error  Choose File  ${locator.Awarding.UploadDisqualInput}   ${file_path}
+  Input Text  ${locator.Awarding.DisqualReason}  Some disqualification reason text
+  Click Element  ${locator.Awarding.DisqualButton}
   Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
   Remove File  ${file_path}
 
@@ -621,11 +553,11 @@ Approve Bid
 Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
-  Wait And Click Element  id=submit-bid-award-cancelbtn  20
-  Wait Modal Animation  id=cancel-bid-award-dialog-yes
-  Click Element  id=cancel-bid-award-dialog-yes
-  Wait Until Keyword Succeeds  30 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Wait And Click Element  ${locator.Awarding.CancelAwardButton}  20
+  Wait Modal Animation  ${locator.Awarding.CancelAwardDialogYes}
+  Click Element  ${locator.Awarding.CancelAwardDialogYes}
+  Wait Until Keyword Succeeds  30 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 
 #--------------------------------------------------------------------------
@@ -634,17 +566,17 @@ Approve Bid
 # Confirm the signing of the contract
 Підтвердити підписання контракту
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
-  Input Text  id=contract-number  777
-  Click Element  id=save-contract-info
-  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  id=complete-auction
-  Click Element  id=complete-auction
-  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//*[contains(@class,"alert-success")]
+  Input Text  ${locator.Awarding.ContractNumberInput}  777
+  Click Element  ${locator.Awarding.ContractNumberButton}
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.Awarding.CompleteAuctionButton}
+  Click Element  ${locator.Awarding.CompleteAuctionButton}
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 # Upload an agreement to the tender
 Завантажити угоду до тендера
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}  ${filepath}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click Element  xpath=//*[contains(@href,"/Bids/Phases/")]
+  Click Element  ${locator.exchangeToolbar.Bids}
   Select From KPMG List By Data-Value  _contractType_dropdown  2
-  Choose File  id=contract-file-upload  ${filepath}
-  Click Element  id=upload-contract-document
+  Choose File  ${locator.Awarding.ContractUploadInput}  ${filepath}
+  Click Element  ${locator.Awarding.ContractUploadButton}

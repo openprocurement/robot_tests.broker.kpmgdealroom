@@ -22,7 +22,7 @@ UNITS_NAME_DICT = {
     'box': u'ящик',
     'trip': u'рейс',
     'tonne': u'тони',
-    'metre squared': u'метри квадратні',
+    'metresquared': u'метри квадратні',
     'kilometre': u'кілометри',
     'piece': u'штуки',
     'month': u'місяць',

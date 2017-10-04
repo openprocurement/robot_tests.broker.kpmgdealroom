@@ -15,8 +15,8 @@ ${locator.toolbar.LogoutButton}                             id=toolbar-logout
 # exchange toolbar
 ${locator.exchangeToolbar.Details}                          id=li-exchange-toolbar-assets
 ${locator.exchangeToolbar.DataRoom}                         id=li-exchange-toolbar-data-room
-${locator.exchangeToolbar.FAQ}                              id=li-exchange-toolbar-data-faq
-${locator.exchangeToolbar.Bids}                             id=li-exchange-toolbar-data-bids	
+${locator.exchangeToolbar.FAQ}                              xpath=//a[contains(@href,"Question") or contains(@href,"/Faq/")]
+${locator.exchangeToolbar.Bids}                             xpath=//*[contains(@href,"Bids/")]
 ${locator.exchangeToolbar.Admin}                            id=li-exchange-toolbar-admin
 
 # publish exchange
@@ -35,10 +35,12 @@ ${locator.exchangeAdmin.cancel.confirmButton}  id=closeCancelExchange-dialog-yes
 
 # team management
 ${locator.Admin.Admin}                                      id=li-exchange-toolbar-admin
-${locator.AddTeam.AddEditTeams}                           xpath=//ul[@id='sidebar']/li[2]/a
+${locator.AddTeam.AddEditTeams}                             xpath=//ul[@id='sidebar']/li[2]/a
 ${locator.AddTeam.AddNewteam}                               id=AddExchangeTeam
 ${locator.AddTeam.Name}                                     id=Name
-${locator.AddTeam.Save}                                     //*[@id='SaveNewExchangeTeam']/span
+${locator.AddTeam.Save}                                     xpath=//*[@id='SaveNewExchangeTeam']/span
+${locator.Admin.CheckBoxEligible}                           xpath=//*[contains(@for,"_Eligible")]
+${locator.Admin.CheckBoxQualified}                          xpath=//*[contains(@for,"_Qualified")]
 
 # user management
 ${locator.Addusers.Addusers}            xpath=//ul[@id='sidebar']/li[3]/a
@@ -72,11 +74,10 @@ ${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contain
 ${locator.createExchange.GuaranteeAmount}                   id=guaranteeAmount
 ${locator.createExchange.StartPrice}                        id=startingPrice
 ${locator.createExchange.MinimumStepValue}                  xpath=//input[contains(@id,"inimumStepValue")]
-
+${locator.createExchange.VatIncluded}                       name=ExchangeDetails.VatIncluded
 ${locator.createExchange.dgfID}                             id=dgfId
 ${locator.createExchange.dgfDecisionID}                     name=ExchangeDetails.DgfDecisionId
 ${locator.createExchange.dgfDecisionDate}                   id=DgfDecisionDateInput
-${locator.createExchange.dgfDecisionDateField}              DgfDecisionDateInput
 ${locator.createExchange.description}                       name=ExchangeDetails.Description
 ${locator.createExchange.tenderAttempts}                    name=_ExchangeDetails.TenderAttempts   
 
@@ -89,6 +90,11 @@ ${locator.editExchange.dgfDecisionID}  name=ExchangeDetails.DgfDecisionId
 ${locator.editExchange.dgfDecisionDate}  id=DgfDecisionDateInput
 ${locator.editExchange.description}  id=description
 ${locator.editExchange.tenderAttempts}  name=ExchangeDetails.TenderAttempts
+${locator.editExchange.clarificationDocument}  id=ExchangeDetails_ClarificationDocument
+${locator.editExchange.VirtualDataRoomLink}  id=ExchangeDetails_VirtualDataRoomLink
+${locator.editExchange.PublicEquityPassportLink}  id=ExchangeDetails_PublicEquityPassportLink
+${locator.editExchange.AssetFamiliarizationMessage}  id=ExchangeDetails_AssetFamiliarizationMessage
+${locator.editExchange.ItemBlock}  //*[@id="AssetList"]/descendant::*[contains(@id,"at-asset-container")]
 ${locator.editExchange.SubmitButton}  //*[@value="Save"]
 
 
@@ -139,6 +145,8 @@ ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
 ${locator.viewExchange.procuringEntity.name}  xpath=//*[text()="Seller Address"]/..
 
+${locator.viewExchange.auctionUrl}  //a[contains(@href,"/auctions/")]
+
 # auction dates on bids page
 ${locator.viewExchange.auctionPeriod.startDate}  id=auctionPeriodStart
 
@@ -168,15 +176,16 @@ ${locator.viewExchange.cancellations.status}  xpath=//*[text()="Auction Status"]
 ${locator.viewExchange.cancellations.reason}  xpath=//*[@data-test-id="cancellation-reason"]
 
 # search exchange list
-#${locator.exchangeList.FilterByTypeButton}  //th[@id='exchangeDashboardTypeCol']/a/span
-${locator.exchangeList.FilterByIdButton}  //*[contains(@class,"k-state-active")]/descendant::*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]
+${locator.exchangeList.FilterByIdButton.authUser}  xpath=//*[contains(@class,"k-state-active")]/descendant::*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]
+${locator.exchangeList.FilterByIdButton.viewer}    xpath=//*[contains(@id,"IdCol")]/a[contains(@class,"k-grid-filter")]
 ${locator.exchangeList.FilterTextField}  //form[contains(@style,"display: block")]/descendant::input[@type='text']
 ${locator.exchangeList.FilterSubmitButton}  //form[contains(@style,"display: block")]/descendant::button[@type='submit']
 ${locator.exchangeList.FilteredFirstRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr/td[1]/a
 ${locator.exchangeList.FilteredSecondRow}  //*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td/a
-${locator.exchangeList.MyExchangesTab}  //li/span[2]
+${locator.exchangeList.MyExchangesTab}  xpath=//*[@aria-controls="exchangesTabStrip-1"]
 ${locator.exchangeList.ProzorroExchangesTab}  //li[2]/span[2]
 ${locator.exchangeList.ProzorroFilteredFirstRow}  //div[@id='prozorroExchangesTable']/table/tbody/tr/td[2]/a
+${locator.exchangeList.OwnerProzorroAuctionStatus}  xpath=//*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td[3]
 
 
 # questions and answers
@@ -192,11 +201,11 @@ ${locator.Questions.Confirm}                id=confirm-edit-yes
 
 ${locator.Answers.PageTitle}                id=pageTitle
 ${locator.Answers.Answer}                   id=Answer
-${locator.Answers.Publish}                  id=question-Published
+${locator.Answers.Publish}                  xpath=//button[@type="submit"]
 
 
 # bidding
-${locator.Bidding.UploadFilesButton}        //button[@type='submit']
+${locator.Bidding.UploadFilesButton}        xpath=//*[text()="Upload Documents"]
 ${locator.Bidding.EligibilityFile}          id=BidDocuments_EligibilityDocument
 ${locator.Bidding.QualificationFile}        id=BidDocuments_QualificationDocument
 ${locator.Bidding.FinancialFile}            id=BidDocuments.FinancialLicenseDocument
@@ -208,12 +217,36 @@ ${locator.Bidding.ConfirmBidButton}         id=submit-bid-dialog-yes
 ${locator.Bidding.CancelBidButton}          id=submit-bid-cancelbtn
 ${locator.Bidding.CancelBidYesButton}       id=cancel-bid-dialog-yes
 
+# awarding
+${locator.Awarding.UploadProtocolInput}     id=protocol-file-upload
+${locator.Awarding.UploadDisqualInput}      id=disqualification-file-upload
+${locator.Awarding.UploadFileButton}        id=upload-protocol-document
+${locator.Awarding.NextStatusButton}        id=change-status-button
+${locator.Awarding.DisqualReason}           id=disqualification-reason
+${locator.Awarding.DisqualButton}           xpath=//*[contains(@class,"disqualify-btn")]
+${locator.Awarding.CancelAwardButton}       id=submit-bid-award-cancelbtn
+${locator.Awarding.CancelAwardDialogYes}    id=cancel-bid-award-dialog-yes
+${locator.Awarding.ContractNumberInput}     id=contract-number
+${locator.Awarding.ContractNumberButton}    id=save-contract-info
+${locator.Awarding.ContractUploadInput}     id=contract-file-upload
+${locator.Awarding.ContractUploadButton}    id=upload-contract-document
+${locator.Awarding.CompleteAuctionButton}   id=complete-auction
+
 # file operations
 ${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room
 ${locator.Dataroom.UploadIcon}              id=dataroom-upload
-#${locator.Dataroom.Upload}                  id=dataroom-upload
 ${locator.Dataroom.RulesDialogYes}          id=exchangerules-dialog-yes
 ${locator.Dataroom.UploadSelect}            id=dataroom-upload
 ${locator.Dataroom.SelectFiles}             id=files
-${locator.Dataroom.UploadFileButton}        //*[@id='dataroom-upload-modal-form']/div/div/div/button[2]
+${locator.Dataroom.UploadFileButton}        xpath=//button[contains(@class,"k-upload-selected")]
 ${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close
+${locator.Dataroom.UploadFileStatus.Done}   xpath=//*[contains(@class,"k-upload-status-total") and contains(text(),"Done")]
+${locator.Dataroom.DocumentRaw}             //*[contains(@id,"DataroomDocument")]/descendant::tbody/tr
+
+# page elements
+${locator.PageElements.Dropdown.Opened}     xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]
+${locator.PageElements.LoadingImage}        css=div.k-loading-image
+${locator.PageElements.successActionAlert}  xpath=//*[contains(@class,"alert-success")]
+${locator.PageElements.ModalFadeIn}         xpath=//*[@class="modal fade in"]
+${locator.PageElements.ModalOk}             xpath=//*[text()="Ok"]
+${locator.PageElements.SaveButton}          xpath=//button[text()="Save"]
