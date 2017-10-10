@@ -69,8 +69,8 @@ ${locator.createExchange.TypeSelector.Prozorro}             //*[@id="_TypeId_dro
 ${locator.createExchange.StartDate}                         id=AuctionStartDateInput
 ${locator.createExchange.StartDateField}                    AuctionStartDate
 ${locator.createExchange.DgfCategorySelector}               //div[@id='_ExchangeDetails.ProzorroCategory_dropdown']/div[2]/i
-${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'dgfFinancialAssets')]
-${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'dgfOtherAssets')]
+${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'Financial Assets')]
+${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'Other Assets')]
 ${locator.createExchange.GuaranteeAmount}                   id=guaranteeAmount
 ${locator.createExchange.StartPrice}                        id=startingPrice
 ${locator.createExchange.MinimumStepValue}                  xpath=//input[contains(@id,"inimumStepValue")]

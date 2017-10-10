@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import dateutil.parser
 import urllib
-import os
 from datetime import datetime
 from pytz import timezone
 from dateutil.tz import tzlocal
@@ -11,7 +10,7 @@ tzlocal = tzlocal()
 
 # asset units name translation dictionary
 UNITS_NAME_DICT = {
-    'pair' : u'пара',
+    'pair': u'пара',
     'litre': u'літр',
     'set': u'набір',
     'number of packs': u'пачок',
@@ -103,7 +102,7 @@ def post_process_field(field_name, value):
     elif field_name == 'value.valueAddedTaxIncluded':
         return_value = (str(value).lower() == 'true')
     elif field_name == 'procuringEntity.name':
-        return_value = extract_procuring_entity_name(value) #value.replace("Name:", "").strip()
+        return_value = extract_procuring_entity_name(value)
     elif 'Date' in field_name:
         return_value = convert_time_to_local(value)
     elif field_name == 'status':
