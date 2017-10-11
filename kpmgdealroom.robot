@@ -459,7 +459,7 @@ Approve Bid
   Switch Browser  admin
   Wait Until Element Is Visible  ${locator.login.EmailField}  10
   Input text  ${locator.login.EmailField}  kdruser104@kpmg.co.uk
-  Input text  ${locator.login.PasswordField}  Admin12345
+  Input text  ${locator.login.PasswordField}  Deal12345
   Click Element  ${locator.login.LoginButton}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}

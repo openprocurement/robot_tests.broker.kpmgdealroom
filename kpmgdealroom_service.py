@@ -33,13 +33,19 @@ UNITS_NAME_DICT = {
 }
 
 AUCTION_STATE_DICT = {
-    'Tendering' : 'active.tendering',
-    'Auction' : 'active.auction',
-    'Qualification' : 'active.qualification',
-    'Awarded':'active.awarded',
-    'Unsuccessful' : 'unsuccessful',
+    'Tendering': 'active.tendering',
+    'Auction': 'active.auction',
+    'Qualification': 'active.qualification',
+    'Awarded': 'active.awarded',
+    'Unsuccessful': 'unsuccessful',
     'Completed': 'complete',
-    'Cancelled':'cancelled'
+    'Cancelled': 'cancelled'
+}
+
+PROCUREMENT_TYPE = {
+    'Other Assets': 'dgfOtherAssets',
+    'Financial Assets': 'dgfFinancialAssets',
+    'Dutch Auction': 'dgfInsider'
 }
 
 
@@ -54,6 +60,9 @@ def convert_date_to_dp_format(value, fieldname):
 def adapt_tender_data(tender_data, role):
     if role == 'tender_owner':
         tender_data['data']['procuringEntity']['name'] = u'Prozorro Seller Entity'
+        for i in range(len(tender_data['data']['items'])):
+            unit_name = list(UNITS_NAME_DICT.keys())[list(UNITS_NAME_DICT.values()).index(tender_data['data']['items'][i]['unit']['name'])]
+            tender_data['data']['items'][i]['unit']['name'] = unit_name
     return tender_data
 
 
@@ -78,6 +87,10 @@ def convert_auction_status(status):
     return AUCTION_STATE_DICT.get(status, status)
 
 
+def convert_procurement_type(proc_type):
+    return PROCUREMENT_TYPE.get(proc_type, proc_type)
+
+
 def extract_unit_name(value):
     temp = value.split('\n')    # this is temporary.  Refactor after HTML page optimization
     return temp[1].replace(' ', '').replace(')', '').split('(')[0]
@@ -91,6 +104,8 @@ def extract_procuring_entity_name(value):
 def post_process_field(field_name, value):
     if field_name == 'tenderAttempts':
         return_value = int(value.split(" ")[0])
+    elif field_name == 'procurementMethodType':
+        return_value = convert_procurement_type(value)
     elif 'quantity' in field_name:
         return_value = int(value)
     elif field_name == 'value.amount' or field_name == 'minimalStep.amount':
