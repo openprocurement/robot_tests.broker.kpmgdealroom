@@ -167,7 +167,7 @@ Search Auction As Provider1
   [Arguments]  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Run Keyword If  not ${status}  Set Interested And Filter Auction In My Auctions   ${tender_uaid}
-  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  40 x  5 s  JQuery Ajax Should Complete
   Execute Javascript  $('a').css({display: "block"})
   Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td/a[contains(@href,"ExternalExchange")]  10
 
@@ -189,7 +189,7 @@ Set Interested And Filter Auction In My Auctions
 
 Filter Auction
   [Arguments]  ${tender_uaid}    ${search_btn_locator}
-  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  40 x  5 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
   Wait Until Element Is Visible  ${search_btn_locator}
   Click Element  ${search_btn_locator}
