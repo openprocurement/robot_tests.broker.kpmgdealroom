@@ -249,4 +249,4 @@ ${locator.PageElements.LoadingImage}        css=div.k-loading-image
 ${locator.PageElements.successActionAlert}  xpath=//*[contains(@class,"alert-success")]
 ${locator.PageElements.ModalFadeIn}         xpath=//*[@class="modal fade in"]
 ${locator.PageElements.ModalOk}             xpath=//*[text()="Ok"]
-${locator.PageElements.SaveButton}          xpath=//button[text()="Save"]
+${locator.PageElements.SaveButton}          xpath=//button[contains(text(),"Save")]
