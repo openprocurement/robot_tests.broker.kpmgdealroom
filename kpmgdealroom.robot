@@ -163,8 +163,8 @@ Check Auction Status
 
 # Search for a bid identifier (KDR-1077)
 Пошук тендера по ідентифікатору
-  [Arguments]  ${username}  ${tender_uaid}
-  Switch Browser  ${my_alias}
+  [Arguments]  ${username}  ${tender_uaid}  ${alias}=${my_alias}
+  Switch Browser  ${alias}
   Go to  ${USERS.users['${username}'].default_page}
   Run Keyword  Search Auction As ${ROLE.replace("1","")}  ${tender_uaid}
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
@@ -481,11 +481,11 @@ Approve Bid
   Input text  ${locator.login.EmailField}  kdruser104@kpmg.co.uk
   Input text  ${locator.login.PasswordField}  Deal12345
   Click Element  ${locator.login.LoginButton}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}  admin
   Click Element  ${locator.exchangeToolbar.Bids}
-  Click Element  ${locator.Admin.CheckBoxEligible}
-  Click Element  ${locator.Admin.CheckBoxQualified}
-  Click Element  ${locator.PageElements.SaveButton}
+  Scroll And Click  ${locator.Admin.CheckBoxEligible}
+  Scroll And Click  ${locator.Admin.CheckBoxQualified}
+  Scroll And Click  ${locator.PageElements.SaveButton}
   Switch Browser  ${my_alias}
 
 # Upload a financial license
