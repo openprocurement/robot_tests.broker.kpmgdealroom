@@ -24,6 +24,17 @@ Wait And Click Element
   Wait Until Keyword Succeeds  ${delay} x  1 s  Element Should Be Visible  ${locator}
   Click Element  ${locator}
 
+Scroll To Element
+  [Arguments]  ${locator}
+  Wait Until Page Contains Element  ${locator}  10
+  ${elem_vert_pos}=  Get Vertical Position  ${locator}
+  Execute Javascript  window.scrollTo(0,${elem_vert_pos - 200});
+
+Scroll And Click
+  [Arguments]  ${locator}
+  Scroll To Element  ${locator}
+  Click Element  ${locator}
+
 Click If Page Contains Element
   [Arguments]  ${locator}
   ${status}=  Run Keyword And Return Status  Element Should Be Visible  ${locator}
@@ -438,12 +449,11 @@ Search Auction If Modified
 # Submit a bid
 Подати цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}  ${bid}
-  ${amount}=  Convert To Integer  ${bid.data.value.amount}
+  Switch Browser  ${my_alias}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
-  Click Element  ${locator.Bidding.InitialBiddingLink}
-  Wait until Element Is Visible  ${locator.Bidding.BiddingAmount}  10
-  Input Text  ${locator.Bidding.BiddingAmount}  ${amount}
+  Scroll And Click  ${locator.Bidding.InitialBiddingLink}
+  Run Keyword If  'Insider' not in '${MODE}'  Input Bid Value  ${bid}
   Click Element  ${locator.Bidding.SubmitBidButton}
   Wait Until Element Is Visible  ${locator.Bidding.ConfirmBidPassword}  10
   Wait Modal Animation  ${locator.Bidding.ConfirmBidPassword}
@@ -467,16 +477,17 @@ Approve Bid
   Click Element  ${locator.Admin.CheckBoxEligible}
   Click Element  ${locator.Admin.CheckBoxQualified}
   Click Element  ${locator.PageElements.SaveButton}
-  Switch Browser  ${username}
+  Switch Browser  ${my_alias}
 
 # Upload a financial license
 Завантажити фінансову ліцензію
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}
+  Switch Browser  ${my_alias}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
-  Click Element  ${locator.Bidding.InitialBiddingLink}
+  Scroll And Click  ${locator.Bidding.InitialBiddingLink}
   Choose File  ${locator.Bidding.FinancialFile}   ${filepath}
-  Click Element  ${locator.Bidding.UploadFilesButton}
+  Scroll And Click  ${locator.Bidding.UploadFilesButton}
   Approve Bid  ${username}  ${tender_uaid}
 
 # Cancel your bid
