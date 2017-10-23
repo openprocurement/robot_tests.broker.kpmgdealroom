@@ -145,7 +145,7 @@ ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
 ${locator.viewExchange.procuringEntity.name}  xpath=//*[text()="Seller Address"]/..
 
-${locator.viewExchange.auctionUrl}  //a[contains(@href,"/auctions/")]
+${locator.viewExchange.auctionUrl}  //a[contains(@href,"auctions/")]
 
 # auction dates on bids page
 ${locator.viewExchange.auctionPeriod.startDate}  id=auctionPeriodStart

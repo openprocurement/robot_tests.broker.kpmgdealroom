@@ -85,8 +85,9 @@ Add Item
 # Prepare client for user
 Підготувати клієнт для користувача
   [Arguments]  ${username}
+  Set Suite Variable  ${my_alias}  ${username + 'CUSTOM'}
   Set Global Variable   ${KPMG_MODIFICATION_DATE}   ${EMPTY}
-  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}
+  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${my_alias}
   Set Window Position  @{USERS.users['${username}']['position']}
   Set Window Size      @{USERS.users['${username}']['size']}
   Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Login  ${username}
@@ -107,7 +108,7 @@ Add Item
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
   ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}  Date
   ${dp_dgf_decision_date}=  convert_date_to_dp_format  ${tender_data.data.dgfDecisionDate}  Date
-  Switch Browser  ${username}
+  Switch Browser  ${my_alias}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
   Wait Until Element Is Visible  ${locator.createExchange.ClientSelector.Prozorro}  2
@@ -163,8 +164,9 @@ Check Auction Status
 # Search for a bid identifier (KDR-1077)
 Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}
+  Switch Browser  ${my_alias}
   Go to  ${USERS.users['${username}'].default_page}
-  Run Keyword  Search Auction As ${ROLE}  ${tender_uaid}
+  Run Keyword  Search Auction As ${ROLE.replace("1","")}  ${tender_uaid}
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
   Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
@@ -175,7 +177,7 @@ Search Auction As Viewer
   Execute Javascript  $('a').css({display: "block"})
   Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/following-sibling::td/a[contains(@href,"/ExternalExchangeDetails/")]  10
 
-Search Auction As Provider1
+Search Auction As Provider
   [Arguments]  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Run Keyword If  not ${status}  Set Interested And Filter Auction In My Auctions   ${tender_uaid}
@@ -224,12 +226,13 @@ Search Auction If Modified
 # Refresh the page with the tender
 Оновити сторінку з тендером
   [Arguments]  ${username}  ${tender_uaid}
-  Switch Browser  ${username}
+  Switch Browser  ${my_alias}
   Reload Page
 
 # Get information about the tender
 Отримати інформацію із тендера
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+  Switch Browser  ${my_alias}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   # get value
   Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  ${locator.exchangeToolbar.Bids}
@@ -464,6 +467,12 @@ Search Auction If Modified
   Run Keyword If  '${MODE}' == 'dgfOtherAssets'  Approve Bid  ${username}  ${tender_uaid}
   [Return]  ${bid}
 
+Input Bid Value
+  [Arguments]  ${bid}
+  ${amount}=  Convert To Integer  ${bid.data.value.amount}
+  Wait until Element Is Visible  ${locator.Bidding.BiddingAmount}  10
+  Input Text  ${locator.Bidding.BiddingAmount}  ${amount}
+
 Approve Bid
   [Arguments]  ${username}  ${tender_uaid}
   Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=admin
@@ -502,6 +511,7 @@ Approve Bid
 
 Отримати посилання на аукціон для учасника
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
+  Switch Browser  ${my_alias}
   Run Keyword And Ignore Error  Login  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
