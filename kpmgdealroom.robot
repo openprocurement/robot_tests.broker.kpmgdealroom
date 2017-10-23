@@ -473,6 +473,7 @@ Approve Bid
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
+  Click Element  ${locator.Bidding.InitialBiddingLink}
   Choose File  ${locator.Bidding.FinancialFile}   ${filepath}
   Click Element  ${locator.Bidding.UploadFilesButton}
   Approve Bid  ${username}  ${tender_uaid}
