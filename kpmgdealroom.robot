@@ -76,7 +76,8 @@ Add Item
   [Arguments]  ${username}
   Set Global Variable   ${KPMG_MODIFICATION_DATE}   ${EMPTY}
   Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}
-  Maximize Browser Window
+  Set Window Position  @{USERS.users['${username}']['position']}
+  Set Window Size      @{USERS.users['${username}']['size']}
   Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Login  ${username}
 
 # Prepare data for tender announcement
