@@ -19,6 +19,15 @@ Login
   Input text  ${locator.login.PasswordField}  ${USERS.users['${username}'].password}
   Click Element  ${locator.login.LoginButton}
 
+Signin If Logged Out
+  [Arguments]  ${username}
+  Reload Page
+  ${is_logged}=  Run Keyword And Return Status  Page Should Contain Element  ${locator.toolbar.LoginButton}
+  Run Keyword If  ${is_logged}  Run Keywords
+  ...  Click Element  ${locator.toolbar.LoginButton}
+  ...  AND  Login  ${username}
+
+
 Wait And Click Element
   [Arguments]  ${locator}  ${delay}
   Wait Until Keyword Succeeds  ${delay} x  1 s  Element Should Be Visible  ${locator}
@@ -453,6 +462,7 @@ Search Auction If Modified
 Подати цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}  ${bid}
   Switch Browser  ${my_alias}
+  Signin If Logged Out  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Scroll And Click  ${locator.Bidding.InitialBiddingLink}
@@ -512,7 +522,7 @@ Approve Bid
 Отримати посилання на аукціон для учасника
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
   Switch Browser  ${my_alias}
-  Run Keyword And Ignore Error  Login  ${username}
+  Signin If Logged Out  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Wait Until Keyword Succeeds  20 x  60 s  Run Keywords
@@ -564,6 +574,7 @@ Approve Bid
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}  ${description}
   ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
   ${index}=  Convert To Integer  ${award_num}
+  Signin If Logged Out  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Run Keyword And Ignore Error  Choose File  ${locator.Awarding.UploadDisqualInput}   ${file_path}

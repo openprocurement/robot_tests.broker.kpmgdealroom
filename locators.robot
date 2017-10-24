@@ -11,6 +11,7 @@ ${locator.login.LoginButton}                                id=login-submit
 ${locator.toolbar.ExchangesButton}                          //*[@id='top-nav-exchange-dashboard']/a/div[2]
 ${locator.toolbar.CreateExchangeButton}                     //*[@id='top-nav-create-exchange']/a/div/span
 ${locator.toolbar.LogoutButton}                             id=toolbar-logout
+${locator.toolbar.LoginButton}                              xpath=//*[@href="/Login"]
 
 # exchange toolbar
 ${locator.exchangeToolbar.Details}                          id=li-exchange-toolbar-assets
