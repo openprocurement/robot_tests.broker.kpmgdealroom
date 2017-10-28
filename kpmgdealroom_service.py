@@ -21,7 +21,7 @@ UNITS_NAME_DICT = {
     'box': u'ящик',
     'trip': u'рейс',
     'tonne': u'тони',
-    'metresquared': u'метри квадратні',
+    'metre squared': u'метри квадратні',
     'kilometre': u'кілометри',
     'piece': u'штуки',
     'month': u'місяць',
@@ -92,8 +92,7 @@ def convert_procurement_type(proc_type):
 
 
 def extract_unit_name(value):
-    temp = value.split('\n')    # this is temporary.  Refactor after HTML page optimization
-    return temp[1].replace(' ', '').replace(')', '').split('(')[0]
+    return value.split('\n')[-1]  # this is temporary.  Refactor after HTML page optimization
 
 
 def extract_procuring_entity_name(value):
