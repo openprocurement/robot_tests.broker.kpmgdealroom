@@ -222,7 +222,7 @@ Filter Auction
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
-  Page Should Contain  ${tender_uaid}
+  Element Should Be Visible  //*[contains(text(), "${tender_uaid}")]
 
 Search Auction If Modified
   [Arguments]  ${last_mod_date}  ${username}  ${tender_uaid}
