@@ -211,9 +211,17 @@ Set Interested And Filter Auction In My Auctions
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
 
 Filter Auction
-  [Arguments]  ${tender_uaid}    ${search_btn_locator}
+  [Arguments]  ${tender_uaid}  ${search_btn_locator}
   Wait Until Keyword Succeeds  40 x  5 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
+  Input Auction Id And Click Search Button  ${tender_uaid}  ${search_btn_locator}
+  ${auction_id_is_visible}=  Run Keyword And Return Status  Element Should Be Visible  //*[contains(text(), "${tender_uaid}")]
+  Run Keyword If  not ${auction_id_is_visible}  Wait Until Keyword Succeeds  5 x  1 s  Run Keywords
+  ...  Input Auction Id And Click Search Button  ${tender_uaid}  ${search_btn_locator}
+  ...  AND  Element Should Be Visible  //*[contains(text(), "${tender_uaid}")]
+
+Input Auction Id And Click Search Button
+  [Arguments]  ${tender_uaid}  ${search_btn_locator}
   Wait Until Element Is Visible  ${search_btn_locator}
   Click Element  ${search_btn_locator}
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.exchangeList.FilterTextField}
@@ -222,7 +230,6 @@ Filter Auction
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
-  Element Should Be Visible  //*[contains(text(), "${tender_uaid}")]
 
 Search Auction If Modified
   [Arguments]  ${last_mod_date}  ${username}  ${tender_uaid}
@@ -486,6 +493,8 @@ Input Bid Value
 Approve Bid
   [Arguments]  ${username}  ${tender_uaid}
   Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=admin
+  Set Window Position  @{USERS.users['${username}']['position']}
+  Set Window Size      @{USERS.users['${username}']['size']}
   Switch Browser  admin
   Wait Until Element Is Visible  ${locator.login.EmailField}  10
   Input text  ${locator.login.EmailField}  kdruser104@kpmg.co.uk
