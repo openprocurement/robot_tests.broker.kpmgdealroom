@@ -77,8 +77,8 @@ Add Item
   Wait Until Element Is Visible  ${locator.assetDetails.items.description}  20
   Input Text  ${locator.assetDetails.items.description}  ${item.description}
   Input Text  ${locator.assetDetails.items.quantity}  ${item.quantity}
-  Click Element  xpath=//*[@id="_AssetUnit${index}_dropdown"]/div[2]
-  Click Element  xpath=//*[@id="_AssetUnit${index}_dropdown"]/descendant::a[@data-value="${item.unit.code}"]
+  Click Element  xpath=//*[@id="_AssetUnit_${index}___dropdown"]/div[2]
+  Click Element  xpath=//*[@id="_AssetUnit_${index}___dropdown"]/descendant::a[@data-value="${item.unit.code}"]
   Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
   Input Text  ${locator.assetDetails.items.classification.code}  ${item.classification.id}
   Input Text  ${locator.assetDetails.items.address1}  ${item.deliveryAddress.streetAddress}
@@ -198,7 +198,7 @@ Search Auction As Tender_owner
   [Arguments]  ${tender_uaid}
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Execute Javascript  $('a').css({display: "block"})
-  Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td[text()="ProzorroInternal"]/preceding-sibling::td/a[contains(@href,"/Exchange/")]  10
+  Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td[text()="Prozorro"]/preceding-sibling::td/a[contains(@href,"/Exchange/")]  10
 
 Set Interested And Filter Auction In My Auctions
   [Arguments]  ${tender_uaid}
