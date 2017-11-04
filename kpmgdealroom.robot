@@ -122,7 +122,7 @@ Add Item
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
   Wait Until Element Is Visible  ${locator.createExchange.ClientSelector.Prozorro}  2
   Click Element  ${locator.createExchange.ClientSelector.Prozorro}
-  Wait Until Keyword Succeeds  10 x  1 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  10 x  3 s  JQuery Ajax Should Complete
   Input Text  ${locator.createExchange.Name}  ${tender_data.data.title}
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
@@ -209,6 +209,7 @@ Set Interested And Filter Auction In My Auctions
   Wait Until Element Is Visible  xpath=//*[text()="${tender_uaid}"]/../../descendant::label[@class="prozorro-synch"]
   Click Element  ${locator.exchangeList.MyExchangesTab}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  Reload Page
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
 
 Filter Auction
