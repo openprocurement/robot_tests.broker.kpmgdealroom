@@ -206,6 +206,7 @@ Set Interested And Filter Auction In My Auctions
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Click Element  xpath=//*[text()="${tender_uaid}"]/../../descendant::label[@class="prozorro-synch"]
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  Wait Until Element Is Visible  xpath=//*[text()="${tender_uaid}"]/../../descendant::label[@class="prozorro-synch"]
   Click Element  ${locator.exchangeList.MyExchangesTab}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
@@ -214,14 +215,6 @@ Filter Auction
   [Arguments]  ${tender_uaid}  ${search_btn_locator}
   Wait Until Keyword Succeeds  40 x  5 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
-  Input Auction Id And Click Search Button  ${tender_uaid}  ${search_btn_locator}
-  ${auction_id_is_visible}=  Run Keyword And Return Status  Element Should Be Visible  //*[contains(text(), "${tender_uaid}")]
-  Run Keyword If  not ${auction_id_is_visible}  Wait Until Keyword Succeeds  5 x  1 s  Run Keywords
-  ...  Input Auction Id And Click Search Button  ${tender_uaid}  ${search_btn_locator}
-  ...  AND  Element Should Be Visible  //*[contains(text(), "${tender_uaid}")]
-
-Input Auction Id And Click Search Button
-  [Arguments]  ${tender_uaid}  ${search_btn_locator}
   Wait Until Element Is Visible  ${search_btn_locator}
   Click Element  ${search_btn_locator}
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.exchangeList.FilterTextField}
@@ -230,6 +223,7 @@ Input Auction Id And Click Search Button
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
+  Element Should Be Visible  xpath=//td[contains(text(), ${tender_uaid})]
 
 Search Auction If Modified
   [Arguments]  ${last_mod_date}  ${username}  ${tender_uaid}
@@ -552,7 +546,7 @@ Approve Bid
   Choose File  ${locator.Awarding.UploadProtocolInput}  ${filepath}
   Click Element  ${locator.Awarding.UploadFileButton}
   Click Element  ${locator.Awarding.NextStatusButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Payment")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Payment")]
 
 Підтвердити наявність протоколу аукціону
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}
@@ -577,7 +571,7 @@ Approve Bid
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Click Element  ${locator.Awarding.NextStatusButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Active")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Active")]
 
 Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}  ${description}
@@ -589,7 +583,7 @@ Approve Bid
   Run Keyword And Ignore Error  Choose File  ${locator.Awarding.UploadDisqualInput}   ${file_path}
   Input Text  ${locator.Awarding.DisqualReason}  Some disqualification reason text
   Click Element  ${locator.Awarding.DisqualButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
   Remove File  ${file_path}
 
 # Cancellation of the decision of the qualification commission
