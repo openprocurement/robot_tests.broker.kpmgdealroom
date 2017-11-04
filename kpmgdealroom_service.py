@@ -48,6 +48,14 @@ PROCUREMENT_TYPE = {
     'Dutch Auction': 'dgfInsider'
 }
 
+AWARD_STATE_DICT = {
+    'Verification': 'pending.verification',
+    'Waiting': 'pending.waiting',
+    'Payment': 'pending.payment',
+    'Unsuccessful': 'unsuccessful',
+    'Cancelled': 'cancelled',
+    'Active': 'active'
+}
 
 def convert_date_to_dp_format(value, fieldname):
     if "dgfDecisionDate" in fieldname:
@@ -86,6 +94,8 @@ def convert_unit_name(name):
 def convert_auction_status(status):
     return AUCTION_STATE_DICT.get(status, status)
 
+def convert_award_status(status):
+    return AWARD_STATE_DICT.get(status, status)
 
 def convert_procurement_type(proc_type):
     return PROCUREMENT_TYPE.get(proc_type, proc_type)
@@ -123,6 +133,8 @@ def post_process_field(field_name, value):
         return_value = convert_auction_status(value)
     elif 'cancellations' in field_name and 'status'in field_name and value == 'Cancelled':
         return_value = 'active'
+    elif 'awards' in field_name and 'status'in field_name:
+        return_value = convert_award_status(value)
     else:
         return_value = value
     return return_value
