@@ -186,7 +186,7 @@ ${locator.exchangeList.FilteredSecondRow}  //*[@id='exchangeDashboardTable']/tab
 ${locator.exchangeList.MyExchangesTab}  xpath=//*[@aria-controls="exchangesTabStrip-1"]
 ${locator.exchangeList.ProzorroExchangesTab}  //li[2]/span[2]
 ${locator.exchangeList.ProzorroFilteredFirstRow}  //div[@id='prozorroExchangesTable']/table/tbody/tr/td[2]/a
-${locator.exchangeList.OwnerProzorroAuctionStatus}  xpath=//*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td[3]
+${locator.exchangeList.OwnerProzorroAuctionStatus}  xpath=//*[@id='exchangeDashboardTable']/table/tbody/tr[1]/td[3]
 
 
 # questions and answers
