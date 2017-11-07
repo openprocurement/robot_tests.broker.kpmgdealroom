@@ -102,7 +102,7 @@ def convert_procurement_type(proc_type):
 
 
 def extract_unit_name(value):
-    return value.split('\n')[-1]  # this is temporary.  Refactor after HTML page optimization
+    return value.split('\n')[-1]
 
 
 def extract_procuring_entity_name(value):

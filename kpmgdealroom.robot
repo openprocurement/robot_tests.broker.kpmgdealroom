@@ -285,7 +285,7 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${cancellation_reason}  ${document}  ${new_description}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
-  Click Element  ${locator.exchangeToolbar.Admin}
+  Wait And Click Element  ${locator.exchangeToolbar.Admin}  10
   Wait And Click Element  ${locator.exchangeAdmin.nav.Cancel}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.cancel.submitButton}  10
   Input Text  ${locator.exchangeAdmin.cancel.reason}  ${cancellation_reason}
@@ -492,7 +492,7 @@ Approve Bid
   Set Window Size      @{USERS.users['${username}']['size']}
   Switch Browser  admin
   Wait Until Element Is Visible  ${locator.login.EmailField}  10
-  Input text  ${locator.login.EmailField}  kdruser104@kpmg.co.uk
+  Input text  ${locator.login.EmailField}  kdruser104@gmail.com
   Input text  ${locator.login.PasswordField}  Deal12345
   Click Element  ${locator.login.LoginButton}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}  admin
