@@ -65,7 +65,7 @@ ${locator.createExchange.Name}                              id=Name
 ${locator.createExchange.SellerName}                        id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}                      id=SponsorEmail
 ${locator.createExchange.AdminEmails}                       id=PrincipalAdministratorEmails
-${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[2]
+${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[1]
 ${locator.createExchange.TypeSelector.Prozorro}             //*[@id="_TypeId_dropdown"]/descendant::*[@data-value="3"]/..
 ${locator.createExchange.StartDate}                         id=AuctionStartDateInput
 ${locator.createExchange.StartDateField}                    AuctionStartDate

@@ -47,6 +47,7 @@ Scroll And Click
 Click If Page Contains Element
   [Arguments]  ${locator}
   ${status}=  Run Keyword And Return Status  Element Should Be Visible  ${locator}
+  Wait Modal Animation  ${locator}
   Run Keyword If  ${status}  Click Element  ${locator}
 
 JQuery Ajax Should Complete
@@ -79,7 +80,7 @@ Add Item
   Input Text  ${locator.assetDetails.items.quantity}  ${item.quantity}
   Click Element  xpath=//*[@id="_AssetUnit_${index}___dropdown"]/div[2]
   Click Element  xpath=//*[@id="_AssetUnit_${index}___dropdown"]/descendant::a[@data-value="${item.unit.code}"]
-  Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
+  #Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
   Input Text  ${locator.assetDetails.items.classification.code}  ${item.classification.id}
   Input Text  ${locator.assetDetails.items.address1}  ${item.deliveryAddress.streetAddress}
   Input Text  ${locator.assetDetails.items.region}  ${item.deliveryAddress.region}
@@ -492,8 +493,8 @@ Approve Bid
   Set Window Size      @{USERS.users['${username}']['size']}
   Switch Browser  admin
   Wait Until Element Is Visible  ${locator.login.EmailField}  10
-  Input text  ${locator.login.EmailField}  kdruser104@gmail.com
-  Input text  ${locator.login.PasswordField}  Deal12345
+  Input text  ${locator.login.EmailField}  Bhanu.pasham@kpmg.co.uk
+  Input text  ${locator.login.PasswordField}  Admin1234
   Click Element  ${locator.login.LoginButton}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}  admin
   Click Element  ${locator.exchangeToolbar.Bids}
