@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import dateutil.parser
 import urllib
-import os
 from datetime import datetime
 from pytz import timezone
 from dateutil.tz import tzlocal
@@ -11,7 +10,7 @@ tzlocal = tzlocal()
 
 # asset units name translation dictionary
 UNITS_NAME_DICT = {
-    'pair' : u'пара',
+    'pair': u'пара',
     'litre': u'літр',
     'set': u'набір',
     'number of packs': u'пачок',
@@ -22,7 +21,7 @@ UNITS_NAME_DICT = {
     'box': u'ящик',
     'trip': u'рейс',
     'tonne': u'тони',
-    'metresquared': u'метри квадратні',
+    'metre squared': u'метри квадратні',
     'kilometre': u'кілометри',
     'piece': u'штуки',
     'month': u'місяць',
@@ -34,15 +33,29 @@ UNITS_NAME_DICT = {
 }
 
 AUCTION_STATE_DICT = {
-    'Tendering' : 'active.tendering',
-    'Auction' : 'active.auction',
-    'Qualification' : 'active.qualification',
-    'Awarded':'active.awarded',
-    'Unsuccessful' : 'unsuccessful',
+    'Tendering': 'active.tendering',
+    'Auction': 'active.auction',
+    'Qualification': 'active.qualification',
+    'Awarded': 'active.awarded',
+    'Unsuccessful': 'unsuccessful',
     'Completed': 'complete',
-    'Cancelled':'cancelled'
+    'Cancelled': 'cancelled'
 }
 
+PROCUREMENT_TYPE = {
+    'Other Assets': 'dgfOtherAssets',
+    'Financial Assets': 'dgfFinancialAssets',
+    'Dutch Auction': 'dgfInsider'
+}
+
+AWARD_STATE_DICT = {
+    'Verification': 'pending.verification',
+    'Waiting': 'pending.waiting',
+    'Payment': 'pending.payment',
+    'Unsuccessful': 'unsuccessful',
+    'Cancelled': 'cancelled',
+    'Active': 'active'
+}
 
 def convert_date_to_dp_format(value, fieldname):
     if "dgfDecisionDate" in fieldname:
@@ -55,6 +68,9 @@ def convert_date_to_dp_format(value, fieldname):
 def adapt_tender_data(tender_data, role):
     if role == 'tender_owner':
         tender_data['data']['procuringEntity']['name'] = u'Prozorro Seller Entity'
+        for i in range(len(tender_data['data']['items'])):
+            unit_name = list(UNITS_NAME_DICT.keys())[list(UNITS_NAME_DICT.values()).index(tender_data['data']['items'][i]['unit']['name'])]
+            tender_data['data']['items'][i]['unit']['name'] = unit_name
     return tender_data
 
 
@@ -78,10 +94,15 @@ def convert_unit_name(name):
 def convert_auction_status(status):
     return AUCTION_STATE_DICT.get(status, status)
 
+def convert_award_status(status):
+    return AWARD_STATE_DICT.get(status, status)
+
+def convert_procurement_type(proc_type):
+    return PROCUREMENT_TYPE.get(proc_type, proc_type)
+
 
 def extract_unit_name(value):
-    temp = value.split('\n')    # this is temporary.  Refactor after HTML page optimization
-    return temp[1].replace(' ', '').replace(')', '').split('(')[0]
+    return value.split('\n')[-1]
 
 
 def extract_procuring_entity_name(value):
@@ -92,6 +113,8 @@ def extract_procuring_entity_name(value):
 def post_process_field(field_name, value):
     if field_name == 'tenderAttempts':
         return_value = int(value.split(" ")[0])
+    elif field_name == 'procurementMethodType':
+        return_value = convert_procurement_type(value)
     elif 'quantity' in field_name:
         return_value = int(value)
     elif field_name == 'value.amount' or field_name == 'minimalStep.amount':
@@ -103,13 +126,15 @@ def post_process_field(field_name, value):
     elif field_name == 'value.valueAddedTaxIncluded':
         return_value = (str(value).lower() == 'true')
     elif field_name == 'procuringEntity.name':
-        return_value = extract_procuring_entity_name(value) #value.replace("Name:", "").strip()
+        return_value = extract_procuring_entity_name(value)
     elif 'Date' in field_name:
         return_value = convert_time_to_local(value)
     elif field_name == 'status':
         return_value = convert_auction_status(value)
     elif 'cancellations' in field_name and 'status'in field_name and value == 'Cancelled':
         return_value = 'active'
+    elif 'awards' in field_name and 'status'in field_name:
+        return_value = convert_award_status(value)
     else:
         return_value = value
     return return_value

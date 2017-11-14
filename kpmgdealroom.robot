@@ -19,14 +19,35 @@ Login
   Input text  ${locator.login.PasswordField}  ${USERS.users['${username}'].password}
   Click Element  ${locator.login.LoginButton}
 
+Signin If Logged Out
+  [Arguments]  ${username}
+  Reload Page
+  ${is_logged}=  Run Keyword And Return Status  Page Should Contain Element  ${locator.toolbar.LoginButton}
+  Run Keyword If  ${is_logged}  Run Keywords
+  ...  Click Element  ${locator.toolbar.LoginButton}
+  ...  AND  Login  ${username}
+
+
 Wait And Click Element
   [Arguments]  ${locator}  ${delay}
   Wait Until Keyword Succeeds  ${delay} x  1 s  Element Should Be Visible  ${locator}
   Click Element  ${locator}
 
+Scroll To Element
+  [Arguments]  ${locator}
+  Wait Until Page Contains Element  ${locator}  10
+  ${elem_vert_pos}=  Get Vertical Position  ${locator}
+  Execute Javascript  window.scrollTo(0,${elem_vert_pos - 200});
+
+Scroll And Click
+  [Arguments]  ${locator}
+  Scroll To Element  ${locator}
+  Click Element  ${locator}
+
 Click If Page Contains Element
   [Arguments]  ${locator}
   ${status}=  Run Keyword And Return Status  Element Should Be Visible  ${locator}
+  Wait Modal Animation  ${locator}
   Run Keyword If  ${status}  Click Element  ${locator}
 
 JQuery Ajax Should Complete
@@ -57,9 +78,9 @@ Add Item
   Wait Until Element Is Visible  ${locator.assetDetails.items.description}  20
   Input Text  ${locator.assetDetails.items.description}  ${item.description}
   Input Text  ${locator.assetDetails.items.quantity}  ${item.quantity}
-  Click Element  xpath=//*[@id="_AssetUnit${index}_dropdown"]/div[2]
-  Click Element  xpath=//*[@id="_AssetUnit${index}_dropdown"]/descendant::a[@data-value="${item.unit.code}"]
-  Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
+  Click Element  xpath=//*[@id="_AssetUnit_${index}___dropdown"]/div[2]
+  Click Element  xpath=//*[@id="_AssetUnit_${index}___dropdown"]/descendant::a[@data-value="${item.unit.code}"]
+  #Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
   Input Text  ${locator.assetDetails.items.classification.code}  ${item.classification.id}
   Input Text  ${locator.assetDetails.items.address1}  ${item.deliveryAddress.streetAddress}
   Input Text  ${locator.assetDetails.items.region}  ${item.deliveryAddress.region}
@@ -74,9 +95,11 @@ Add Item
 # Prepare client for user
 Підготувати клієнт для користувача
   [Arguments]  ${username}
+  Set Suite Variable  ${my_alias}  ${username + 'CUSTOM'}
   Set Global Variable   ${KPMG_MODIFICATION_DATE}   ${EMPTY}
-  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}
-  Maximize Browser Window
+  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${my_alias}
+  Set Window Position  @{USERS.users['${username}']['position']}
+  Set Window Size      @{USERS.users['${username}']['size']}
   Run Keyword If  '${username}' != 'kpmgdealroom_Viewer'  Login  ${username}
 
 # Prepare data for tender announcement
@@ -95,12 +118,12 @@ Add Item
   ${step_rate}=  convert_number_to_currency_str  ${tender_data.data.minimalStep.amount}
   ${dp_auction_start_date}=  convert_date_to_dp_format  ${tender_data.data.auctionPeriod.startDate}  Date
   ${dp_dgf_decision_date}=  convert_date_to_dp_format  ${tender_data.data.dgfDecisionDate}  Date
-  Switch Browser  ${username}
+  Switch Browser  ${my_alias}
   Wait And Click Element  ${locator.toolbar.CreateExchangeButton}  5
   Wait And Click Element  ${locator.createExchange.ClientSelector}  5
   Wait Until Element Is Visible  ${locator.createExchange.ClientSelector.Prozorro}  2
   Click Element  ${locator.createExchange.ClientSelector.Prozorro}
-  Wait Until Keyword Succeeds  10 x  1 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  10 x  3 s  JQuery Ajax Should Complete
   Input Text  ${locator.createExchange.Name}  ${tender_data.data.title}
   Input Text  ${locator.createExchange.SponsorEmail}  ${USERS.users['${username}'].login}
   Input Text  ${locator.createExchange.AdminEmails}  ${USERS.users['${username}'].login}
@@ -150,9 +173,10 @@ Check Auction Status
 
 # Search for a bid identifier (KDR-1077)
 Пошук тендера по ідентифікатору
-  [Arguments]  ${username}  ${tender_uaid}
+  [Arguments]  ${username}  ${tender_uaid}  ${alias}=${my_alias}
+  Switch Browser  ${alias}
   Go to  ${USERS.users['${username}'].default_page}
-  Run Keyword  Search Auction As ${ROLE}  ${tender_uaid}
+  Run Keyword  Search Auction As ${ROLE.replace("1","")}  ${tender_uaid}
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
   Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
@@ -163,11 +187,11 @@ Search Auction As Viewer
   Execute Javascript  $('a').css({display: "block"})
   Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/following-sibling::td/a[contains(@href,"/ExternalExchangeDetails/")]  10
 
-Search Auction As Provider1
+Search Auction As Provider
   [Arguments]  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Run Keyword If  not ${status}  Set Interested And Filter Auction In My Auctions   ${tender_uaid}
-  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  Wait Until Keyword Succeeds  40 x  5 s  JQuery Ajax Should Complete
   Execute Javascript  $('a').css({display: "block"})
   Wait And Click Element  xpath=//*[text()="${tender_uaid}"]/preceding-sibling::td/a[contains(@href,"ExternalExchange")]  10
 
@@ -183,13 +207,15 @@ Set Interested And Filter Auction In My Auctions
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
   Click Element  xpath=//*[text()="${tender_uaid}"]/../../descendant::label[@class="prozorro-synch"]
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  Wait Until Element Is Visible  xpath=//*[text()="${tender_uaid}"]/../../descendant::label[@class="prozorro-synch"]
   Click Element  ${locator.exchangeList.MyExchangesTab}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  Reload Page
   Filter Auction  ${tender_uaid}  ${locator.exchangeList.FilterByIdButton.authUser}
 
 Filter Auction
-  [Arguments]  ${tender_uaid}    ${search_btn_locator}
-  Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
+  [Arguments]  ${tender_uaid}  ${search_btn_locator}
+  Wait Until Keyword Succeeds  40 x  5 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
   Wait Until Element Is Visible  ${search_btn_locator}
   Click Element  ${search_btn_locator}
@@ -199,7 +225,7 @@ Filter Auction
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
-  Page Should Contain  ${tender_uaid}
+  Element Should Be Visible  xpath=//td[contains(text(), ${tender_uaid})]
 
 Search Auction If Modified
   [Arguments]  ${last_mod_date}  ${username}  ${tender_uaid}
@@ -212,12 +238,13 @@ Search Auction If Modified
 # Refresh the page with the tender
 Оновити сторінку з тендером
   [Arguments]  ${username}  ${tender_uaid}
-  Switch Browser  ${username}
+  Switch Browser  ${my_alias}
   Reload Page
 
 # Get information about the tender
 Отримати інформацію із тендера
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+  Switch Browser  ${my_alias}
   Search Auction If Modified  ${TENDER['LAST_MODIFICATION_DATE']}  ${username}  ${tender_uaid}
   # get value
   Run Keyword If  'startDate' in '${field_name}' or 'endDate' in '${field_name}'  Click Element  ${locator.exchangeToolbar.Bids}
@@ -259,7 +286,7 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${cancellation_reason}  ${document}  ${new_description}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
-  Click Element  ${locator.exchangeToolbar.Admin}
+  Wait And Click Element  ${locator.exchangeToolbar.Admin}  10
   Wait And Click Element  ${locator.exchangeAdmin.nav.Cancel}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.cancel.submitButton}  10
   Input Text  ${locator.exchangeAdmin.cancel.reason}  ${cancellation_reason}
@@ -437,12 +464,12 @@ Search Auction If Modified
 # Submit a bid
 Подати цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}  ${bid}
-  ${amount}=  Convert To Integer  ${bid.data.value.amount}
+  Switch Browser  ${my_alias}
+  Signin If Logged Out  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
-  Click Element  ${locator.Bidding.InitialBiddingLink}
-  Wait until Element Is Visible  ${locator.Bidding.BiddingAmount}  10
-  Input Text  ${locator.Bidding.BiddingAmount}  ${amount}
+  Scroll And Click  ${locator.Bidding.InitialBiddingLink}
+  Run Keyword If  'Insider' not in '${MODE}'  Input Bid Value  ${bid}
   Click Element  ${locator.Bidding.SubmitBidButton}
   Wait Until Element Is Visible  ${locator.Bidding.ConfirmBidPassword}  10
   Wait Modal Animation  ${locator.Bidding.ConfirmBidPassword}
@@ -453,28 +480,38 @@ Search Auction If Modified
   Run Keyword If  '${MODE}' == 'dgfOtherAssets'  Approve Bid  ${username}  ${tender_uaid}
   [Return]  ${bid}
 
+Input Bid Value
+  [Arguments]  ${bid}
+  ${amount}=  Convert To Integer  ${bid.data.value.amount}
+  Wait until Element Is Visible  ${locator.Bidding.BiddingAmount}  10
+  Input Text  ${locator.Bidding.BiddingAmount}  ${amount}
+
 Approve Bid
   [Arguments]  ${username}  ${tender_uaid}
   Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=admin
+  Set Window Position  @{USERS.users['${username}']['position']}
+  Set Window Size      @{USERS.users['${username}']['size']}
   Switch Browser  admin
   Wait Until Element Is Visible  ${locator.login.EmailField}  10
-  Input text  ${locator.login.EmailField}  kdruser104@kpmg.co.uk
-  Input text  ${locator.login.PasswordField}  Admin12345
+  Input text  ${locator.login.EmailField}  Bhanu.pasham@kpmg.co.uk
+  Input text  ${locator.login.PasswordField}  Admin1234
   Click Element  ${locator.login.LoginButton}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}  admin
   Click Element  ${locator.exchangeToolbar.Bids}
-  Click Element  ${locator.Admin.CheckBoxEligible}
-  Click Element  ${locator.Admin.CheckBoxQualified}
-  Click Element  ${locator.PageElements.SaveButton}
-  Switch Browser  ${username}
+  Scroll And Click  ${locator.Admin.CheckBoxEligible}
+  Scroll And Click  ${locator.Admin.CheckBoxQualified}
+  Scroll And Click  ${locator.PageElements.SaveButton}
+  Switch Browser  ${my_alias}
 
 # Upload a financial license
 Завантажити фінансову ліцензію
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}
+  Switch Browser  ${my_alias}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
+  Scroll And Click  ${locator.Bidding.InitialBiddingLink}
   Choose File  ${locator.Bidding.FinancialFile}   ${filepath}
-  Click Element  ${locator.Bidding.UploadFilesButton}
+  Scroll And Click  ${locator.Bidding.UploadFilesButton}
   Approve Bid  ${username}  ${tender_uaid}
 
 # Cancel your bid
@@ -489,7 +526,8 @@ Approve Bid
 
 Отримати посилання на аукціон для учасника
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
-  Run Keyword And Ignore Error  Login  ${username}
+  Switch Browser  ${my_alias}
+  Signin If Logged Out  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Wait Until Keyword Succeeds  20 x  60 s  Run Keywords
@@ -510,7 +548,7 @@ Approve Bid
   Choose File  ${locator.Awarding.UploadProtocolInput}  ${filepath}
   Click Element  ${locator.Awarding.UploadFileButton}
   Click Element  ${locator.Awarding.NextStatusButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Payment")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Payment")]
 
 Підтвердити наявність протоколу аукціону
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}
@@ -535,18 +573,19 @@ Approve Bid
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Click Element  ${locator.Awarding.NextStatusButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Active")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Active")]
 
 Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}  ${description}
   ${file_path}  ${file_name}  ${file_content}=  create_fake_doc
   ${index}=  Convert To Integer  ${award_num}
+  Signin If Logged Out  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Run Keyword And Ignore Error  Choose File  ${locator.Awarding.UploadDisqualInput}   ${file_path}
   Input Text  ${locator.Awarding.DisqualReason}  Some disqualification reason text
   Click Element  ${locator.Awarding.DisqualButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody[2]/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
   Remove File  ${file_path}
 
 # Cancellation of the decision of the qualification commission

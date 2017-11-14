@@ -11,6 +11,7 @@ ${locator.login.LoginButton}                                id=login-submit
 ${locator.toolbar.ExchangesButton}                          //*[@id='top-nav-exchange-dashboard']/a/div[2]
 ${locator.toolbar.CreateExchangeButton}                     //*[@id='top-nav-create-exchange']/a/div/span
 ${locator.toolbar.LogoutButton}                             id=toolbar-logout
+${locator.toolbar.LoginButton}                              xpath=//*[@href="/Login"]
 
 # exchange toolbar
 ${locator.exchangeToolbar.Details}                          id=li-exchange-toolbar-assets
@@ -64,13 +65,13 @@ ${locator.createExchange.Name}                              id=Name
 ${locator.createExchange.SellerName}                        id=sellerDisplayName
 ${locator.createExchange.SponsorEmail}                      id=SponsorEmail
 ${locator.createExchange.AdminEmails}                       id=PrincipalAdministratorEmails
-${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[2]
+${locator.createExchange.TypeSelector}                      //div[@id='_TypeId_dropdown']/div[1]
 ${locator.createExchange.TypeSelector.Prozorro}             //*[@id="_TypeId_dropdown"]/descendant::*[@data-value="3"]/..
 ${locator.createExchange.StartDate}                         id=AuctionStartDateInput
 ${locator.createExchange.StartDateField}                    AuctionStartDate
 ${locator.createExchange.DgfCategorySelector}               //div[@id='_ExchangeDetails.ProzorroCategory_dropdown']/div[2]/i
-${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'dgfFinancialAssets')]
-${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'dgfOtherAssets')]
+${locator.createExchange.DgfCategorySelector.dgfFinancialAssets}     //a[contains(text(),'Financial Assets')]
+${locator.createExchange.DgfCategorySelector.dgfOtherAssets}         //a[contains(text(), 'Other Assets')]
 ${locator.createExchange.GuaranteeAmount}                   id=guaranteeAmount
 ${locator.createExchange.StartPrice}                        id=startingPrice
 ${locator.createExchange.MinimumStepValue}                  xpath=//input[contains(@id,"inimumStepValue")]
@@ -145,7 +146,7 @@ ${locator.viewExchange.value.valueAddedTaxIncluded}  id=vatIncluded
 
 ${locator.viewExchange.procuringEntity.name}  xpath=//*[text()="Seller Address"]/..
 
-${locator.viewExchange.auctionUrl}  //a[contains(@href,"/auctions/")]
+${locator.viewExchange.auctionUrl}  //a[contains(@href,"auctions/")]
 
 # auction dates on bids page
 ${locator.viewExchange.auctionPeriod.startDate}  id=auctionPeriodStart
@@ -185,7 +186,7 @@ ${locator.exchangeList.FilteredSecondRow}  //*[@id='exchangeDashboardTable']/tab
 ${locator.exchangeList.MyExchangesTab}  xpath=//*[@aria-controls="exchangesTabStrip-1"]
 ${locator.exchangeList.ProzorroExchangesTab}  //li[2]/span[2]
 ${locator.exchangeList.ProzorroFilteredFirstRow}  //div[@id='prozorroExchangesTable']/table/tbody/tr/td[2]/a
-${locator.exchangeList.OwnerProzorroAuctionStatus}  xpath=//*[@id='exchangeDashboardTable']/table/tbody/tr[2]/td[3]
+${locator.exchangeList.OwnerProzorroAuctionStatus}  xpath=//*[@id='exchangeDashboardTable']/table/tbody/tr[1]/td[3]
 
 
 # questions and answers
@@ -249,4 +250,4 @@ ${locator.PageElements.LoadingImage}        css=div.k-loading-image
 ${locator.PageElements.successActionAlert}  xpath=//*[contains(@class,"alert-success")]
 ${locator.PageElements.ModalFadeIn}         xpath=//*[@class="modal fade in"]
 ${locator.PageElements.ModalOk}             xpath=//*[text()="Ok"]
-${locator.PageElements.SaveButton}          xpath=//button[text()="Save"]
+${locator.PageElements.SaveButton}          xpath=//button[contains(text(),"Save")]
