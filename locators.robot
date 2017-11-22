@@ -243,6 +243,8 @@ ${locator.Dataroom.UploadFileButton}        xpath=//button[contains(@class,"k-up
 ${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close
 ${locator.Dataroom.UploadFileStatus.Done}   xpath=//*[contains(@class,"k-upload-status-total") and contains(text(),"Done")]
 ${locator.Dataroom.DocumentRaw}             //*[contains(@id,"DataroomDocument")]/descendant::tbody/tr
+${locator.Dataroom.UploadCompleteMessage}   //*[contains(@class, "upload-complete-message")]
+${locator.Dataroom.BusyIndicator}           id=dataroom-upload-progress-icon
 
 # page elements
 ${locator.PageElements.Dropdown.Opened}     xpath=//*[contains(@class, "dropdown") and contains(@class, "open")]

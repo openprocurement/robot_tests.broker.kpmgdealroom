@@ -320,8 +320,9 @@ Search Auction If Modified
   Wait Until Page Contains Element  ${locator.PageElements.Dropdown.Opened} 
   Wait And Click Element  xpath=//a[@data-value='${documentType.replace("tenderNotice","notice")}']  10
   Wait And Click Element  ${locator.Dataroom.UploadFileButton}  10
+  Wait Until Element Is Visible  ${locator.Dataroom.UploadCompleteMessage}  30
   Wait And Click Element  ${locator.Dataroom.CloseButton}  10
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  ${locator.Dataroom.UploadFileStatus.Done}
+  Wait Until Keyword Succeeds  60 x  1 s  Element Should Not Be Visible  ${locator.Dataroom.BusyIndicator}
 
 # Upload a document in a tender with a type
 Завантажити документ в тендер з типом
