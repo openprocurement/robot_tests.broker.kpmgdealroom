@@ -27,7 +27,6 @@ Signin If Logged Out
   ...  Click Element  ${locator.toolbar.LoginButton}
   ...  AND  Login  ${username}
 
-
 Wait And Click Element
   [Arguments]  ${locator}  ${delay}
   Wait Until Keyword Succeeds  ${delay} x  1 s  Element Should Be Visible  ${locator}
@@ -80,7 +79,6 @@ Add Item
   Input Text  ${locator.assetDetails.items.quantity}  ${item.quantity}
   Click Element  xpath=//*[@id="_AssetUnit_${index}___dropdown"]/div[2]
   Click Element  xpath=//*[@id="_AssetUnit_${index}___dropdown"]/descendant::a[@data-value="${item.unit.code}"]
-  #Input Text  ${locator.assetDetails.items.classification.description}  ${item.classification.description}
   Input Text  ${locator.assetDetails.items.classification.code}  ${item.classification.id}
   Input Text  ${locator.assetDetails.items.address1}  ${item.deliveryAddress.streetAddress}
   Input Text  ${locator.assetDetails.items.region}  ${item.deliveryAddress.region}
@@ -88,6 +86,9 @@ Add Item
   Input Text  ${locator.assetDetails.items.country}  ${item.deliveryAddress.countryName_en}
   Input Text  ${locator.assetDetails.items.postcode}  ${item.deliveryAddress.postalCode}
 
+Dismiss Exchange Rules Dialog
+  Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
+  Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
 #------------------------------------------------------------------------------
 #  LOT OPERATIONS - СТВОРЕННЯ ТЕНДЕРУ
 #------------------------------------------------------------------------------
@@ -145,7 +146,8 @@ Add Item
   Input Text  ${locator.createExchange.description}  ${tender_data.data.description}
   Select From KPMG List By Data-Value  _ExchangeDetails.TenderAttempts_dropdown  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
-  Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
+  Dismiss Exchange Rules Dialog
+  # Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
   :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
   Click Element  ${locator.addAsset.SaveButton}
@@ -177,8 +179,9 @@ Check Auction Status
   Switch Browser  ${alias}
   Go to  ${USERS.users['${username}'].default_page}
   Wait Until Keyword Succeeds  5 x  5 s  Search Auction As ${ROLE.replace("1","")}  ${tender_uaid}
-  Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
-  Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
+  Dismiss Exchange Rules Dialog
+  #Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
+  #Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
 
 Search Auction As Viewer
@@ -285,7 +288,8 @@ Search Auction If Modified
 Скасувати закупівлю
   [Arguments]  ${username}  ${tender_uaid}  ${cancellation_reason}  ${document}  ${new_description}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
+  Dismiss Exchange Rules Dialog
+  #Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Admin}  10
   Wait And Click Element  ${locator.exchangeAdmin.nav.Cancel}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.cancel.submitButton}  10
