@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+
+# This script is provided by KPMG to ProZorro for the purpose of carrying out automated tests on
+# the KPMG Deal Room testing system, in accordance with the rules of compliance for participating
+# in the ProZorro.Sale process, as set out by the Ministry of Economic Development and Trade of
+# Ukraine, Transparency International Ukraine, the Deposit Guarantee Fund and the National Bank of
+# Ukraine - https://prozorro.sale/en/aim. For more information on the transparent public testing
+# procedures please visit here https://github.com/openprocurement/"
+
 import dateutil.parser
 import urllib
 from datetime import datetime
 from pytz import timezone
 from dateutil.tz import tzlocal
-
 
 tzlocal = tzlocal()
 

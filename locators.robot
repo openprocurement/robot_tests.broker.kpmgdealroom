@@ -1,3 +1,10 @@
+# This script is provided by KPMG to ProZorro for the purpose of carrying out automated tests on
+# the KPMG Deal Room testing system, in accordance with the rules of compliance for participating
+# in the ProZorro.Sale process, as set out by the Ministry of Economic Development and Trade of
+# Ukraine, Transparency International Ukraine, the Deposit Guarantee Fund and the National Bank of
+# Ukraine - https://prozorro.sale/en/aim. For more information on the transparent public testing
+# procedures please visit here https://github.com/openprocurement/"
+
 *** Settings ***
 Resource    kpmgdealroom.robot
 
@@ -237,7 +244,6 @@ ${locator.Awarding.CompleteAuctionButton}   id=complete-auction
 ${locator.Dataroom.DataRoom}                id=li-exchange-toolbar-data-room
 ${locator.Dataroom.UploadIcon}              id=dataroom-upload
 ${locator.Dataroom.RulesDialogYes}          id=exchangerules-dialog-yes
-${locator.Dataroom.UploadSelect}            id=dataroom-upload
 ${locator.Dataroom.SelectFiles}             id=files
 ${locator.Dataroom.UploadFileButton}        xpath=//button[contains(@class,"k-upload-selected")]
 ${locator.Dataroom.CloseButton}             id=dataroom-upload-btn-close

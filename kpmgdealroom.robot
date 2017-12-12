@@ -1,3 +1,10 @@
+# This script is provided by KPMG to ProZorro for the purpose of carrying out automated tests on
+# the KPMG Deal Room testing system, in accordance with the rules of compliance for participating
+# in the ProZorro.Sale process, as set out by the Ministry of Economic Development and Trade of
+# Ukraine, Transparency International Ukraine, the Deposit Guarantee Fund and the National Bank of
+# Ukraine - https://prozorro.sale/en/aim. For more information on the transparent public testing
+# procedures please visit here https://github.com/openprocurement/"
+
 *** Settings ***
 Library  String
 Library  Selenium2Library
@@ -89,6 +96,14 @@ Add Item
 Dismiss Exchange Rules Dialog
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
   Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
+
+Open Dataroom
+  [Arguments]  ${username}  ${tender_uaid}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
+  Wait And Click Element  ${locator.Dataroom.UploadIcon}  60
+  Wait Modal Animation  ${locator.Dataroom.SelectFiles}
+
 #------------------------------------------------------------------------------
 #  LOT OPERATIONS - СТВОРЕННЯ ТЕНДЕРУ
 #------------------------------------------------------------------------------
@@ -147,7 +162,6 @@ Dismiss Exchange Rules Dialog
   Select From KPMG List By Data-Value  _ExchangeDetails.TenderAttempts_dropdown  ${tender_data.data.tenderAttempts}
   Click Element  ${locator.createExchange.SubmitButton}
   Dismiss Exchange Rules Dialog
-  # Wait And Click Element  ${locator.Dataroom.RulesDialogYes}  20
   :FOR  ${index}  IN RANGE  ${number_of_items}
   \  Add Item  ${items[${index}]}  ${index}
   Click Element  ${locator.addAsset.SaveButton}
@@ -173,15 +187,13 @@ Check Auction Status
   ${status}=  Get Text  ${locator.exchangeList.OwnerProzorroAuctionStatus}
   Should Be Equal  ${expected_status}  ${status}
 
-# Search for a bid identifier (KDR-1077)
+# Search for a bid identifier
 Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}  ${alias}=${my_alias}
   Switch Browser  ${alias}
   Go to  ${USERS.users['${username}'].default_page}
   Wait Until Keyword Succeeds  5 x  5 s  Search Auction As ${ROLE.replace("1","")}  ${tender_uaid}
   Dismiss Exchange Rules Dialog
-  #Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
-  #Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
 
 Search Auction As Viewer
@@ -289,7 +301,6 @@ Search Auction If Modified
   [Arguments]  ${username}  ${tender_uaid}  ${cancellation_reason}  ${document}  ${new_description}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Dismiss Exchange Rules Dialog
-  #Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Admin}  10
   Wait And Click Element  ${locator.exchangeAdmin.nav.Cancel}  5
   Wait Until Element Is Visible  ${locator.exchangeAdmin.cancel.submitButton}  10
@@ -315,10 +326,11 @@ Search Auction If Modified
 # Upload document
 Завантажити документ
   [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${documentType}=technicalSpecifications
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  Wait And Click Element  ${locator.Dataroom.UploadIcon}  60
-  Wait Modal Animation  ${locator.Dataroom.SelectFiles}
+  Wait Until Keyword Succeeds   10 x  5 s  Run Keyword  Open Dataroom  ${username}  ${tender_uaid}
+  #kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  #Wait And Click Element  ${locator.Dataroom.Dataroom}  10
+  #Wait And Click Element  ${locator.Dataroom.UploadIcon}  60
+  #Wait Modal Animation  ${locator.Dataroom.SelectFiles}
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
   Wait Until Page Contains Element  ${locator.PageElements.Dropdown.Opened} 
