@@ -163,7 +163,6 @@ Publish Auction
   Wait Until Page Contains Element  ${locator.exchangeAdmin.publish.publishedID}  30
   ${auction_id}=  Get Text  ${locator.exchangeAdmin.publish.publishedID}
   Set Test Variable  ${auction_id}
-  Sleep  20s
 
 Check Auction Status
   [Arguments]  ${username}  ${expected_status}
@@ -177,7 +176,7 @@ Check Auction Status
   [Arguments]  ${username}  ${tender_uaid}  ${alias}=${my_alias}
   Switch Browser  ${alias}
   Go to  ${USERS.users['${username}'].default_page}
-  Run Keyword  Search Auction As ${ROLE.replace("1","")}  ${tender_uaid}
+  Wait Until Keyword Succeeds  5 x  5 s  Search Auction As ${ROLE.replace("1","")}  ${tender_uaid}
   Click If Page Contains Element  ${locator.Dataroom.RulesDialogYes}
   Wait Until Element Is Not Visible  ${locator.Dataroom.RulesDialogYes}
   Wait And Click Element  ${locator.exchangeToolbar.Details}  5
