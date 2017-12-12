@@ -163,6 +163,7 @@ Publish Auction
   Wait Until Page Contains Element  ${locator.exchangeAdmin.publish.publishedID}  30
   ${auction_id}=  Get Text  ${locator.exchangeAdmin.publish.publishedID}
   Set Test Variable  ${auction_id}
+  Sleep  20s
 
 Check Auction Status
   [Arguments]  ${username}  ${expected_status}
