@@ -327,10 +327,6 @@ Search Auction If Modified
 Завантажити документ
   [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${documentType}=technicalSpecifications
   Wait Until Keyword Succeeds   10 x  5 s  Run Keyword  Open Dataroom  ${username}  ${tender_uaid}
-  #kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  #Wait And Click Element  ${locator.Dataroom.Dataroom}  10
-  #Wait And Click Element  ${locator.Dataroom.UploadIcon}  60
-  #Wait Modal Animation  ${locator.Dataroom.SelectFiles}
   Choose File  ${locator.Dataroom.SelectFiles}  ${filepath}
   Wait And Click Element  xpath=//*[@id="UploadDocumentTypeDropdown"]/descendant::*[@data-toggle="dropdown"][2]  10
   Wait Until Page Contains Element  ${locator.PageElements.Dropdown.Opened} 
@@ -339,6 +335,8 @@ Search Auction If Modified
   Wait Until Element Is Visible  ${locator.Dataroom.UploadCompleteMessage}  30
   Wait And Click Element  ${locator.Dataroom.CloseButton}  10
   Wait Until Keyword Succeeds  180 x  2 s  Element Should Not Be Visible  ${locator.Dataroom.BusyIndicator}
+  Sleep  180s   Delay to allow KDR -> CDB file transfer queue to empty
+  Capture Page Screenshot
 
 # Upload a document in a tender with a type
 Завантажити документ в тендер з типом
