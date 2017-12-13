@@ -3,7 +3,7 @@
 # in the ProZorro.Sale process, as set out by the Ministry of Economic Development and Trade of
 # Ukraine, Transparency International Ukraine, the Deposit Guarantee Fund and the National Bank of
 # Ukraine - https://prozorro.sale/en/aim. For more information on the transparent public testing
-# procedures please visit here https://github.com/openprocurement/"
+# procedures please visit here https://github.com/openprocurement/
 
 *** Settings ***
 Resource    kpmgdealroom.robot
