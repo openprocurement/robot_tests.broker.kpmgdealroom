@@ -335,7 +335,7 @@ Search Auction If Modified
   Wait Until Element Is Visible  ${locator.Dataroom.UploadCompleteMessage}  30
   Wait And Click Element  ${locator.Dataroom.CloseButton}  10
   Wait Until Keyword Succeeds  180 x  2 s  Element Should Not Be Visible  ${locator.Dataroom.BusyIndicator}
-  Sleep  120s   Delay to allow KDR -> CDB file transfer queue to empty
+  Sleep  180s   Delay to allow KDR -> CDB file transfer queue to empty
   Capture Page Screenshot
 
 # Upload a document in a tender with a type
