@@ -564,6 +564,7 @@ Approve Bid
   Choose File  ${locator.Awarding.UploadProtocolInput}  ${filepath}
   Click Element  ${locator.Awarding.UploadFileButton}
   Click Element  ${locator.Awarding.NextStatusButton}
+  Sleep  120s  Delay to allow KDR -> CDB synchronization
   Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Payment")]
 
 Підтвердити наявність протоколу аукціону
@@ -625,7 +626,7 @@ Approve Bid
   Click Element  ${locator.Awarding.ContractNumberButton}
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.Awarding.CompleteAuctionButton}
   Click Element  ${locator.Awarding.CompleteAuctionButton}
-  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
+  #Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 # Upload an agreement to the tender
 Завантажити угоду до тендера
