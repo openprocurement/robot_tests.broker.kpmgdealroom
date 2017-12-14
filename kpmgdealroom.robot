@@ -626,7 +626,7 @@ Approve Bid
   Click Element  ${locator.Awarding.ContractNumberButton}
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.Awarding.CompleteAuctionButton}
   Click Element  ${locator.Awarding.CompleteAuctionButton}
-  #Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 # Upload an agreement to the tender
 Завантажити угоду до тендера
