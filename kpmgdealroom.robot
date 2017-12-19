@@ -564,8 +564,7 @@ Approve Bid
   Choose File  ${locator.Awarding.UploadProtocolInput}  ${filepath}
   Click Element  ${locator.Awarding.UploadFileButton}
   Click Element  ${locator.Awarding.NextStatusButton}
-  Sleep  120s  Delay to allow KDR -> CDB synchronization
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Payment")]
+  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Payment")]
 
 Підтвердити наявність протоколу аукціону
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}
@@ -573,16 +572,6 @@ Approve Bid
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Page Should Contain  Download Auction Protocol Document
-
-# Upload the decision document of the qualification commission
-Завантажити документ рішення кваліфікаційної комісії
-  [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${award_num}
-  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//div[contains(@class, 'award_docs')]//span[contains(@class, 'add_document')])
-  Choose File  xpath=(//*[@id='upload_form']/input[2])  ${filepath}
-  Wait And Click Element  id=upload_button
-  Reload Page
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
