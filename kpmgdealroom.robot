@@ -564,7 +564,7 @@ Approve Bid
   Choose File  ${locator.Awarding.UploadProtocolInput}  ${filepath}
   Click Element  ${locator.Awarding.UploadFileButton}
   Click Element  ${locator.Awarding.NextStatusButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//@data-test-id='award-bidder-${index}'/td[contains(text(),"Payment")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@data-test-id='award-bidder-${index}']/td[contains(text(),"Payment")]
   #Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Payment")]
 
 Підтвердити наявність протоколу аукціону
@@ -580,7 +580,7 @@ Approve Bid
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  ${locator.exchangeToolbar.Bids}
   Click Element  ${locator.Awarding.NextStatusButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//@data-test-id='award-bidder-${index}'/td[contains(text(),"Active")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@data-test-id='award-bidder-${index}']/td[contains(text(),"Active")]
   #Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Active")]
   
 
@@ -594,7 +594,7 @@ Approve Bid
   Run Keyword And Ignore Error  Choose File  ${locator.Awarding.UploadDisqualInput}   ${file_path}
   Input Text  ${locator.Awarding.DisqualReason}  Some disqualification reason text
   Click Element  ${locator.Awarding.DisqualButton}
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//@data-test-id='award-bidder-${index}'/td[contains(text(),"Unsuccessful")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@data-test-id='award-bidder-${index}']/td[contains(text(),"Unsuccessful")]
   #Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//*[@id="phasesPartial"]/descendant::tbody/tr[${index + 1}]/td[contains(text(),"Unsuccessful")]
   Remove File  ${file_path}
 
