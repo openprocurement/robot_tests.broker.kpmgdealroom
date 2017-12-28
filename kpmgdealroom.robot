@@ -268,6 +268,7 @@ Search Auction If Modified
   ...  ELSE IF  '${field_name}' == 'procuringEntity.name'  Get Text  ${locator.viewExchange.${field_name}}
   ...  ELSE IF  'cancellations' in '${field_name}'  Get Value  ${locator.viewExchange.${field_name.replace('[0]','')}}
   ...  ELSE IF  'awards' in '${field_name}'  Отримати інформацію про авард  ${username}  ${tender_uaid}  ${field_name}
+  ...  ELSE IF  'contracts' in '${field_name}'  Отримати інформацію про контракт  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE  Get Value  ${locator.viewExchange.${field_name}}
   # post process
   ${return_value} =  post_process_field  ${field_name}  ${value}
@@ -279,6 +280,15 @@ Search Auction If Modified
   ${award_index}=  Convert To Integer  ${field_name[7:8]}
   ${value}=  Get Text  xpath=//*[text()="Award Bidders"]/../descendant::tbody/tr[${award_index + 1}]/td[5]
   [Return]  ${value}
+
+Отримати інформацію про контракт
+  [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Click Element  xpath=//td[contains(text(),"Active")]/following-sibling::td/b[@id="unregistered-user-award-dialog"]
+  Wait Modal Animation  xpath=//*[@data-test-id="public_documents"]
+  ${is_contract}=  Run Keyword And Return Status  Page Should Contain Element  xpath=//*[@data-test-id="public_documents"]/descendant::*[contains(text(),"Contract signed")]
+  ${return_value}=  Set Variable If  ${is_contract}  active  damn
+  [Return]  ${return_value}
 
 # Make changes to the tender
 Внести зміни в тендер
