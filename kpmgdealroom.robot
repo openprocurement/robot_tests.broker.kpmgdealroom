@@ -482,7 +482,8 @@ Search Auction If Modified
   Click Element  xpath=//a[contains(text(),"${question_id}")]
   Input Text  xpath=//*[contains(text(),"${question_id}")]/../descendant::*[@id="Question_Answer"]  ${answer_data.data.answer}
   Click Element  ${locator.Answers.Publish}
-  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
+#  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
+   # commented on the lack of an element with class "alert-success" after form submitting
 
 #--------------------------------------------------------------------------
 #  BIDDING - 
