@@ -574,6 +574,20 @@ Approve Bid
   Wait Until Keyword Succeeds  10 x  500 ms  Element Should Not Be Visible  ${locator.PageElements.ModalFadeIn}
   Click Element  ${locator.exchangeToolbar.Bids}
 
+Завантажити документ в ставку
+  [Arguments]  ${username}  ${path}  ${tender_uaid}  ${doc_type}=documents
+  Switch Browser  ${my_alias}
+  Signin If Logged Out  ${username}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Scroll And Click  ${locator.Bidding.InitialBiddingLink}
+  Choose File  id=BidDocuments.QualificationDocument  ${path}
+  Click Element  xpath=//*[@type="submit"]
+
+Змінити документ в ставці
+  [Arguments]  ${username}  ${tender_uaid}  ${path}  ${docid}
+  kpmgdealroom.Завантажити документ в ставку  ${username}  ${path}  ${tender_uaid}
+
 # Upload a financial license
 Завантажити фінансову ліцензію
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}
@@ -583,7 +597,7 @@ Approve Bid
   Scroll And Click  ${locator.Bidding.InitialBiddingLink}
   Choose File  ${locator.Bidding.FinancialFile}   ${filepath}
   Scroll And Click  ${locator.Bidding.UploadFilesButton}
-  Approve Bid  ${username}  ${tender_uaid}
+  Approve Bid  ${username}  ${tender_uaid}  ${True}
 
 # Cancel your bid
 Скасувати цінову пропозицію
