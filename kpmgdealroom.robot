@@ -453,15 +453,29 @@ Search Auction If Modified
 #--------------------------------------------------------------------------
 # Ask a question about an item
 Задати запитання на предмет
-  [Arguments]  ${username}  ${tender_uaid}  ${question}
+  [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${question}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Задати питання  ${username}  ${tender_uaid}  ${question}
+  Click Element  ${locator.exchangeToolbar.FAQ}
+  Wait And Click Element  xpath=//*[contains(@href,"Faq/Ask/")]  10
+  Select From KPMG List By Data-Value  _QuestionOf_dropdown  2
+  Click Element  xpath=//div[@id="_RelatedAssetId_dropdown"]/div[2]
+  Wait Until Page Contains Element  ${locator.PageElements.Dropdown.Opened}
+  Click Element  xpath=//*[@id="_RelatedAssetId_dropdown"]/descendant::a[contains(text(),"${item_id}")]
+  Input Text  id=QuestionTitle  ${question.data.title}
+  Input Text  id=QuestionDescription  ${question.data.description}
+  Click Element  xpath=//button[@type="submit"]
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 # Ask a question about the tender
 Задати запитання на тендер
   [Arguments]  ${username}  ${tender_uaid}  ${question}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Задати питання  ${username}  ${tender_uaid}  ${question}
+  Click Element  ${locator.exchangeToolbar.FAQ}
+  Wait And Click Element  xpath=//*[contains(@href,"Faq/Ask/")]  10
+  Input Text  id=QuestionTitle  ${question.data.title}
+  Input Text  id=QuestionDescription  ${question.data.description}
+  Click Element  xpath=//button[@type="submit"]
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  ${locator.PageElements.successActionAlert}
 
 # Get info from the question
 Отримати інформацію із запитання
