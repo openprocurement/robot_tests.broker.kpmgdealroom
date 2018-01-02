@@ -240,6 +240,7 @@ Filter Auction
   Click Element  ${locator.exchangeList.FilterSubmitButton}
   Wait Until Keyword Succeeds  20 x  3 s  JQuery Ajax Should Complete
   Wait Until Keyword Succeeds  20 x  1 s  Element Should Not Be Visible  ${locator.PageElements.LoadingImage}
+  Focus  ${search_btn_locator}
   Element Should Be Visible  xpath=//td[contains(text(), ${tender_uaid})]
 
 Search Auction If Modified
@@ -505,6 +506,7 @@ Search Auction If Modified
 # Submit a bid
 Подати цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}  ${bid}
+  ${is_qualified}=  Get From Dictionary  ${bid['data']}  qualified
   Switch Browser  ${my_alias}
   Signin If Logged Out  ${username}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
@@ -518,7 +520,7 @@ Search Auction If Modified
   Click Element  ${locator.PageElements.ModalOk}
   Wait Until Keyword Succeeds  10 x  500 ms  Element Should Not Be Visible  ${locator.PageElements.ModalFadeIn}
   Click Element  ${locator.exchangeToolbar.Bids}
-  Run Keyword If  '${MODE}' == 'dgfOtherAssets'  Approve Bid  ${username}  ${tender_uaid}
+  Run Keyword If  '${MODE}' != 'dgfInsider'  Approve Bid  ${username}  ${tender_uaid}  ${is_qualified}
   [Return]  ${bid}
 
 Input Bid Value
@@ -528,7 +530,7 @@ Input Bid Value
   Input Text  ${locator.Bidding.BiddingAmount}  ${amount}
 
 Approve Bid
-  [Arguments]  ${username}  ${tender_uaid}
+  [Arguments]  ${username}  ${tender_uaid}  ${is_qualified}
   Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=admin
   Set Window Position  @{USERS.users['${username}']['position']}
   Set Window Size      @{USERS.users['${username}']['size']}
@@ -538,11 +540,39 @@ Approve Bid
   Input text  ${locator.login.PasswordField}  Admin1234
   Click Element  ${locator.login.LoginButton}
   kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}  admin
-  Click Element  ${locator.exchangeToolbar.Bids}
+  Run Keyword If  ${is_qualified}  Click Element  ${locator.exchangeToolbar.Bids}
   Scroll And Click  ${locator.Admin.CheckBoxEligible}
   Scroll And Click  ${locator.Admin.CheckBoxQualified}
   Scroll And Click  ${locator.PageElements.SaveButton}
   Switch Browser  ${my_alias}
+
+Отримати інформацію із пропозиції
+  [Arguments]  ${username}  ${tender_uaid}  ${field}
+  Signin If Logged Out  ${username}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Scroll And Click  ${locator.Bidding.InitialBiddingLink}
+  ${bid_value}=   Get Value   id=ExternalExchangeBid_Amount
+  ${return_value}=  Convert To Number  ${bid_value}
+  [return]  ${return_value}
+
+Змінити цінову пропозицію
+  [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
+  ${amount}=  Convert To Integer  ${fieldvalue}
+  Switch Browser  ${my_alias}
+  Signin If Logged Out  ${username}
+  kpmgdealroom.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Click Element  ${locator.exchangeToolbar.Bids}
+  Scroll And Click  ${locator.Bidding.InitialBiddingLink}
+  Wait until Element Is Visible  ${locator.Bidding.BiddingAmount}  10
+  Input Text  ${locator.Bidding.BiddingAmount}  ${amount}
+  Click Element  ${locator.Bidding.SubmitBidButton}
+  Wait Until Element Is Visible  ${locator.Bidding.ConfirmBidPassword}  10
+  Wait Modal Animation  ${locator.Bidding.ConfirmBidPassword}
+  Input Text  ${locator.Bidding.ConfirmBidPassword}  ${USERS.users['${username}'].password}
+  Click Element  ${locator.PageElements.ModalOk}
+  Wait Until Keyword Succeeds  10 x  500 ms  Element Should Not Be Visible  ${locator.PageElements.ModalFadeIn}
+  Click Element  ${locator.exchangeToolbar.Bids}
 
 # Upload a financial license
 Завантажити фінансову ліцензію
