@@ -30,7 +30,7 @@ Signin If Logged Out
   [Arguments]  ${username}
   Reload Page
   ${is_logged}=  Run Keyword And Return Status  Page Should Contain Element  ${locator.toolbar.LoginButton}
-  Run Keyword If  ${is_logged}  Run Keywords
+  Run Keyword If  ${is_logged} and "${username}" != "kpmgdealroom_Viewer"  Run Keywords
   ...  Click Element  ${locator.toolbar.LoginButton}
   ...  AND  Login  ${username}
 
