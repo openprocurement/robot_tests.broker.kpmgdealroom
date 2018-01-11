@@ -191,6 +191,7 @@ Check Auction Status
 Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}  ${alias}=${my_alias}
   Switch Browser  ${alias}
+  Signin If Logged Out  ${username}
   Go to  ${USERS.users['${username}'].default_page}
   Wait Until Keyword Succeeds  5 x  5 s  Search Auction As ${ROLE.replace("1","")}  ${tender_uaid}
   Dismiss Exchange Rules Dialog
